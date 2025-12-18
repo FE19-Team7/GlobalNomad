@@ -9,5 +9,9 @@ if [[ ! "$branch" =~ ^(main|dev|feat/.+)$ ]]; then
   echo "- main"
   echo "- dev"
   echo "- feat/*"
+  echo "- chore/*"
+  echo "- design/*"
+  echo "- bug/*"
+  echo "- docs/*"
   exit 1
 fi
