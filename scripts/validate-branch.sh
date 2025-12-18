@@ -2,7 +2,7 @@
 
 branch="$(git branch --show-current)"
 
-if [[ ! "$branch" =~ ^(main|dev|feat/.+)$ ]]; then
+if [[ ! "$branch" =~ ^(main|dev|(feat|chore|design|bug|docs)/.+)$ ]]; then
   echo "❌ invalid branch name: $branch"
   echo ""
   echo "허용 브랜치:"
