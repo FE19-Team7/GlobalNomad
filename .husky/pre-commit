@@ -1,6 +1,7 @@
 branch="$(git branch --show-current)"
 
-if [ "$branch" = "main" ]; then
-  echo "❌ main 브랜치에서는 직접 커밋 불가 (PR 사용)"
+if [ "$branch" = "main" ] || [ "$branch" = "dev" ]; then
+  echo "❌ main / dev 브랜치에서는 직접 커밋 불가"
+  echo "👉 작업 브랜치를 생성해서 PR로 머지해주세요"
   exit 1
 fi
