@@ -1,0 +1,72 @@
+/* =========================
+   @font-face (lazy load)
+   ========================= */
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================
+   font tokens
+   ========================= */
+:root {
+  /* font family */
+  --font-sans: "Pretendard";
+
+  /* font weights (실사용 only) */
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  /* font sizes */
+  --text-h1: 32px;
+  --text-h2: 24px;
+  --text-h3: 20px;
+  --text-h4: 18px;
+  --text-body-lg: 16px;
+  --text-body: 14px;
+
+  /* letter spacing */
+  --tracking-h1: -0.5px;
+  --tracking-h2: -0.3px;
+  --tracking-h3: -0.2px;
+  --tracking-h4: -0.1px;
+  --tracking-body: 0px;
+}
+
+/* =========================
+   tailwind mapping
+   ========================= */
+@theme inline {
+  /* font family */
+  --font-sans: var(--font-sans);
+
+  /* font sizes */
+  --text-h1: var(--text-h1);
+  --text-h2: var(--text-h2);
+  --text-h3: var(--text-h3);
+  --text-h4: var(--text-h4);
+  --text-body-lg: var(--text-body-lg);
+  --text-body: var(--text-body);
+
+  /* letter spacing */
+  --tracking-h1: var(--tracking-h1);
+  --tracking-h2: var(--tracking-h2);
+  --tracking-h3: var(--tracking-h3);
+  --tracking-h4: var(--tracking-h4);
+  --tracking-body: var(--tracking-body);
+
+  /* font weights */
+  --weight-medium: var(--weight-medium);
+  --weight-bold: var(--weight-bold);
+}
