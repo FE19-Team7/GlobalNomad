@@ -15,7 +15,7 @@ export default function Header({ isLoggedIn = false }: HeaderProps) {
         {/* 왼쪽 */}
         <Link
           href="/"
-          className="flex items-center gap-2 justify-start cursor-pointer"
+          className="flex items-center justify-start cursor-pointer"
         >
           <Logo />
         </Link>
