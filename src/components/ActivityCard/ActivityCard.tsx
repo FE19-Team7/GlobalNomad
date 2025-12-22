@@ -1,5 +1,6 @@
-import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
+import DefaultThumbnail from '@/assets/activity-default-thumbnail.png';
 import StarIcon from '@/assets/icon_star.svg';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ActivityCard() {
@@ -7,21 +8,23 @@ export default function ActivityCard() {
     <div className="w-[262px]">
       <Link
         href="/activities/{activityId}"
-        className="w-full flex flex-col justify-start overflow-hidden rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)]"
+        className="w-full flex flex-col overflow-hidden rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)]"
       >
-        <DefaultThumbnail alt="체험 썸네일 이미지" className="flex w-full h-[290px] object-cover" />
+        <div className="w-full h-[290px] flex bg-gray-100">
+          <Image src={DefaultThumbnail} alt="체험 썸네일 이미지" className="object-cover object-center" />
+        </div>
         <div className="flex flex-col -mt-[60px] px-[20px] py-[30px] gap-[18px] bg-white rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)]">
           <div className="flex flex-col">
             <div className="text-lg font-semibold leading-6">title</div>
-            <div className="flex flex-row gap-[2px]">
-              <StarIcon alt="별점 아이콘" className="w-[20px] h-[20px]" />
+            <div className="flex gap-[2px]">
+              <StarIcon aria-label="별점 아이콘" className="w-[20px] h-[20px]" />
               <span className="ml-[3px] text-sm leading-6">4.9</span>
               <span className="text-gray-400 text-sm leading-6">(254)</span>
             </div>
           </div>
-          <div className="cursor-text">
+          <div>
             <span className="text-lg font-bold leading-6">₩ 25,000</span>
-            <span className="text-gray-400 font-semibold text-base leading-6">/ 인</span>
+            <span className="text-gray-400 font-semibold text-base leading-6"> / 인</span>
           </div>
         </div>
       </Link>
