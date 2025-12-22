@@ -8,17 +8,22 @@ type HeaderProps = {
 };
 
 export default function Header({ isLoggedIn = false }: HeaderProps) {
+  const nickname = "조동현"; // 임시 데이터 -> 추후 로그인 회원가입 연동 시 수정
   return (
     <HeaderLayout>
       <div className="grid w-full grid-cols-2 items-center">
         {/* 왼쪽 */}
-        <div className="flex items-center gap-2 justify-start cursor-pointer">
+        <div className="flex items-center justify-start cursor-pointer">
           <Logo />
         </div>
 
         {/* 오른쪽 */}
         <div className="flex justify-end">
-          {isLoggedIn ? <LoggedInMenu /> : <LoggedOutMenu />}
+          {isLoggedIn ? (
+            <LoggedInMenu nickname={nickname} />
+          ) : (
+            <LoggedOutMenu />
+          )}
         </div>
       </div>
     </HeaderLayout>
