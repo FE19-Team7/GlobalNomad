@@ -3,7 +3,7 @@ import DefaultProfile from "@/assets/default profile.svg";
 
 export default function LoggedInMenu() {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2.5">
       <BellIcon />
       <div className="h-3.5 w-px bg-gray-100" />
       <DefaultProfile />
