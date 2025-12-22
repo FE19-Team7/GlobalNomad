@@ -2,6 +2,7 @@ import HeaderLayout from "./HeaderLayout";
 import Logo from "@/assets/Logo.svg";
 import LoggedInMenu from "./LoggedInMenu";
 import LoggedOutMenu from "./LoggedOutMenu";
+import Link from "next/link";
 
 type HeaderProps = {
   isLoggedIn?: boolean;
@@ -12,9 +13,12 @@ export default function Header({ isLoggedIn = false }: HeaderProps) {
     <HeaderLayout>
       <div className="grid w-full grid-cols-2 items-center">
         {/* 왼쪽 */}
-        <div className="flex items-center gap-2 justify-start cursor-pointer">
+        <Link
+          href="/"
+          className="flex items-center justify-start cursor-pointer"
+        >
           <Logo />
-        </div>
+        </Link>
 
         {/* 오른쪽 */}
         <div className="flex justify-end">
