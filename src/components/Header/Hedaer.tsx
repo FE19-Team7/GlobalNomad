@@ -1,6 +1,7 @@
 import HeaderLayout from "./HeaderLayout";
 import Logo from "@/assets/Logo.svg";
-import HeaderRight from "./HeaderRight";
+import LoggedInMenu from "./LoggedInMenu";
+import LoggedOutMenu from "./LoggedOutMenu";
 
 type HeaderProps = {
   isLoggedIn?: boolean;
@@ -17,7 +18,7 @@ export default function Header({ isLoggedIn = false }: HeaderProps) {
 
         {/* 오른쪽 */}
         <div className="flex justify-end">
-          <HeaderRight isLoggedIn={isLoggedIn} />
+          {isLoggedIn ? <LoggedInMenu /> : <LoggedOutMenu />}
         </div>
       </div>
     </HeaderLayout>
