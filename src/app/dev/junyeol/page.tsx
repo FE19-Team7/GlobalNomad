@@ -1,5 +1,23 @@
+'use client';
+
+import Search from "@/src/components/common/Search";
+import { useState } from 'react';
+
 export default function JunyeolPage() {
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = (value: string) => {
+    console.log('검색어:', value);
+  }
+
   return (
-    <div>테스트용 페이지</div>
+    <section className='flex justify-center'>
+      <Search
+        value={searchValue}
+        onChange={setSearchValue}
+        onSearch={handleSearch}
+        className='w-full max-w-[740px]'
+      />
+    </section>
   );
 }
