@@ -1,6 +1,5 @@
-import DefaultThumbnail from '@/assets/activity-default-thumbnail.png';
+import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ActivityCard() {
@@ -8,10 +7,10 @@ export default function ActivityCard() {
     <div className="w-[262px]">
       <Link
         href="/activities/{activityId}"
-        className="w-full flex flex-col overflow-hidden rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)]"
+        className="flex flex-col overflow-hidden rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)]"
       >
-        <div className="w-full h-[290px] flex bg-gray-100">
-          <Image src={DefaultThumbnail} alt="체험 썸네일 이미지" className="object-cover object-center" />
+        <div className="w-full h-[290px] overflow-hidden bg-gray-100">
+          <DefaultThumbnail aria-label="체험 썸네일 이미지" className="w-full h-full" preserveAspectRatio="xMidYMid slice" />
         </div>
         <div className="flex flex-col -mt-[60px] px-[20px] py-[30px] gap-[18px] bg-white rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)]">
           <div className="flex flex-col">
