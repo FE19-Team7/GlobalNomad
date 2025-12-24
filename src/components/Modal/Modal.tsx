@@ -22,7 +22,7 @@ export default function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* dim */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50" />
 
       {/* modal */}
       <div className="relative z-10 w-100 rounded-2xl bg-white shadow-lg overflow-hidden">
