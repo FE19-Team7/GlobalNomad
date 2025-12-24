@@ -13,30 +13,34 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       fullWidth = false,
       disabled,
+      selected = false,
       children,
       className = '',
       ...props
     },
     ref
   ) => {
+    const isDisabled = disabled || loading;
+
     const baseStyles =
       'rounded-xl transition-all duration-200 ease-in-out disabled:cursor-not-allowed cursor-pointer';
 
+    // Varidant별 스타일
     const variantStyles = {
-      primary:
-        loading || disabled
-          ? 'bg-grayscale-300 text-white'
-          : 'bg-primary-200 text-white hover:bg-primary-300 active:bg-primary-300',
-      secondary:
-        loading || disabled
-          ? 'bg-transparent border-2 border-grayscale-300 text-grayscale-300'
-          : 'bg-transparent border-2 border-primary-200 text-primary-200 hover:bg-primary-100 active:bg-primary-100',
+      primary: isDisabled
+          ? 'bg-[var(--gray-200)] text-[var(--white)]'
+          : 'bg-[var(--primary-500)] text-[var(--white)] hover:opacity-90 active:opacity-80',
+      secondary: isDisabled
+          ? 'bg-[var(--white)] border border-[var(--gray-200)] text-[var(--gray-200)]'
+          : selected
+          ? 'bg-[var(--primary-500)] text-[var(--white)] hover:opacity-90 active:opacity-80'
+          : 'bg-[var(--white)] border border-[var-(--gray-200)] text-[var(gray-600)] hover:bg-[var(--gray-25)] active:bg-[var-(--gray-50)]',
     };
 
     const sizeStyles = {
-      sm: 'px-6 py-3 text-md-medium min-w-[120px]',
-      md: 'px-8 py-3.5 text-lg-medium min-w-[160px]',
-      lg: 'px-10 py-4 text-lg-semibold min-w-full',
+      sm: 'px-6 py-3 text-[14px] min-w-[120px] h-[40px]',
+      md: 'px-8 py-3.5 text-[16px] min-w-[160px] h-[48px]',
+      lg: 'px-10 py-4 text-[18px] w-full h-[56px]',
     };
 
     const widthStyles = fullWidth ? 'w-full' : '';
@@ -45,7 +49,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (href) {
       const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        if (disabled || loading) {
+        if (isDisabled) {
           e.preventDefault();
           return;
         }
