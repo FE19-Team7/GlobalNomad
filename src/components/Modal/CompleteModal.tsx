@@ -21,11 +21,14 @@ export default function CompleteModal({
         <div
           className="
             flex flex-col items-center text-center
-            px-10 pt-10 gap-5 pb-7.5
+            px-10 pt-10
           "
         >
           <p className="text-lg font-bold">{message}</p>
-
+        </div>
+      }
+      footer={
+        <div className="px-10 pb-7.5">
           <button
             onClick={onClose}
             className="w-full rounded-lg bg-blue-500 py-3 text-sm font-medium text-white"
