@@ -2,7 +2,26 @@ import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 import Link from 'next/link';
 
-export default function ActivityCard() {
+interface ActivityCardProps {
+  id: string;
+  title: string;
+  category: string;
+  rating: number;
+  reviewCount: number;
+  price: number;
+  bannerImageUrl?: string;
+}
+
+export default function ActivityCard({
+  id,
+  title,
+  category,
+  rating,
+  reviewCount,
+  price,
+  bannerImageUrl,
+}: ActivityCardProps) {
+
   return (
     <div className="w-[262px]">
       <Link
