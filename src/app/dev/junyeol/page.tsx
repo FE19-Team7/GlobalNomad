@@ -1,6 +1,6 @@
 'use client';
 
-import Search from "@/src/components/common/search";
+import Search from "@/src/components/Search/search";
 import { useState } from 'react';
 
 export default function JunyeolPage() {
