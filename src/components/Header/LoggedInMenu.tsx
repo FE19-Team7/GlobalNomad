@@ -21,7 +21,7 @@ export default function LoggedInMenu({ nickname }: LoggedInMenuProps) {
         aria-label="마이페이지"
         className="flex items-center gap-2 hover:opacity-70 transition"
       >
-        <DefaultProfile />
+        <DefaultProfile/>
         <span className="text-sm text-gray-950">{nickname}</span>
       </Link>
     </div>
