@@ -31,8 +31,11 @@ export default function ReviewModal({
   };
 
   const handleClose = () => {
-    resetState();
     onClose();
+
+    setTimeout(() => {
+      resetState();
+    }, 300);
   };
 
   const handleSubmit = () => {
@@ -85,7 +88,7 @@ export default function ReviewModal({
             onChange={(e) => setContent(e.target.value)}
             maxLength={100}
             placeholder="체험에서 느낀 경험을 자유롭게 남겨주세요"
-            className="mt-2 flex w-full h-[179px]items-start gap-2 p-5rounded-xl border border-[#E0E0E5] bg-whiteshadow-[0_4px_24px_rgba(156,180,202,0.2)]"
+            className="mt-2 flex w-full h-[179px] items-start gap-2 p-5 rounded-xl border border-[#E0E0E5] bg-whiteshadow-[0_4px_24px_rgba(156,180,202,0.2)]"
             rows={4}
           />
 
