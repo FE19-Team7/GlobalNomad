@@ -22,7 +22,7 @@ export default function Header({ isLoggedIn = false }: HeaderProps) {
         </Link>
 
         {/* 오른쪽 */}
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center">
           {isLoggedIn ? (
             <LoggedInMenu nickname={nickname} />
           ) : (
