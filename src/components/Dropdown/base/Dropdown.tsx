@@ -104,7 +104,7 @@ export default function Dropdown({
                 aria-haspopup="listbox"
                 aria-expanded={open}
                 className={`
-                    flex items-center p-[10px] text-body-lg
+                    flex items-center text-body-lg
                     ${fullWidth ? 'w-full justify-between' : 'w-fit'}
                     ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
                     bg-transparent
