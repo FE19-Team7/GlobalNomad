@@ -1,0 +1,97 @@
+/* CalendarBadge CSS Module
+   - 셀 기본 크기: 80x124 (테스트용으로 고정)
+   - 내부 패딩: top 18px / right 12px / bottom 10px / left 12px
+   - 배지 간격: 5px
+   - 배지 크기: 56x21 (padding 2 / 8)
+*/
+
+.root {
+  box-sizing: border-box;
+  /* 테스트 시 셀 크기 고정 (캘린더 그리드에서 관리하면 이 두 줄 제거) */
+  width: 80px;
+  height: 124px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;        /* 가운데 정렬 */
+  justify-content: flex-start;
+  position: relative;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+
+  /* 시안 패딩 */
+  padding-top: 18px;
+  padding-right: 12px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+
+  gap: 5px; /* 루트 레벨 gap : 날짜와 배지리스트 간격(통일) */
+  overflow: visible;
+}
+
+/* 날짜 텍스트 */
+.date {
+  font-size: 16px;
+  line-height: 1;
+  color: #49494C;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  align-self: center;
+}
+
+/* 배지 리스트: 세로 스택, 가운데 정렬, gap 5px */
+.badgeList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중요: 자식이 늘어나지 않게 가운데 고정 */
+  gap: 5px;            /* 요청한 간격(5px) */
+  margin-top: 4px;
+}
+
+/* 배지(고정 크기: 56x21, padding 2/8) */
+.badge {
+  box-sizing: border-box;
+  width: 56px;        /* Figma: 56 */
+  height: 21px;       /* Figma: 21 */
+  padding: 2px 8px;   /* top/bottom 2, left/right 8 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* badge 텍스트 내부 */
+.badgeLabel {
+  margin-right: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+.badgeCount {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* 도트(알림) */
+.dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  z-index: 20;
+}
+
+/* 액티브 / 포커스 */
+.badge:active { transform: translateY(1px); }
+.badge:focus { outline: none; box-shadow: 0 0 0 4px rgba(59,130,246,0.08); }
