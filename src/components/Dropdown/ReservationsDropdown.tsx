@@ -31,6 +31,7 @@ export default function ReservationsDropdown({
       className={`border border-gray-100 rounded-[16px] ${className}`}
       menuClassName="w-full mt-0.5 top-full"
       itemClassName="text-left"
+      buttonClassName="p-[10px]"
     />
   );
 }

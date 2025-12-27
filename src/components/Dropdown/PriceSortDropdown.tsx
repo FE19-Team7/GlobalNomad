@@ -31,6 +31,7 @@ export default function PriceSortDropdown({
             fullWidth={false}
             align="center"
             menuClassName="min-w-[80px]"
+            buttonClassName="p-[10px]"
         />
     );
 }
