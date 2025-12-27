@@ -23,24 +23,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || loading;
 
     const baseStyles =
-      'rounded-xl transition-all duration-200 ease-in-out disabled:cursor-not-allowed cursor-pointer';
+      'inline-flex items-center justify-center rounded-xl transition-all duration-200 ease-in-out disabled:cursor-not-allowed cursor-pointer font-bold';
 
-    // Varidant별 스타일
+    // Variant별 스타일
     const variantStyles = {
       primary: isDisabled
-          ? 'bg-[var(--gray-200)] text-[var(--white)]'
-          : 'bg-[var(--primary-500)] text-[var(--white)] hover:opacity-90 active:opacity-80',
+        ? 'bg-gray-200 text-white'
+        : 'bg-primary-500 text-white hover:opacity-90 active:opacity-80',
       secondary: isDisabled
-          ? 'bg-[var(--white)] border border-[var(--gray-200)] text-[var(--gray-200)]'
-          : selected
-          ? 'bg-[var(--primary-500)] text-[var(--white)] hover:opacity-90 active:opacity-80'
-          : 'bg-[var(--white)] border border-[var-(--gray-200)] text-[var(gray-600)] hover:bg-[var(--gray-25)] active:bg-[var-(--gray-50)]',
+        ? 'bg-white border border-gray-200 text-gray-200'
+        : selected
+        ? 'bg-primary-500 text-white hover:opacity-90 active:opacity-80'
+        : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-25 active:bg-gray-50',
     };
 
     const sizeStyles = {
-      sm: 'px-6 py-3 text-[14px] min-w-[120px] h-[40px]',
-      md: 'px-8 py-3.5 text-[16px] min-w-[160px] h-[48px]',
-      lg: 'px-10 py-4 text-[18px] w-full h-[56px]',
+      sm: 'px-6 h-[40px] text-[14px] min-w-[120px]',
+      md: 'px-8 h-[48px] text-[16px] min-w-[160px]',
+      lg: 'px-10 h-[56px] text-[18px] w-full',
     };
 
     const widthStyles = fullWidth ? 'w-full' : '';
@@ -63,9 +63,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           href={href}
           className={combinedClassName}
           onClick={handleClick}
-          aria-disabled={disabled || loading}
+          aria-disabled={isDisabled}
         >
-          <span className="flex items-center justify-center gap-1">{children}</span>
+          {children}
         </Link>
       );
     }
@@ -73,7 +73,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        disabled={disabled || loading}
+        disabled={isDisabled}
         className={combinedClassName}
         {...props}
       >
