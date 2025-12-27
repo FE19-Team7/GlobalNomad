@@ -21,7 +21,7 @@ export default function LoggedInMenu({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="absolute flex items-center">
+    <div className="flex items-center">
       <button
         type="button"
         aria-label="알림"
@@ -47,7 +47,11 @@ export default function LoggedInMenu({
       >
         <DefaultProfile />
       </Link>
-      <UserMenuDropDown userName={nickname} onLogout={onLogout} />
+      <UserMenuDropDown
+        userName={nickname}
+        onLogout={onLogout}
+        className="absolute  min-w-[120px]"
+      />
     </div>
   );
 }

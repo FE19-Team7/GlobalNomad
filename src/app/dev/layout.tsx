@@ -3,7 +3,6 @@ import Header from "@/src/components/Header/Hedaer";
 import type { PropsWithChildren } from "react";
 
 export default function RootLayout({ children }: PropsWithChildren) {
-  const isLoggedIn = true;
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
