@@ -6,7 +6,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   const isLoggedIn = true;
   return (
     <div className="min-h-screen flex flex-col">
-      <Header isLoggedIn={isLoggedIn} />
+      <Header />
       <main className="flex-1 py-12">
         <div className="w-full max-w-[964px] mx-auto flex flex-col gap-y-8">
           {children}
