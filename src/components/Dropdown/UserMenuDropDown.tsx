@@ -30,7 +30,7 @@ export default function UserMenuDropDownProps({
         <Dropdown
             label={userName}
             items={items}
-            align="center"
+            align="end"
             showArrow={false}
             fullWidth={false}
             className={`[&>button>span]:hover:text-gray-700 ${className}`}
