@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 
@@ -20,12 +23,17 @@ export default function MyActivitiesCard({
   price = 0,
   bannerImageUrl,
 }: MyActivitiesCardProps) {
+  const router = useRouter();
+
+  const handleEdit = () => {
+    router.push(` `);
+  };
 
   return (
     <div className="w-[600px] h-[200px]">
-      <Link href={`/activities/${id}`} className="block group">
-        <div className="flex p-[30px] justify-between rounded-3xl shadow-[0px_4px_24px_0px_rgba(156,180,202,0.20)]">
-          <div className="w-76 flex flex-col gap-5 rounded-[32px]">
+      <div className="flex p-[30px] justify-between rounded-3xl shadow-[0px_4px_24px_0px_rgba(156,180,202,0.20)]">
+        <div className="w-76 flex flex-col gap-5 rounded-[32px]">
+          <Link href={`/activities/${id}`} className="block group">
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-2">
                 <div className="text-lg font-semibold leading-6">{title}</div>
@@ -40,11 +48,18 @@ export default function MyActivitiesCard({
                 <span className="text-gray-400 text-base leading-6">/{' '}인</span>
               </div>
             </div>
-            <div className="flex items-center gap-[8px]">
-              <button className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-sm text-gray-600 rounded-lg">수정하기</button>
-              <button className="px-[10px] py-[6px] bg-gray-100 text-sm text-gray-600 rounded-lg">삭제하기</button>
-            </div>
+          </Link >
+          <div className="flex items-center gap-[8px]">
+            <button
+              onClick={handleEdit}
+              className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-sm text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150"
+            >
+              수정하기
+            </button>
+            <button className="px-[10px] py-[6px] bg-gray-100 text-sm text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150">삭제하기</button>
           </div>
+        </div>
+        <Link href={`/activities/${id}`} className="block group">
           <div className="w-36 h-36 flex justify-center items-center rounded-[32px] overflow-hidden bg-gray-100">
             {bannerImageUrl ? (
               <Image
@@ -62,8 +77,8 @@ export default function MyActivitiesCard({
               />
             )}
           </div>
-        </div>
-      </Link >
+        </Link>
+      </div>
     </div >
   )
 };
