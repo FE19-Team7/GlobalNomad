@@ -13,6 +13,7 @@ interface MyActivitiesCardProps {
   reviewCount: number;
   price: number;
   bannerImageUrl?: string;
+  onDelete?: (id: number) => void;
 }
 
 export default function MyActivitiesCard({
@@ -22,12 +23,17 @@ export default function MyActivitiesCard({
   reviewCount = 0,
   price = 0,
   bannerImageUrl,
+  onDelete,
 }: MyActivitiesCardProps) {
   const router = useRouter();
 
   const handleEdit = () => {
-    router.push(` `);
+    router.push(` `);   // 체험 수정 페이지로 이동
   };
+
+  const handleDelete = () => {
+    onDelete?.(id);   // 삭제 confirm 모달 띄우는 함수 호출
+  }
 
   return (
     <div className="w-[600px] h-[200px]">
@@ -56,7 +62,12 @@ export default function MyActivitiesCard({
             >
               수정하기
             </button>
-            <button className="px-[10px] py-[6px] bg-gray-100 text-sm text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150">삭제하기</button>
+            <button
+              className="px-[10px] py-[6px] bg-gray-100 text-sm text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
+              onClick={handleDelete}
+            >
+              삭제하기
+            </button>
           </div>
         </div>
         <Link href={`/activities/${id}`} className="block group">
