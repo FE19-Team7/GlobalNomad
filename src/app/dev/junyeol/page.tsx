@@ -1,6 +1,7 @@
-'use client';
+'use client'
 
 import { useState } from 'react';
+import SideMenu from "@/src/components/SideMenu/SideMenu";
 import UserMenuDropDown from '@/src/components/Dropdown/UserMenuDropDown';
 import PriceSortDropdown, { PriceSortValue } from '@/src/components/Dropdown/PriceSortDropdown';
 import ActivitiesCategoryDropdown, { ActivityCategory } from '@/src/components/Dropdown/ActivitiesCategoryDropdown';
@@ -144,7 +145,7 @@ export default function JunyeolPage() {
           <EventBadge status="COMPLETED" count={7} />
         </div>
       </div>
-      
+
       <div className="flex ph-10 gap-10 justify-center items-center">
         {/* Pagination 컴포넌트 사용 예시 */}
         <Pagination
@@ -155,8 +156,16 @@ export default function JunyeolPage() {
         />
       </div>
 
+      <div className="flex ph-10 gap-10 justify-center items-center">
+        {/* SideMenu 컴포넌트 사용 예시 */}
+          <SideMenu
+            className="w-[290px]"
+            profileImageUrl={null}
+            onProfileEdit={() => {
+              console.log("프로필 편집");
+            }} />
+      </div>
+
     </div>
-
-
   );
 }
