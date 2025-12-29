@@ -17,7 +17,6 @@ jobs:
           script: |
             const reviewers = [
               "Chodongdong",
-              "ddangwoo210",
               "glowhyeon",
               "hyuns8328",
               "kimjunyeol3"
