@@ -7,6 +7,7 @@ import ActivitiesCategoryDropdown, { ActivityCategory } from '@/src/components/D
 import ReservationsDropdown, { ReservationItem } from '@/src/components/Dropdown/ReservationsDropdown';
 import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
 import { EventBadge } from '@/src/components/Calendar/EventBadge';
+import { Pagination } from '@/src/components/Pagination/Pagination';
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
@@ -40,6 +41,8 @@ export default function JunyeolPage() {
   const [reservation, setReservation] = useState<string | undefined>(
     sortedReservations[0]?.value
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const TOTAL_PAGES = 12;
 
   return (
     <div className="flex flex-col ph-10 gap-20 justify-center items-center">
@@ -140,9 +143,20 @@ export default function JunyeolPage() {
           <EventBadge status="APPROVED" count={3} />
           <EventBadge status="COMPLETED" count={7} />
         </div>
-
       </div>
+      
+      <div className="flex ph-10 gap-10 justify-center items-center">
+        {/* Pagination 컴포넌트 사용 예시 */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={TOTAL_PAGES}
+          maxPageButtons={5}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+
     </div>
+
 
   );
 }
