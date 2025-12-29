@@ -16,10 +16,10 @@ export interface CreateUserBody {
 }
 
 // 회원가입 응답
-export interface CreateUserResponse extends User { }
+export type CreateUserResponse = User;
 
 // 내 정보 조회 응답
-export interface GetMeResponse extends User { }
+export type GetMeResponse = User;
 
 // 내 정보 수정 요청 body
 export interface UpdateUserBody {
@@ -29,7 +29,7 @@ export interface UpdateUserBody {
 }
 
 // 내 정보 수정 응답
-export interface UpdateUserResponse extends User { }
+export type UpdateUserResponse = User;
 
 // 프로필 이미지 업로드 응답
 export interface UploadProfileImageResponse {
