@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 
+type ReservationStatus = 'pending' | 'confirmed' | 'cancelled' | 'declined' | 'completed';
+
 interface ReservationCardProps {
   id: number;
   activity: {
@@ -9,7 +11,7 @@ interface ReservationCardProps {
     title: string;
     bannerImageUrl?: string;
   };
-  status: ReservationStatus;
+  status?: ReservationStatus;
   totalPrice: number;
   headCount: number;
   date: string;
