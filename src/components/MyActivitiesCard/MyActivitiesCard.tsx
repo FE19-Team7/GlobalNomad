@@ -7,32 +7,36 @@ import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 
 interface MyActivitiesCardProps {
-  id: number;
-  title: string;
-  rating: number;
-  reviewCount: number;
-  price: number;
-  bannerImageUrl?: string;
-  onDelete?: (id: number) => void;
+  activity: {
+    id: number;
+    title: string;
+    rating: number;
+    reviewCount: number;
+    price: number;
+    bannerImageUrl?: string;
+    onDelete?: (id: number) => void;
+  }
 }
 
 export default function MyActivitiesCard({
-  id,
-  title,
-  rating = 0,
-  reviewCount = 0,
-  price = 0,
-  bannerImageUrl,
-  onDelete,
+  activity: {
+    id,
+    title,
+    rating = 0,
+    reviewCount = 0,
+    price = 0,
+    bannerImageUrl,
+    onDelete,
+  }
 }: MyActivitiesCardProps) {
   const router = useRouter();
 
   const handleEdit = () => {
-    router.push(` `);   // 체험 수정 페이지로 이동
+    router.push(`/seller/activities/${id}/edit`);    // 체험 수정 페이지로 이동
   };
 
   const handleDelete = () => {
-    onDelete?.(id);   // 삭제 confirm 모달 띄우는 함수 호출
+    onDelete?.(id);    // 삭제 confirm 모달 호출
   }
 
   return (
