@@ -1,13 +1,15 @@
-import StatusBadge from "@/src/components/StatusBadge/StatusBadge";
+import ActivityCard from "../../../components/ActivityCard/ActivityCard";
 
 export default function SunghyeonPage() {
   return (
-    <div className="flex gap-4">
-      <StatusBadge status="confirmed" />
-      <StatusBadge status="pending" />
-      <StatusBadge status="cancelled" />
-      <StatusBadge status="declined" />
-      <StatusBadge status="completed" />
+    <div className="flex flex-row gap-6">
+      <ActivityCard
+        id={1}
+        title="크리스마스 랜선 집들이"
+        rating={4.9}
+        reviewCount={10}
+        price={25000}
+      />
     </div>
   );
 }
