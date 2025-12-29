@@ -5,6 +5,8 @@ import UserMenuDropDown from '@/src/components/Dropdown/UserMenuDropDown';
 import PriceSortDropdown, { PriceSortValue } from '@/src/components/Dropdown/PriceSortDropdown';
 import ActivitiesCategoryDropdown, { ActivityCategory } from '@/src/components/Dropdown/ActivitiesCategoryDropdown';
 import ReservationsDropdown, { ReservationItem } from '@/src/components/Dropdown/ReservationsDropdown';
+import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
+import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 
 // api 연동 전 목업 데이터
@@ -79,6 +81,71 @@ export default function JunyeolPage() {
       </div>
 
       <div className="flex ph-10 gap-10 justify-center items-center">
+        {/* CalendarDayCell 컴포넌트 사용 예시 */}
+        {/* 달력 구조는 따로 컴포넌트로 만들어야 될듯 */}
+        <div className="grid grid-cols-5 gap-4 h-[124px]">
+          {/* 이벤트 없음 */}
+          <CalendarDayCell
+            day={1}
+            summary={{
+              reserved: 0,
+              approved: 0,
+              completed: 0,
+            }}
+          />
+
+          {/* 예약만 */}
+          <CalendarDayCell
+            day={2}
+            summary={{
+              reserved: 2,
+              approved: 0,
+              completed: 0,
+            }}
+          />
+
+          {/* 예약 + 승인 */}
+          <CalendarDayCell
+            day={3}
+            summary={{
+              reserved: 1,
+              approved: 3,
+              completed: 0,
+            }}
+          />
+
+          {/* 예약 + 승인 + 완료 */}
+          <CalendarDayCell
+            day={4}
+            summary={{
+              reserved: 1,
+              approved: 1,
+              completed: 1,
+            }}
+          />
+
+          {/* 완료만 */}
+          <CalendarDayCell
+            day={5}
+            summary={{
+              reserved: 0,
+              approved: 0,
+              completed: 4,
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="flex ph-10 gap-10 justify-center items-center">
+        {/* 기본 상태 */}
+        <div className="flex items-center gap-4">
+          <EventBadge status="RESERVED" count={1} />
+          <EventBadge status="APPROVED" count={3} />
+          <EventBadge status="COMPLETED" count={7} />
+        </div>
+      </div>
+      
+      <div className="flex ph-10 gap-10 justify-center items-center">
         {/* Pagination 컴포넌트 사용 예시 */}
         <Pagination
           currentPage={currentPage}
@@ -89,6 +156,7 @@ export default function JunyeolPage() {
       </div>
 
     </div>
+
 
   );
 }
