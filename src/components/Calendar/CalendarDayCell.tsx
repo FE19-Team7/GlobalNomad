@@ -12,16 +12,21 @@ interface CalendarDayCellProps {
     className?: string;
 }
 
+const TRACKING_FIELDS: (keyof DaySummary)[] = [
+    'reserved',
+    'approved',
+    'completed',
+];
+
 export const CalendarDayCell = ({
     day,
     summary,
     className = '',
 }: CalendarDayCellProps) => {
     // 뱃지가 하나라도 있을 경우 알림 빨간 점 표시
-    const hasEvent =
-        summary.reserved > 0 ||
-        summary.approved > 0 ||
-        summary.completed > 0;
+    const hasEvent = TRACKING_FIELDS.some(
+        (field) => summary[field] > 0
+    );
 
     return (
         <div className={`flex flex-col gap-[5px] 
