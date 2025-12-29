@@ -9,6 +9,7 @@ import ReservationsDropdown, { ReservationItem } from '@/src/components/Dropdown
 import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
 import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
+import Search from "@/src/components/Search/search";
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
@@ -44,6 +45,11 @@ export default function JunyeolPage() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const TOTAL_PAGES = 12;
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = (value: string) => {
+    console.log('검색어:', value);
+  }
 
   return (
     <div className="flex flex-col ph-10 gap-20 justify-center items-center">
@@ -158,12 +164,21 @@ export default function JunyeolPage() {
 
       <div className="flex ph-10 gap-10 justify-center items-center">
         {/* SideMenu 컴포넌트 사용 예시 */}
-          <SideMenu
-            className="w-[290px]"
-            profileImageUrl={null}
-            onProfileEdit={() => {
-              console.log("프로필 편집");
-            }} />
+        <SideMenu
+          className="w-[290px]"
+          profileImageUrl={null}
+          onProfileEdit={() => {
+            console.log("프로필 편집");
+          }} />
+      </div>
+
+      <div className="flex ph-10 gap-10 justify-center items-center">
+          <Search
+            value={searchValue}
+            onChange={setSearchValue}
+            onSearch={handleSearch}
+            className="w-[660px]"
+          />
       </div>
 
     </div>
