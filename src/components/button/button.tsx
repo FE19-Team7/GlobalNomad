@@ -13,30 +13,34 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       fullWidth = false,
       disabled,
+      selected = false,
       children,
       className = '',
       ...props
     },
     ref
   ) => {
-    const baseStyles =
-      'rounded-xl transition-all duration-200 ease-in-out disabled:cursor-not-allowed cursor-pointer';
+    const isDisabled = disabled || loading;
 
+    const baseStyles =
+      'inline-flex items-center justify-center rounded-xl transition-all duration-200 ease-in-out disabled:cursor-not-allowed cursor-pointer font-bold';
+
+    // Variant별 스타일
     const variantStyles = {
-      primary:
-        loading || disabled
-          ? 'bg-grayscale-300 text-white'
-          : 'bg-primary-200 text-white hover:bg-primary-300 active:bg-primary-300',
-      secondary:
-        loading || disabled
-          ? 'bg-transparent border-2 border-grayscale-300 text-grayscale-300'
-          : 'bg-transparent border-2 border-primary-200 text-primary-200 hover:bg-primary-100 active:bg-primary-100',
+      primary: isDisabled
+        ? 'bg-gray-200 text-white'
+        : 'bg-primary-500 text-white hover:opacity-90 active:opacity-80',
+      secondary: isDisabled
+        ? 'bg-white border border-gray-200 text-gray-200'
+        : selected
+        ? 'bg-primary-500 text-white hover:opacity-90 active:opacity-80'
+        : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-25 active:bg-gray-50',
     };
 
     const sizeStyles = {
-      sm: 'px-6 py-3 text-md-medium min-w-[120px]',
-      md: 'px-8 py-3.5 text-lg-medium min-w-[160px]',
-      lg: 'px-10 py-4 text-lg-semibold min-w-full',
+      sm: 'px-6 h-[40px] text-[14px] min-w-[120px]',
+      md: 'px-8 h-[48px] text-[16px] min-w-[160px]',
+      lg: 'px-10 h-[56px] text-[18px] w-full',
     };
 
     const widthStyles = fullWidth ? 'w-full' : '';
@@ -45,7 +49,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (href) {
       const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        if (disabled || loading) {
+        if (isDisabled) {
           e.preventDefault();
           return;
         }
@@ -59,9 +63,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           href={href}
           className={combinedClassName}
           onClick={handleClick}
-          aria-disabled={disabled || loading}
+          aria-disabled={isDisabled}
         >
-          <span className="flex items-center justify-center gap-1">{children}</span>
+          {children}
         </Link>
       );
     }
@@ -69,7 +73,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        disabled={disabled || loading}
+        disabled={isDisabled}
         className={combinedClassName}
         {...props}
       >
