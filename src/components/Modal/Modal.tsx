@@ -8,6 +8,7 @@ interface ModalProps {
   header?: ReactNode;
   contents: ReactNode;
   footer?: ReactNode;
+  dim?: boolean;
 }
 
 export default function Modal({
@@ -16,13 +17,14 @@ export default function Modal({
   header,
   contents,
   footer,
+  dim = true,
 }: ModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* dim */}
-      <div className="absolute inset-0 bg-black/50" />
+      {dim && <div className="absolute inset-0 bg-black/50" />}
 
       {/* modal */}
       <div className="relative z-10 w-100 rounded-2xl bg-white shadow-lg overflow-hidden">

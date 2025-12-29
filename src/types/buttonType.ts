@@ -57,4 +57,6 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   href?: string; // 링크(페이지 이동 등)
 
   onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
+
+  selected?: boolean;
 }
