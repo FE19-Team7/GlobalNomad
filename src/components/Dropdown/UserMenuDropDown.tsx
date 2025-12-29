@@ -16,7 +16,7 @@ export default function UserMenuDropDownProps({
     const items: DropdownItem[] = [
         {
             type: 'link',
-            label: '마이 페이지',
+            label: '마이페이지',
             href: '/mypage',
         },
         {
@@ -30,11 +30,11 @@ export default function UserMenuDropDownProps({
         <Dropdown
             label={userName}
             items={items}
-            align="end"
+            align="center"
             showArrow={false}
             fullWidth={false}
             className={`[&>button>span]:hover:text-gray-700 ${className}`}
-            menuClassName="min-w-[0px]"
+            menuClassName="min-w-[100px] mt-1"
         />
     );
 }
