@@ -50,7 +50,6 @@ export default function LoggedInMenu({
       <UserMenuDropDown
         userName={nickname}
         onLogout={onLogout}
-        className="absolute  min-w-[120px]"
       />
     </div>
   );
