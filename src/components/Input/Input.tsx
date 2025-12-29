@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { InputProps } from '../../types/inputType';
+import EyeOpen from '@/assets/eye-open.svg';
+import EyeClosed from '@/assets/eye-closed.svg';
 
 export default function Input({
   label,
@@ -15,8 +16,9 @@ export default function Input({
   onBlur,
   disabled,
   type,
+  ref,
   ...props
-}: InputProps) {
+}: InputProps & { ref?: React.Ref<HTMLInputElement> }) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -83,6 +85,7 @@ export default function Input({
       {/* 인풋 wrapper */}
       <div className={wrapperStyles}>
         <input
+          ref={ref}
           type={type}
           className={`${inputStyles} ${className}`}
           onFocus={handleFocus}
@@ -100,12 +103,11 @@ export default function Input({
             tabIndex={-1}
             aria-label="toggle password visibility"
           >
-            <Image
-              src={showPassword ? '/assets/eye-open.svg' : '/assets/eye-closed.svg'}
-              alt=""
-              width={24}
-              height={24}
-            />
+            {showPassword ? (
+              <EyeOpen width={24} height={24} />
+            ) : (
+              <EyeClosed width={24} height={24} />
+            )}
           </button>
         )}
       </div>
