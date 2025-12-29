@@ -11,6 +11,8 @@ import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 import Search from "@/src/components/Search/search";
 import { getActivities } from '@/src/api';
+import { ActivitiesResponse } from '@/src/api/activities/activities.types';
+
 import Button from "@/src/components/button/button";
 
 // api 연동 전 목업 데이터
@@ -53,7 +55,7 @@ export default function JunyeolPage() {
     console.log('검색어:', value);
   }
 
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<ActivitiesResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleGetActivities = async () => {
@@ -78,7 +80,7 @@ export default function JunyeolPage() {
   return (
     <div className="flex flex-col gap-10 justify-center items-center">
       <h2 className="text-h2">Dropdown 컴포넌트</h2>
-      <div className="flex flex-col border border-primary-100 p-10 gap-10 justify-center items-center">
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
         {/* UserMenuDropDown 컴포넌트 사용 예시 */}
         {/* api 연동시 로그아웃 로직 구현 */}
         <UserMenuDropDown
@@ -111,7 +113,7 @@ export default function JunyeolPage() {
       </div>
 
       <h2 className="text-h2">CallendarDayCell, EventBadge 컴포넌트</h2>
-      <div className="flex flex-col border border-primary-100 p-10 gap-10 justify-center items-center">
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
         {/* CalendarDayCell 컴포넌트 사용 예시 */}
         {/* 달력 구조는 따로 컴포넌트로 만들어야 될듯 */}
         <div className="grid grid-cols-5 gap-4 h-[124px]">
@@ -167,7 +169,7 @@ export default function JunyeolPage() {
         </div>
       </div>
 
-      <div className="flex flex-col border border-primary-100 p-10 gap-10 justify-center items-center">
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
         {/* EventBadge 컴포넌트 사용 예시 */}
         <div className="flex items-center gap-4">
           <EventBadge status="RESERVED" count={1} />
@@ -177,7 +179,7 @@ export default function JunyeolPage() {
       </div>
 
       <h2 className="text-h2">Pagination 컴포넌트</h2>
-      <div className="flex flex-col border border-primary-100 p-10 gap-10 justify-center items-center">
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
         {/* Pagination 컴포넌트 사용 예시 */}
         <Pagination
           currentPage={currentPage}
@@ -188,7 +190,7 @@ export default function JunyeolPage() {
       </div>
 
       <h2 className="text-h2">SideMenu 컴포넌트</h2>
-      <div className="flex flex-col border border-primary-100 p-10 gap-10 justify-center items-center">
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
         {/* SideMenu 컴포넌트 사용 예시 */}
         <SideMenu
           className="w-[290px]"
@@ -199,7 +201,7 @@ export default function JunyeolPage() {
       </div>
 
       <h2 className="text-h2">Search 컴포넌트</h2>
-      <div className="flex flex-col border border-primary-100 p-10 gap-10 justify-center items-center">
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
         {/* Search 컴포넌트 사용 예시 */}
         <Search
           value={searchValue}
@@ -210,7 +212,7 @@ export default function JunyeolPage() {
       </div>
 
       <h2 className="text-h2">API 테스트</h2>
-      <div className="flex flex-col border border-primary-100 p-10 gap-10 justify-center items-center">
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
         {/* API 테스트 */}
         <div className="flex flex-col gap-4">
           <Button onClick={handleGetActivities}>Activities 테스트</Button>
@@ -218,7 +220,7 @@ export default function JunyeolPage() {
           {loading && <p>로딩중...</p>}
 
           {result && (
-            <pre className="mt-4 p-4 bg-black text-[#00ff00] max-h-100 overflow-auto">
+            <pre className="mt-4 p-4 bg-black text-[#00ff00] rounded-xl max-h-100 overflow-auto">
               {JSON.stringify(result, null, 2)}
             </pre>
           )}
