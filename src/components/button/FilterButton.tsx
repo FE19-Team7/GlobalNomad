@@ -13,7 +13,7 @@ export default function FilterButton ({
   children,
   ref,
   ...props
-}: FilterButtonProps & {ref?: React.Ref<HTMLButtonElement> }) {
+}: FilterButtonProps) {
   const baseStyles = `
     inline-flex
     items-center
@@ -23,7 +23,7 @@ export default function FilterButton ({
     rounded-full
     font-medium
     text-sm
-    transtion-all
+    transition-all
     duration-200
     cursor-pointer
     disabled:opacity-50
@@ -33,7 +33,7 @@ export default function FilterButton ({
   // 사이즈별 스타일
   const sizeStyles = {
     sm: 'px-6 py-3 text-sm',
-    md: 'px-8 py-3 text-md',
+    md: 'px-8 py-3 text-base',
     lg: 'px-10 py-3 text-lg',
   };
 

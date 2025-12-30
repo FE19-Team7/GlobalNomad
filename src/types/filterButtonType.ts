@@ -1,4 +1,6 @@
-export interface FilterButtonProps {
+import { ReactNode, MouseEventHandler, Ref, ButtonHTMLAttributes } from 'react';
+
+export interface FilterButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
   /** 
    *  버튼 라벨 텍스트
   */
@@ -12,7 +14,7 @@ export interface FilterButtonProps {
   /**
    * 클릭 핸들러
    */
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 
   /**
    * 비활성화 상태
@@ -29,4 +31,8 @@ export interface FilterButtonProps {
    * 추가 CSS 클래스
    */
   className?: string;
+
+  children?: ReactNode;
+
+  ref?: Ref<HTMLButtonElement>;
 }
