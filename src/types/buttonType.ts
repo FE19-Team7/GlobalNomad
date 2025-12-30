@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode, MouseEvent } from 'react';
 
 /**
  * 버튼 변형 타입
@@ -38,12 +38,6 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   loading?: boolean;
 
   /**
-   * 로딩 중 점 애니메이션 표시 여부
-   * @default true
-   */
-  showLoadingDots?: boolean;
-
-  /**
    * 전체 너비 사용 여부
    * @default false
    */
@@ -52,11 +46,19 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   /**
    * 버튼 내용
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   href?: string; // 링크(페이지 이동 등)
 
-  onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
-
   selected?: boolean;
+
+  /**
+   * 커스텀 베이스 스타일
+   */
+  baseStyles?: string;
+
+  /**
+   * 클릭 이벤트 핸들러 (button과 anchor 모두 지원)
+   */
+  onClick?: (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
 }

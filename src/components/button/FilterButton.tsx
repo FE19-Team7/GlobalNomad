@@ -1,57 +1,52 @@
 'use client';
 
 import React from 'react';
+import Button from './Button';
 import { FilterButtonProps } from '@/src/types/filterButtonType';
 
-export default function FilterButton ({
-  label,
-  selected = false,
-  onClick,
-  disabled = false,
-  size = 'md',
-  className = '',
-  children,
-  ref,
-  ...props
-}: FilterButtonProps) {
-  const baseStyles = `
-    inline-flex
-    items-center
-    gap-2
-    px-5
-    py-2.5
-    rounded-full
-    font-medium
-    text-sm
-    transition-all
-    duration-200
-    cursor-pointer
-    disabled:opacity-50
-    disabled:cursor-not-allowed
-  `;
+const FilterButton = React.forwardRef<HTMLButtonElement, FilterButtonProps>(
+  (
+    {
+      label,
+      icon,
+      selected = false,
+      size = 'md',
+      className = '',
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    // 반응형 사이즈
+    const sizeStyles = {
+      sm: 'px-3 sm:px-4 py-1.5 sm:py-2 text-xs gap-1.5 sm:gap-2',
+      md: 'px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm gap-2',
+      lg: 'px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base gap-2 sm:gap-2.5',
+    };
 
-  // 사이즈별 스타일
-  const sizeStyles = {
-    sm: 'px-6 py-3 text-sm',
-    md: 'px-8 py-3 text-base',
-    lg: 'px-10 py-3 text-lg',
-  };
+    const variantStyles = selected
+      ? 'bg-black text-white border-0'
+      : 'bg-white text-black border border-gray-200 hover:border-gray-300 active:border-gray-400';
 
-  // 선택 여부에 따른 스타일
-  const variantStyles = selected
-    ? 'bg-gray-900 text-white border-2 border-gray-900'
-    : 'bg-white text-gray-900 border-2 border-gray-200 hover:border-gray-300 active:border-gray-400';
+    // FilterButton만의 baseStyles 재정의
+    const filterBaseStyles = `inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 ease-in-out disabled:cursor-not-allowed cursor-pointer ${sizeStyles[size]} ${variantStyles}`;
 
     return (
-      <button
+      <Button
         ref={ref}
-        onClick={onClick}
-        disabled={disabled}
-        className={`${baseStyles} ${sizeStyles[size]} ${variantStyles} ${className}`}
+        baseStyles={filterBaseStyles}
+        className={className}
         {...props}
       >
-        {label}
-        {children}
-      </button>
-    );
-}
+        <>
+        {icon && <span className='flex-shrink-0'>{icon}</span>}
+        <span>{children || label}</span>
+        </>
+      </Button>
+    ); 
+  }
+);
+
+FilterButton.displayName = 'FilterButton';
+
+export default FilterButton;

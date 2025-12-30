@@ -1,25 +1,16 @@
-import { ReactNode, MouseEventHandler, Ref, ButtonHTMLAttributes } from 'react';
+import { ReactNode } from 'react';
+import { ButtonProps } from './buttonType';
 
-export interface FilterButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
+export interface FilterButtonProps extends Omit<ButtonProps, 'children' | 'size'> {
   /** 
    *  버튼 라벨 텍스트
   */
  label: string;
 
-  /**
-   * 선택 상태
-   */
-  selected?: boolean;
-
-  /**
-   * 클릭 핸들러
-   */
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-
-  /**
-   * 비활성화 상태
-   */
-  disabled?: boolean;
+ /**
+  * 아이콘 컴포넌트
+  */
+  icon?: ReactNode;
 
   /**
    * 버튼 사이즈
@@ -27,12 +18,6 @@ export interface FilterButtonProps extends ButtonHTMLAttributes<HTMLButtonElemen
    */
   size?: 'sm' | 'md' | 'lg';
 
-  /**
-   * 추가 CSS 클래스
-   */
-  className?: string;
-
   children?: ReactNode;
 
-  ref?: Ref<HTMLButtonElement>;
 }
