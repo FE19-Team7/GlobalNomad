@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Modal from "./Modal";
-import Button from "@/src/components/button/button";
+import Button from '@/src/components/Button/Button';
 import EmptyStar from "@/src/assets/icon_empty_star.svg";
 import FilledStar from "@/src/assets/icon_filled_star.svg";
 import DeleteIcon from "@/src/assets/icon_delete.svg";
