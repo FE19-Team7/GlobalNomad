@@ -10,10 +10,8 @@ import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
 import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 import Search from "@/src/components/Search/search";
-import { getActivities } from '@/src/api';
-import { ActivitiesResponse } from '@/src/api/activities/activities.types';
 
-import Button from "@/src/components/button/Button";
+import Button from "@/src/components/Button/Button";
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
@@ -54,28 +52,6 @@ export default function JunyeolPage() {
   const handleSearch = (value: string) => {
     console.log('검색어:', value);
   }
-
-  const [result, setResult] = useState<ActivitiesResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleGetActivities = async () => {
-    try {
-      setLoading(true);
-      const res = await getActivities({
-        method: 'offset',
-        page: 1,
-        size: 5,
-      });
-
-      console.log('Activities response:', res.data);
-      setResult(res.data);
-    } catch (e) {
-      console.error(e);
-      alert('API 에러 발생 (콘솔 확인)');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="flex flex-col gap-10 justify-center items-center">
@@ -209,22 +185,6 @@ export default function JunyeolPage() {
           onSearch={handleSearch}
           className="w-[660px]"
         />
-      </div>
-
-      <h2 className="text-h2">API 테스트</h2>
-      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
-        {/* API 테스트 */}
-        <div className="flex flex-col gap-4">
-          <Button onClick={handleGetActivities}>Activities 테스트</Button>
-
-          {loading && <p>로딩중...</p>}
-
-          {result && (
-            <pre className="mt-4 p-4 bg-black text-[#00ff00] rounded-xl max-h-100 overflow-auto">
-              {JSON.stringify(result, null, 2)}
-            </pre>
-          )}
-        </div>
       </div>
 
     </div>

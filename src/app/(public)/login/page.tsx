@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import LogoIcon from "@/src/assets/LoginLogo.svg";
 import KakaoIcon from "@/src/assets/icon_kakao.svg";
-import Button from "@/src/components/button/Button";
+import Button from "@/src/components/Button/Button";
 import Input from "@/src/components/Input/Input";
 import CompleteModal from "@/src/components/Modal/CompleteModal";
 import { useLoginForm } from "@/src/features/public/hooks/useLoginForm";
