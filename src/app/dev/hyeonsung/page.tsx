@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Button from '@/src/components/button/button';
+import Button from '@/src/components/button/Button';
 import FilterButton from '@/src/components/button/FilterButton';
 import Calendar from '@/src/components/Calendar/Calendar';
 import Input from '@/src/components/Input/Input';

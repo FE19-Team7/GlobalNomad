@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Button from '@/src/components/Button/Button';
+import Button from '@/src/components/button/Button';
 import { FilterButtonProps } from '@/src/types/filterButtonType';
 
 const FilterButton = React.forwardRef<HTMLButtonElement, FilterButtonProps>(

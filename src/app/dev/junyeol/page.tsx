@@ -13,7 +13,7 @@ import Search from "@/src/components/Search/search";
 import { getActivities } from '@/src/api';
 import { ActivitiesResponse } from '@/src/api/activities/activities.types';
 
-import Button from "@/src/components/button/button";
+import Button from "@/src/components/button/Button";
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [

@@ -3,7 +3,7 @@
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useCalendar } from '@/src/hooks/useCalendar';
-import Button from '@/src/components/button/button';
+import Button from '@/src/components/button/Button';
 
 const DAY_LIST = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
