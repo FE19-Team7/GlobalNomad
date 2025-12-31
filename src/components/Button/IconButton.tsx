@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Button from '@/src/components/button_test/Button';
+import Button from '@/src/components/Button/Button';
 import { IconButtonProps } from '@/src/types/iconButtonType';
 
 const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, IconButtonProps>(

@@ -2,7 +2,7 @@
 
 import Modal from "./Modal";
 import CancelIcon from "@/src/assets/warning.svg";
-import Button from '@/src/components/button_test/Button';
+import Button from '@/src/components/Button/Button';
 
 interface CancelModalProps {
   isOpen: boolean;
