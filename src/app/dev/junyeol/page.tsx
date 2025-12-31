@@ -10,7 +10,7 @@ import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
 import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 import Search from "@/src/components/Search/search";
-import Button from "@/src/components/Button/Button";
+import Button from '@/src/components/button_test/Button';
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
