@@ -23,7 +23,7 @@ export default function ActivityCard({
 }: ActivityCardProps) {
   return (
     <div className="w-[262px] max-w-[332px]">
-      <Link href={`/activities/${id}`} className="block group">
+      <Link href={`/activities/${id}`} className="inline-block group">
         <CardBase
           rounded="lg"
           boxShadow="md"
