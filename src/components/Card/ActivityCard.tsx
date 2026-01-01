@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import CardBase from '@/src/components/Card/CardBase';
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 
@@ -20,19 +21,22 @@ export default function ActivityCard({
   price = 0,
   bannerImageUrl,
 }: ActivityCardProps) {
-
   return (
-    <div className="w-[262px] w-max-[332px]">
+    <div className="w-[262px] max-w-[332px]">
       <Link href={`/activities/${id}`} className="block group">
-        <div className="overflow-hidden rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.2)]">
-          <div className="relative w-full h-[290px] bg-gray-100 overflow-hidden z-0">
+        <CardBase
+          rounded="lg"
+          boxShadow="md"
+        >
+          {/* 이미지 영역 */}
+          <div className="relative w-full h-[290px] bg-gray-100">
             {bannerImageUrl ? (
               <Image
                 src={bannerImageUrl}
                 alt={`${title} 체험 썸네일 이미지`}
+                fill
                 className="object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-105"
                 sizes="262px"
-                priority={false}
               />
             ) : (
               <DefaultThumbnail
@@ -42,21 +46,30 @@ export default function ActivityCard({
               />
             )}
           </div>
-          <div className="relative flex flex-col -mt-[60px] px-[20px] py-[30px] gap-[18px] bg-white rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)] z-10">
-            <div className="flex flex-col">
-              <div className="text-lg font-semibold leading-6">{title}</div>
-              <div className="flex gap-[2px]">
-                <StarIcon aria-label="별점" className="w-[20px] h-[20px]" />
-                <span className="ml-[3px] text-sm leading-6">{rating} </span>
-                <span className="text-gray-400 text-sm leading-6">({reviewCount.toLocaleString()})</span>
+
+          {/* 텍스트 영역 */}
+          <CardBase
+            boxShadow="sm"
+            rounded="lg"
+            overflow={false}
+            className="-mt-[60px] relative"
+          >
+            <div className="flex flex-col px-[30px] py-[20px] gap-[18px]">
+              <div className="flex flex-col">
+                <div className="text-lg font-semibold leading-6">{title}</div>
+                <div className="flex gap-[2px]">
+                  <StarIcon aria-label="별점" className="w-[20px] h-[20px]" />
+                  <span className="ml-[3px] text-sm leading-6">{rating}</span>
+                  <span className="text-gray-400 text-sm leading-6">({reviewCount.toLocaleString()})</span>
+                </div>
+              </div>
+              <div>
+                <span className="text-lg font-bold leading-6">₩ {price.toLocaleString()}</span>
+                <span className="text-gray-400 font-semibold text-base leading-6">{' '}/ 인</span>
               </div>
             </div>
-            <div>
-              <span className="text-lg font-bold leading-6">₩ {price.toLocaleString()}</span>
-              <span className="text-gray-400 font-semibold text-base leading-6">{' '}/ 인</span>
-            </div>
-          </div>
-        </div>
+          </CardBase>
+        </CardBase>
       </Link>
     </div>
   );
