@@ -34,13 +34,19 @@ const STATUS_CONFIG = {
   }
 } as const satisfies Record<ReservationStatus, StatusConfig>;
 
-interface StatusBadgeProps { status: ReservationStatus; }
+interface StatusBadgeProps {
+  status: ReservationStatus;
+  className?: string;
+}
 
-export default function StatusBadge({ status }: StatusBadgeProps) {
+export default function StatusBadge({
+  status,
+  className = '',
+}: StatusBadgeProps) {
   const config = STATUS_CONFIG[status];
 
   return (
-    <div className={`inline-flex items-center justify-center px-2 py-1 gap-2 rounded-full ${config.bgColor}`}>
+    <div className={`inline-flex items-center justify-center w-[63px] h-6 px-2 py-1 gap-2 rounded-full ${config.bgColor} ${className}`}>
       <span className={`${config.textColor} text-xs font-bold`}>{config.label}</span>
     </div>
   );
