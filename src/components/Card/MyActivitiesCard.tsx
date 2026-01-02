@@ -43,9 +43,6 @@ export default function MyActivitiesCard({
   return (
     <Link href={`/activities/${id}`} className="inline-block group">
       <CardBase
-        rounded="lg"
-        boxShadow="md"
-        overflow={false}
         className="max-width-[640px] min-w-[327px] max-width-[202px] min-h-[159px]"
       >
         <div className="flex p-[30px] justify-between">

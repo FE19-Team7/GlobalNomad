@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import CardBase from '@/src/components/Card/CardBase';
-import StatusBadge from '@/src/components/Card/StatusBadge';
+import StatusBadge, { type ReservationStatus } from '@/src/components/Card/StatusBadge';
 
 interface ReservationCardProps {
   id: number;
@@ -14,7 +14,7 @@ interface ReservationCardProps {
     title: string;
     bannerImageUrl?: string;
   };
-  status?: string;
+  status?: ReservationStatus;
   totalPrice: number;
   headCount: number;
   date: string;
@@ -27,7 +27,7 @@ interface ReservationCardProps {
 export default function ReservationCard({
   id,
   activity,
-  status,
+  status = 'confirmed',
   totalPrice = 0,
   headCount = 0,
   date,
@@ -52,18 +52,21 @@ export default function ReservationCard({
 
   return (
     <CardBase
-      width="w-[600px]"
+      width="w-[640px]"
       height="h-[200px]"
-      rounded="lg"
-      boxShadow="md"
-      overflow={false}
+      className="group"
     >
-      <div className="flex justify-between overflow-hidden rounded-[32px] shadow-[0px_4px_24px_0px_rgba(156,180,202,0.20)]">
-        <div className="w-[423px] grid content-between -mr-[26px] px-[40px] py-[30px] bg-white rounded-[32px] shadow-[0px_-8px_20px_0px_rgba(0,0,0,0.05)] z-10">
+      <div className="flex justify-between">
+        <CardBase
+          width="w-[466px]"
+          height={false}
+          boxShadow='sm'
+          className="flex flex-col justify-between -mr-[26px] px-[40px] py-[30px] z-10">
+
           {/* 텍스트 영역 */}
-          <div className="flex flex-col justify-between">
-            <StatusBadge status='confirmed' className="mb-[12px]" />
-            <Link href={`/activities/${activity.id}`} className="block group">
+          <div className="flex flex-col">
+            <StatusBadge status={status} className="mb-[12px]" />
+            <Link href={`/activities/${activity.id}`} className="block">
               <div className="flex flex-col">
                 <div className="text-lg font-semibold leading-6">{activity.title}</div>
                 <div className="flex">
@@ -74,6 +77,8 @@ export default function ReservationCard({
               </div>
             </Link>
           </div>
+
+          {/* 가격·버튼 영역 */}
           <div className="h-[29px] flex items-center justify-between">
             <div>
               <span className="mr-[4px] text-lg font-bold leading-6">₩ {totalPrice.toLocaleString()}</span>
@@ -82,7 +87,7 @@ export default function ReservationCard({
 
             {/* 예약 상태별 버튼 분기 */}
             {/* TODO: Button 컴포넌트로 교체 예정 */}
-            <div className="flex justify-end items-center gap-[8px]">
+            <div className="flex justify-end items-center gap-2">
               {status === 'confirmed' && (
                 <>
                   <button
@@ -106,16 +111,18 @@ export default function ReservationCard({
               )}
             </div>
           </div>
-        </div>
-        <Link href={`/activities/${activity.id}`} className="block group">
-          <div className="w-[200px] h-[200px] bg-gray-100 overflow-hidden z-0">
+        </CardBase>
+
+        {/* 이미지 영역 */}
+        <Link href={`/activities/${activity.id}`} className="block">
+          <div className="w-[200px] h-[200px] bg-gray-100 relative overflow-hidden">
             {activity.bannerImageUrl ? (
               <Image
                 src={activity.bannerImageUrl}
                 alt={`${activity.title} 체험 썸네일 이미지`}
+                fill
                 className="object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-105"
-                sizes="262px"
-                priority={false}
+                sizes="200px"
               />
             ) : (
               <DefaultThumbnail
