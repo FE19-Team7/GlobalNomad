@@ -22,12 +22,13 @@ export default function ActivityCard({
   bannerImageUrl,
 }: ActivityCardProps) {
   return (
-    <div className="w-[262px] max-w-[332px]">
-      <Link href={`/activities/${id}`} className="inline-block group">
+    <div className="max-w-[332px]">
+      <Link href={`/activities/${id}`} className="block group">
         <CardBase
-          rounded="lg"
-          boxShadow="md"
+          width="w-full"
+          height="h-auto"
         >
+
           {/* 이미지 영역 */}
           <div className="relative w-full h-[290px] bg-gray-100">
             {bannerImageUrl ? (

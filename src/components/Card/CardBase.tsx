@@ -27,6 +27,37 @@ interface CardBaseProps {
   className?: string;
 }
 
+/**
+ * 카드 베이스 컴포넌트
+ * 
+ * 카드의 기본 틀(둥근 모서리, 그림자, overflow)을 제공합니다.
+ * 
+ * @param width - 너비 (기본: 'w-full', false 시 너비 없음)
+ * @param height - 높이 (기본: 'h-auto', false 시 높이 없음)
+ * @param rounded - 둥근 모서리 크기 (기본: 'lg')
+ * @param boxShadow - 그림자 크기 (기본: 'md')
+ * @param overflow - overflow-hidden 적용 여부 (기본: true)
+ * @param className - 추가 Tailwind 클래스 (width/height와 중복 주의)
+ * @param children - 카드 내용
+ * 
+ * @example
+ * // 기본 사용
+ * <CardBase rounded="lg" boxShadow="md">
+ *   <div>내용</div>
+ * </CardBase>
+ * 
+ * @example
+ * // 고정 크기
+ * <CardBase width="w-[640px]" height="h-[200px]">
+ *   <div>내용</div>
+ * </CardBase>
+ * 
+ * @example
+ * // 반응형 (기본값 제거 후 className으로 제어)
+ * <CardBase width={false} height={false} className="w-full max-w-[640px]">
+ *   <div>내용</div>
+ * </CardBase>
+ */
 export default function CardBase({
   width,
   height,
@@ -37,7 +68,7 @@ export default function CardBase({
   className = '',
 }: CardBaseProps) {
   const widthClass = width !== false ? (width || 'w-full') : '';
-  const heightClass = height !== false ? (height || 'h-full') : '';
+  const heightClass = height !== false ? (height || 'h-auto') : '';
   const shadowClass = boxShadow !== 'none' ? SHADOW[boxShadow] : '';
   const overflowClass = overflow ? 'overflow-hidden' : '';
 

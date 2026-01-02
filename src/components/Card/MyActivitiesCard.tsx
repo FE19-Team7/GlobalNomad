@@ -41,12 +41,14 @@ export default function MyActivitiesCard({
   }
 
   return (
-    <Link href={`/activities/${id}`} className="inline-block group">
+    <Link href={`/activities/${id}`} className="w-full block group">
       <CardBase
-        className="max-width-[640px] min-w-[327px] max-width-[202px] min-h-[159px]"
+        height={false}
+        className="max-w-[640px] min-h-[200px]"
       >
-        <div className="flex p-[30px] justify-between">
-          <div className="w-76 flex flex-col gap-5">
+        <div className="flex p-[30px] justify-between gap-[30px]">
+          <div className="max-w-[550px] flex flex-1 min-w-0 flex-col gap-5">
+
             {/* 텍스트 영역 */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-2">
@@ -88,7 +90,7 @@ export default function MyActivitiesCard({
           </div>
 
           {/* 이미지 영역 */}
-          <div className="w-[142px] h-[142px] relative rounded-[32px] overflow-hidden bg-gray-100">
+          <div className="w-[142px] h-[142px] flex-shrink-0 relative rounded-[32px] overflow-hidden bg-gray-100">
             {bannerImageUrl ? (
               <Image
                 src={bannerImageUrl}

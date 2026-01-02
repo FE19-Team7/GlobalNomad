@@ -51,14 +51,10 @@ export default function ReservationCard({
   }
 
   return (
-    <CardBase
-      width="w-[640px]"
-      height="h-[200px]"
-      className="group"
-    >
+    <CardBase className="max-w-[640px] group">
       <div className="flex justify-between">
         <CardBase
-          width="w-[466px]"
+          width="flex-1"
           height={false}
           boxShadow='sm'
           className="flex flex-col justify-between -mr-[26px] px-[40px] py-[30px] z-10">
