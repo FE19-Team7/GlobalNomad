@@ -1,16 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LogoIcon from "@/src/assets/LoginLogo.svg";
 import KakaoIcon from "@/src/assets/icon_kakao.svg";
 import Button from "@/src/components/Button/Button";
 import Input from "@/src/components/Input/Input";
+import CompleteModal from "@/src/components/Modal/CompleteModal";
 import { useSignupForm } from "@/src/features/public/hooks/useSignupForm";
+import { useSignupSubmit } from "@/src/features/public/hooks/useSignupSubmit";
 
 export default function SignupPage() {
+  const router = useRouter();
   const signupForm = useSignupForm();
+  const { submitSignup, isLoading, signupError } = useSignupSubmit();
   const [showPassword, setShowPassword] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     email,
@@ -35,6 +41,25 @@ export default function SignupPage() {
     isFormValid,
   } = signupForm;
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!isFormValid || isLoading) return;
+
+    const ok = await submitSignup({
+      email,
+      password,
+      nickname,
+    });
+
+    if (ok) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto flex min-h-screen max-w-105 flex-col items-center justify-center px-4">
@@ -42,7 +67,10 @@ export default function SignupPage() {
           <LogoIcon />
         </Link>
 
-        <form className="w-full flex flex-col pt-5 gap-3">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full flex flex-col pt-5 gap-3"
+        >
           <div className="flex flex-col pb-7.5">
             <Input
               label="이메일"
@@ -114,6 +142,24 @@ export default function SignupPage() {
           </p>
         </form>
       </div>
+      {isModalOpen && !signupError && (
+        <CompleteModal
+          isOpen
+          message="가입이 완료되었습니다."
+          onClose={() => {
+            setIsModalOpen(false);
+            router.push("/login");
+          }}
+        />
+      )}
+
+      {isModalOpen && signupError && (
+        <CompleteModal
+          isOpen
+          message={signupError}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

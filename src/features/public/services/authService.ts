@@ -16,4 +16,24 @@ export const authService = {
 
     return;
   },
+  signup: async (signupData: {
+    email: string;
+    password: string;
+    nickname: string;
+  }) => {
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(signupData),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message ?? "SIGNUP_FAILED");
+    }
+
+    return;
+  },
 };
