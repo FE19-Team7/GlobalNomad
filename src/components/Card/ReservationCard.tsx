@@ -64,11 +64,11 @@ export default function ReservationCard({
             <StatusBadge status={status} className="mb-[12px]" />
             <Link href={`/activities/${activity.id}`} className="block">
               <div className="flex flex-col">
-                <div className="text-lg font-semibold leading-6">{activity.title}</div>
+                <div className="text-h4 font-bold leading-6">{activity.title}</div>
                 <div className="flex">
-                  <span className="text-gray-500 text-sm leading-6">{date}</span>
-                  <span className="mx-[8px] text-gray-500 text-sm leading-6">·</span>
-                  <span className="text-gray-500 text-sm leading-6">{startTime} - {endTime}</span>
+                  <span className="text-gray-500 text-body leading-6">{date}</span>
+                  <span className="mx-[8px] text-gray-500 text-body leading-6">·</span>
+                  <span className="text-gray-500 text-body leading-6">{startTime} - {endTime}</span>
                 </div>
               </div>
             </Link>
@@ -77,8 +77,8 @@ export default function ReservationCard({
           {/* 가격·버튼 영역 */}
           <div className="h-[29px] flex items-center justify-between">
             <div>
-              <span className="mr-[4px] text-lg font-bold leading-6">₩ {totalPrice.toLocaleString()}</span>
-              <span className="text-gray-400 text-base leading-6">/{' '}{headCount}명</span>
+              <span className="mr-[4px] text-h4 font-bold leading-6">₩ {totalPrice.toLocaleString()}</span>
+              <span className="text-gray-400 text-body-lg leading-6">/{' '}{headCount}명</span>
             </div>
 
             {/* 예약 상태별 버튼 분기 */}
@@ -88,12 +88,12 @@ export default function ReservationCard({
                 <>
                   <button
                     onClick={handleEdit}
-                    className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-sm rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150">
+                    className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150">
                     예약 변경
                   </button>
                   <button
                     onClick={handleCancel}
-                    className="px-[10px] py-[6px] bg-gray-100 text-sm rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150">
+                    className="px-[10px] py-[6px] bg-gray-100 text-body rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150">
                     예약 취소
                   </button>
                 </>
@@ -101,7 +101,7 @@ export default function ReservationCard({
               {status === 'completed' && (
                 <button
                   onClick={handleReview}
-                  className="px-[10px] py-[6px] bg-primary-500 text-sm text-white rounded-lg cursor-pointer hover:bg-blue-500 transition-colors duration-150">
+                  className="px-[10px] py-[6px] bg-primary-500 text-body text-white rounded-lg cursor-pointer hover:bg-blue-500 transition-colors duration-150">
                   후기 작성
                 </button>
               )}

@@ -52,16 +52,16 @@ export default function MyActivitiesCard({
             {/* 텍스트 영역 */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-2">
-                <div className="text-lg font-semibold leading-6">{title}</div>
+                <div className="text-h4 font-bold leading-6">{title}</div>
                 <div className="flex gap-[2px]">
                   <StarIcon aria-label="별점" className="w-[20px] h-[20px]" />
-                  <span className="ml-[3px] text-sm leading-6">{rating}</span>
-                  <span className="text-gray-400 text-sm leading-6">({reviewCount.toLocaleString()})</span>
+                  <span className="ml-[3px] text-body leading-6">{rating}</span>
+                  <span className="text-gray-400 text-body leading-6">({reviewCount.toLocaleString()})</span>
                 </div>
               </div>
               <div>
-                <span className="mr-[4px] text-lg font-bold leading-6">₩ {price.toLocaleString()}</span>
-                <span className="text-gray-400 text-base leading-6">/{' '}인</span>
+                <span className="mr-[4px] text-h4 font-bold leading-6">₩ {price.toLocaleString()}</span>
+                <span className="text-gray-400 text-body-lg leading-6">/{' '}인</span>
               </div>
             </div>
 
@@ -73,7 +73,7 @@ export default function MyActivitiesCard({
                   e.preventDefault();
                   handleEdit();
                 }}
-                className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-sm text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150"
+                className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150"
               >
                 수정하기
               </button>
@@ -82,7 +82,7 @@ export default function MyActivitiesCard({
                   e.preventDefault();
                   handleDelete();
                 }}
-                className="px-[10px] py-[6px] bg-gray-100 text-sm text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
+                className="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
               >
                 삭제하기
               </button>

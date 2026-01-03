@@ -57,16 +57,16 @@ export default function ActivityCard({
           >
             <div className="flex flex-col px-[30px] py-[20px] gap-[18px]">
               <div className="flex flex-col">
-                <div className="text-lg font-semibold leading-6">{title}</div>
+                <div className="text-h4 font-bold leading-6">{title}</div>
                 <div className="flex gap-[2px]">
                   <StarIcon aria-label="별점" className="w-[20px] h-[20px]" />
-                  <span className="ml-[3px] text-sm leading-6">{rating}</span>
-                  <span className="text-gray-400 text-sm leading-6">({reviewCount.toLocaleString()})</span>
+                  <span className="ml-[3px] text-body leading-6">{rating}</span>
+                  <span className="text-gray-400 text-body leading-6">({reviewCount.toLocaleString()})</span>
                 </div>
               </div>
               <div>
-                <span className="text-lg font-bold leading-6">₩ {price.toLocaleString()}</span>
-                <span className="text-gray-400 font-semibold text-base leading-6">{' '}/ 인</span>
+                <span className="text-h4 font-bold leading-6">₩ {price.toLocaleString()}</span>
+                <span className="text-gray-400 text-body-lg leading-6">{' '}/ 인</span>
               </div>
             </div>
           </CardBase>
