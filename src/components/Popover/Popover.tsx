@@ -1,7 +1,7 @@
 "use client";
 
 import { RefObject, useEffect, useRef, useState } from "react";
-import StatusBadge from "@/src/components/StatusBadge/StatusBadge";
+import StatusBadge from "@/src/components/Card/StatusBadge";
 import DeleteIcon from "@/src/assets/icon_delete.svg";
 
 type TabKey = "requested" | "approved" | "declined";
@@ -137,11 +137,10 @@ export default function ReservationPopover({
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`pb-2 ${
-                activeTab === tab
+              className={`pb-2 ${activeTab === tab
                   ? "border-b-2 border-primary-500 text-primary-500 font-semibold"
                   : "text-gray-400"
-              }`}
+                }`}
             >
               {TAB_LABEL[tab]}
             </button>
