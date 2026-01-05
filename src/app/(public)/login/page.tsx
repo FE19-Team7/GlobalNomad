@@ -1,15 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LogoIcon from "@/src/assets/LoginLogo.svg";
 import KakaoIcon from "@/src/assets/icon_kakao.svg";
-import Button from "@/src/components/button/button";
+import Button from '@/src/components/Button/Button';
 import Input from "@/src/components/Input/Input";
 import CompleteModal from "@/src/components/Modal/CompleteModal";
 import { useLoginForm } from "@/src/features/public/hooks/useLoginForm";
+import { useLoginSubmit } from "@/src/features/public/hooks/useLoginSubmit";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const loginForm = useLoginForm();
+  const { submitLogin } = useLoginSubmit();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -17,21 +22,26 @@ export default function LoginPage() {
     emailError,
     handleEmailChange,
     handleEmailBlur,
-
     password,
     passwordError,
     handlePasswordChange,
     handlePasswordBlur,
-
     isFormValid,
-  } = useLoginForm();
+  } = loginForm;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!isFormValid) return;
 
-    setIsModalOpen(true); // 임시 UI 확인용 -> API 연동 로직 구현 예정
+    const ok = await submitLogin(email, password);
+
+    if (!ok) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    router.push("/");
   };
 
   return (

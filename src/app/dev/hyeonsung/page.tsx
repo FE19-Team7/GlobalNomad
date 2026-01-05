@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Button from '@/src/components/button/button';
-import FilterButton from '@/src/components/button/FilterButton';
+import Button from '@/src/components/Button/Button';
+import FilterButton from '@/src/components/Button/FilterButton';
 import Calendar from '@/src/components/Calendar/Calendar';
 import Input from '@/src/components/Input/Input';
 

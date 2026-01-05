@@ -12,6 +12,7 @@ import { Pagination } from '@/src/components/Pagination/Pagination';
 import Search from "@/src/components/Search/search";
 import Input from '@/src/components/Input/Input';
 
+
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
   {
