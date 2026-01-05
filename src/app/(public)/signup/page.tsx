@@ -15,7 +15,6 @@ export default function SignupPage() {
   const router = useRouter();
   const signupForm = useSignupForm();
   const { submitSignup, isLoading, signupError } = useSignupSubmit();
-  const [showPassword, setShowPassword] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -92,18 +91,17 @@ export default function SignupPage() {
 
             <Input
               label="비밀번호"
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="8자 이상 입력해 주세요"
               value={password}
               onChange={handlePasswordChange}
               onBlur={handlePasswordBlur}
               error={passwordError || undefined}
-              onTogglePassword={() => setShowPassword((prev) => !prev)}
             />
 
             <Input
               label="비밀번호 확인"
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="비밀번호를 한 번 더 입력해 주세요"
               value={passwordConfirm}
               onChange={handlePasswordConfirmChange}
