@@ -70,7 +70,7 @@ export default function SignupPage() {
           onSubmit={handleSubmit}
           className="w-full flex flex-col pt-5 gap-3"
         >
-          <div className="flex flex-col pb-7.5">
+          <div className="flex flex-col gap-5">
             <Input
               label="이메일"
               placeholder="이메일을 입력해 주세요"
