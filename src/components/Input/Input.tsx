@@ -54,7 +54,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               ${!disabled && error && 'border-red-500'}
               ${!disabled && !error && focused && 'border-primary-500'}
               ${!disabled && !error && !focused && 'border-gray-100'}
-              ${isPassword ? 'pr-[52px]' : ''}
               ${className}`}
             {...props}
           />

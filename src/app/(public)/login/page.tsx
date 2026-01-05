@@ -10,7 +10,6 @@ import CompleteModal from "@/src/components/Modal/CompleteModal";
 import { useLoginForm } from "@/src/features/public/hooks/useLoginForm";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -58,13 +57,12 @@ export default function LoginPage() {
 
             <Input
               label="비밀번호"
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="비밀번호를 입력해 주세요"
               value={password}
               onChange={handlePasswordChange}
               onBlur={handlePasswordBlur}
               error={passwordError || undefined}
-              onTogglePassword={() => setShowPassword((prev) => !prev)}
             />
           </div>
 

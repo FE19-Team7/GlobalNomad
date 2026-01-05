@@ -186,8 +186,8 @@ export default function JunyeolPage() {
         />
       </div>
 
-      <h2 className="text-h2">Input 테스트</h2>
-      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
+      <h2 className="text-h2">Input 컴포넌트</h2>
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center w-100">
         {/* Input 컴포넌트 사용 예시 */}
         <Input label="Email" placeholder="email@example.com" />
         <Input label="Password" type="password" placeholder="••••••••" />
