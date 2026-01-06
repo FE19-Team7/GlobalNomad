@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-
+import Image from 'next/image'
 import DefaultProfile from '@/assets/default profile-lg.svg'
 import EditButtonIcon from '@/assets/edit_button.svg'
 
