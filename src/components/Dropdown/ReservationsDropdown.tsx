@@ -1,6 +1,6 @@
 'use client';
 
-import Dropdown from '@/src/components/Dropdown/base/Dropdown';
+import Dropdown from '@/src/components/Dropdown/Dropdown';
 
 export type ReservationItem = {
   label: string;

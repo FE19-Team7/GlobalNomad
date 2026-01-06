@@ -1,6 +1,6 @@
 'use client';
 
-import Dropdown, { DropdownItem } from "@/src/components/Dropdown/base/Dropdown";
+import Dropdown, { DropdownItem } from "@/src/components/Dropdown/Dropdown";
 
 export type PriceSortValue = 'price_asc' | 'price_desc';
 
