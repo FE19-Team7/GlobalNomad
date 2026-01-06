@@ -1,8 +1,9 @@
 "use client";
 
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState, useMemo } from "react";
 import StatusBadge from "@/src/components/Card/StatusBadge";
 import DeleteIcon from "@/src/assets/icon_delete.svg";
+import ReservationsTimeDropdown from "@/src/components/Dropdown/ReservationsTimeDropdown";
 
 type TabKey = "requested" | "approved" | "declined";
 
@@ -55,9 +56,30 @@ export default function ReservationPopover({
   const [reservations, setReservations] =
     useState<Reservation[]>(INITIAL_RESERVATIONS);
 
-  const timeOptions = Array.from(new Set(reservations.map((r) => r.time)));
+  const timeOptions = useMemo(() => {
+  const timeStrings = Array.from(
+    new Set(reservations.map((r) => r.time))
+  )
 
-  const [selectedTime, setSelectedTime] = useState(timeOptions[0] ?? "");
+  return timeStrings.map((time, index) => {
+    const [startTime, endTime] = time.split('-').map(t => t.trim())
+
+    return {
+      id: index,  // api 붙이면 수정
+      startTime,
+      endTime,
+      fullTime: time,
+    }
+  })
+}, [reservations])
+
+const [selectedTimeId, setSelectedTimeId] = useState<number>(() => {
+  return timeOptions[0]?.id ?? 0
+})
+
+const selectedTime = useMemo(() => {
+  return timeOptions.find(o => o.id === selectedTimeId)?.fullTime ?? ''
+}, [timeOptions, selectedTimeId])
 
   useEffect(() => {
     if (!isOpen || !anchorRef.current) return;
@@ -138,8 +160,8 @@ export default function ReservationPopover({
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`pb-2 ${activeTab === tab
-                  ? "border-b-2 border-primary-500 text-primary-500 font-semibold"
-                  : "text-gray-400"
+                ? "border-b-2 border-primary-500 text-primary-500 font-semibold"
+                : "text-gray-400"
                 }`}
             >
               {TAB_LABEL[tab]}
@@ -150,17 +172,11 @@ export default function ReservationPopover({
         {/* 예약 시간 */}
         <section>
           <h3 className="text-m font-bold mb-2">예약 시간</h3>
-          <select
-            value={selectedTime}
-            onChange={(e) => setSelectedTime(e.target.value)}
-            className="w-full rounded-lg border border-gray-100 px-3 py-2 text-sm"
-          >
-            {timeOptions.map((time) => (
-              <option key={time} value={time}>
-                {time}
-              </option>
-            ))}
-          </select>
+          <ReservationsTimeDropdown
+            times={timeOptions}
+            value={selectedTimeId}
+            onChange={setSelectedTimeId}
+          />
         </section>
 
         {/* 예약 내역 */}
