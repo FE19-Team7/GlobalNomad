@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CardBase from '@/src/components/Card/CardBase';
+import Button from '@/src/components/Button/Button'
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 
@@ -67,19 +68,18 @@ export default function MyActivitiesCard({
 
         {/* 버튼 영역 */}
         <div className="flex items-center gap-[8px]">
-          {/* TODO: 버튼 컴포넌트로 교체 예정 */}
-          <button
+          <Button
             onClick={handleEdit}
-            className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150"
+            baseStyles="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150"
           >
             수정하기
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleDelete}
-            className="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
+            baseStyles="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
           >
             삭제하기
-          </button>
+          </Button>
         </div>
       </div>
 

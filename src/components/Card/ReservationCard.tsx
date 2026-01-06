@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import CardBase from '@/src/components/Card/CardBase';
 import StatusBadge, { type ReservationStatus } from '@/src/components/Card/StatusBadge';
+import Button from '@/src/components/Button/Button';
+import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 
 interface ReservationCardProps {
   id: number;
@@ -82,28 +83,30 @@ export default function ReservationCard({
             </div>
 
             {/* 예약 상태별 버튼 분기 */}
-            {/* TODO: Button 컴포넌트로 교체 예정 */}
             <div className="flex justify-end items-center gap-2">
               {status === 'confirmed' && (
                 <>
-                  <button
+                  <Button
                     onClick={handleEdit}
-                    className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150">
+                    baseStyles="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150"
+                  >
                     예약 변경
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={handleCancel}
-                    className="px-[10px] py-[6px] bg-gray-100 text-body rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150">
+                    baseStyles="px-[10px] py-[6px] bg-gray-100 text-body rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
+                  >
                     예약 취소
-                  </button>
+                  </Button>
                 </>
               )}
               {status === 'completed' && (
-                <button
+                <Button
                   onClick={handleReview}
-                  className="px-[10px] py-[6px] bg-primary-500 text-body text-white rounded-lg cursor-pointer hover:bg-blue-500 transition-colors duration-150">
+                  baseStyles="px-[10px] py-[6px] bg-primary-500 text-body text-white rounded-lg cursor-pointer hover:bg-blue-500 transition-colors duration-150"
+                >
                   후기 작성
-                </button>
+                </Button>
               )}
             </div>
           </div>
