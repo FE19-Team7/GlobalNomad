@@ -10,10 +10,8 @@ import Input from '@/src/components/Input/Input';
 export default function Home() {
   const [searchValue, setSearchValue] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [errorPassword, setErrorPassword] = useState('');
-  const [showErrorPassword, setShowErrorPassword] = useState(false);
-  
+
   // 필터 버튼 상태
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
@@ -75,7 +73,7 @@ export default function Home() {
         {/* 필터 버튼 테스트 섹션 */}
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-4">필터 버튼 테스트</h2>
-          
+
           <div className="mb-6">
             <div className="flex flex-wrap gap-3">
               <FilterButton
@@ -142,10 +140,10 @@ export default function Home() {
           <h2 className="text-xl font-bold text-gray-900 mb-4">Input Components</h2>
           <div className="flex flex-col gap-6 max-w-2xl">
             {/* 1. 기본 상태 (포커스 아웃) - gray-200 */}
-            <Input 
-              label="기본 인풋" 
-              placeholder="text" 
-              fullWidth 
+            <Input
+              label="기본 인풋"
+              placeholder="text"
+              fullWidth
             />
 
             {/* 2. 포커스 상태 (타이핑 가능) - primary-500 */}
@@ -158,44 +156,40 @@ export default function Home() {
             />
 
             {/* 3. 에러 상태 - red-500 */}
-            <Input 
-              label="에러 인풋" 
-              placeholder="text" 
-              error="에러 메시지입니다" 
-              fullWidth 
+            <Input
+              label="에러 인풋"
+              placeholder="text"
+              error="에러 메시지입니다"
+              fullWidth
             />
 
             {/* 4. 비밀번호 인풋 (눈 아이콘 있음) */}
             <Input
               label="비밀번호"
-              type={showPassword ? 'text' : 'password'}
+              type="password"
               placeholder="비밀번호를 입력하세요"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              showPassword={showPassword}
-              onTogglePassword={() => setShowPassword(!showPassword)}
               fullWidth
             />
 
             {/* 5. 비밀번호 에러 상태 */}
             <Input
               label="비밀번호 에러"
-              type={showErrorPassword ? 'text' : 'password'}
+              type="password"
               placeholder="비밀번호를 입력하세요"
               value={errorPassword}
               onChange={(e) => setErrorPassword(e.target.value)}
               error="비밀번호를 8자 이상 입력해주세요"
-              showPassword={showErrorPassword}
-              onTogglePassword={() => setShowErrorPassword(!showErrorPassword)}
               fullWidth
             />
 
             {/* 6. 비활성화 */}
-            <Input 
-              label="비활성화" 
-              placeholder="비활성화된 인풋" 
-              disabled 
-              fullWidth 
+            <Input
+              label="비활성화"
+              placeholder="비활성화된 인풋"
+              disabled
+              fullWidth
             />
           </div>
         </section>

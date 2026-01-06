@@ -14,7 +14,6 @@ import { useLoginSubmit } from "@/src/features/public/hooks/useLoginSubmit";
 export default function LoginPage() {
   const router = useRouter();
   const loginForm = useLoginForm();
-  const [showPassword, setShowPassword] = useState(false);
   const { submitLogin } = useLoginSubmit();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -56,7 +55,7 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="w-full flex flex-col pt-10 gap-3"
         >
-          <div className="flex flex-col pb-7.5">
+          <div className="flex flex-col gap-5">
             <Input
               label="이메일"
               placeholder="이메일을 입력해 주세요"
@@ -68,13 +67,12 @@ export default function LoginPage() {
 
             <Input
               label="비밀번호"
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="비밀번호를 입력해 주세요"
               value={password}
               onChange={handlePasswordChange}
               onBlur={handlePasswordBlur}
               error={passwordError || undefined}
-              onTogglePassword={() => setShowPassword((prev) => !prev)}
             />
           </div>
 
