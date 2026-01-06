@@ -29,9 +29,9 @@ export default function ReservationsDropdown({
       onChange={onChange}
       fullWidth
       className={`border border-gray-100 rounded-[16px] ${className}`}
-      menuClassName="w-full mt-0.5 top-full"
-      itemClassName="text-left"
-      buttonClassName="p-[10px]"
+      buttonClassName="p-[10px] rounded-[16px]"
+      menuClassName="w-full mt-3 rounded-[8px] p-2"
+      itemClassName="text-left rounded-[12px]"
     />
   );
 }
