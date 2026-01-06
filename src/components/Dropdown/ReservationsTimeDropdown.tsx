@@ -1,6 +1,6 @@
 'use client'
 
-import Dropdown, { DropdownItem } from '@/src/components/Dropdown/Dropdown'
+import Dropdown, { DropdownItem } from '@/src/components/Dropdown/Base/Dropdown'
 
 interface TimeOption {
     id: number;
