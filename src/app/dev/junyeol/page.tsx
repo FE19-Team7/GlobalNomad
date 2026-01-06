@@ -9,7 +9,7 @@ import ReservationsDropdown, { ReservationItem } from '@/src/components/Dropdown
 import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
 import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
-import Search from "@/src/components/SearchTest/Search";
+import Search from "@/src/components/Search/Search";
 import ReservationsTimeDropdown from '@/src/components/Dropdown/ReservationsTimeDropdown';
 import Popover from '@/src/components/Popover/Popover'
 import Button from '@/src/components/Button/Button';
