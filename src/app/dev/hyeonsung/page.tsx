@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Button from '@/src/components/Button/Button';
 import FilterButton from '@/src/components/Button/FilterButton';
-import Calendar from '@/src/components/Calendar/Calendar';
+import Calendar from '@/src/components/ReservationTest/Reservation';
 import Input from '@/src/components/Input/Input';
 
 export default function Home() {
