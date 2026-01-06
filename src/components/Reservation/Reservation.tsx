@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useCalendar } from '@/src/hooks/useCalendar';
+import { useReservation } from '@/src/hooks/useReservation';
 import Button from '@/src/components/Button/Button';
 
 const DAY_LIST = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -14,7 +14,7 @@ const TIME_SLOTS = [
   '17:00~18:00',
 ];
 
-export default function Calendar() {
+export default function Reservation() {
   const {
     weeks,
     handlePrevMonth,
@@ -24,7 +24,7 @@ export default function Calendar() {
     isSelected,
     isToday,
     getFormattedMonthYear,
-  } = useCalendar();
+  } = useReservation();
 
   const [attendees, setAttendees] = useState(10);
   const [selectedTime, setSelectedTime] = useState<string | null>('15:00~16:00');
