@@ -50,7 +50,7 @@ export default function MyActivitiesCard({
     setIsDeleteModalOpen(false);    // 모달 닫기
   }
 
-  const handleCancelDelete = () => {
+  const handleCloseDelete = () => {
     setIsDeleteModalOpen(false);    // 모달 닫기 (삭제 안 함)
   }
 
@@ -122,7 +122,7 @@ export default function MyActivitiesCard({
       {/* 삭제 모달 */}
       <DeleteModal
         isOpen={isDeleteModalOpen}
-        onClose={handleCancelDelete}
+        onClose={handleCloseDelete}
         onConfirm={handleConfirmDelete}
         message="체험을 삭제하시겠습니까?"
       />
