@@ -10,7 +10,8 @@ import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
 import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 import Search from "@/src/components/Search/search";
-import Button from '@/src/components/Button/Button';
+import Input from '@/src/components/Input/Input';
+
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
@@ -184,6 +185,14 @@ export default function JunyeolPage() {
           onSearch={handleSearch}
           className="w-[660px]"
         />
+      </div>
+
+      <h2 className="text-h2">Input 컴포넌트</h2>
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center w-100">
+        {/* Input 컴포넌트 사용 예시 */}
+        <Input label="Email" placeholder="email@example.com" />
+        <Input label="Password" type="password" placeholder="••••••••" />
+        <Input label="Error" error="에러" />
       </div>
 
     </div>
