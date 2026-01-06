@@ -145,13 +145,11 @@ const handleSaveClick = async () => {
           {/* 이메일 영역 */}
           <div>
             <Input
-              label="비밀번호"
-              type="password"
-              value={newPassword}
-              onChange={handleNewPasswordChange}
-              onBlur={handleNewPasswordBlur}
-              error={newPasswordError}
-              placeholder="8자 이상 입력해주세요"
+              label="이메일"
+              type="email"
+              value={email}
+              readOnly
+              className="bg-gray-50 cursor-default"
               fullWidth
             />
           </div>
