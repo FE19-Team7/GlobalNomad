@@ -1,6 +1,6 @@
 'use client';
 
-import Dropdown, { DropdownItem } from '@/src/components/Dropdown/Base/Dropdown';
+import Dropdown, { DropdownItem } from '@/src/components/Dropdown/basetest/Dropdown';
 
 export type ActivityCategory =
     | 'culture'
