@@ -73,20 +73,12 @@ export default function ReservationPopover({
   })
 }, [reservations])
 
-const [selectedTimeId, setSelectedTimeId] = useState<number>(0)
+const [selectedTimeId, setSelectedTimeId] = useState<number>(() => {
+  return timeOptions[0]?.id ?? 0
+})
 
 const selectedTime = useMemo(() => {
-  return (
-    timeOptions.find(o => o.id === selectedTimeId)?.fullTime ?? ''
-  )
-}, [timeOptions, selectedTimeId])
-
-useEffect(() => {
-  if (timeOptions.length === 0) return
-
-  if (!timeOptions.some(o => o.id === selectedTimeId)) {
-    setSelectedTimeId(timeOptions[0].id)
-  }
+  return timeOptions.find(o => o.id === selectedTimeId)?.fullTime ?? ''
 }, [timeOptions, selectedTimeId])
 
   useEffect(() => {
