@@ -18,7 +18,7 @@ interface ReservationCardProps {
     title: string;
     bannerImageUrl?: string;
   };
-  status?: ReservationStatus;
+  status: ReservationStatus;
   totalPrice: number;
   headCount: number;
   date: string;
@@ -31,7 +31,7 @@ interface ReservationCardProps {
 export default function ReservationCard({
   id,
   activity,
-  status = 'confirmed',
+  status,
   totalPrice = 0,
   headCount = 0,
   date,
@@ -111,7 +111,7 @@ export default function ReservationCard({
 
               {/* 예약 상태별 버튼 분기 */}
               <div className="flex justify-end items-center gap-2">
-                {status === 'confirmed' && (
+                {status === 'pending' && (
                   <>
                     <Button
                       onClick={handleEdit}
