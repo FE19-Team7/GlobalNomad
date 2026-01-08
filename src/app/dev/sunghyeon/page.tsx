@@ -41,6 +41,22 @@ export default function SunghyeonPage() {
           endTime="06:30"
         />
       </div>
+      <div>
+        <ReservationCard
+          id={2}
+          activity={{
+            id: 2,
+            title: "자연 속에서 당일치기 캠핑하기",
+            bannerImageUrl: "",
+          }}
+          status="completed"
+          totalPrice={80000}
+          headCount={2}
+          date="2025. 11. 07"
+          startTime="07:00"
+          endTime="17:00"
+        />
+      </div>
     </div>
   );
 }
