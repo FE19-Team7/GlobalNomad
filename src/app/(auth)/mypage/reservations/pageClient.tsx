@@ -9,6 +9,7 @@ import {
   ReservationResponse,
   ReservationStatus,
 } from "@/src/features/mypage/reservations/type";
+import { authFetch } from "@/src/lib/api/authFetch";
 
 const PAGE_SIZE = 10;
 
@@ -40,28 +41,9 @@ export default function PageClient() {
    */
   const requestReservations = async (
     params: URLSearchParams,
-    reset: boolean,
-    retried = false
+    reset: boolean
   ) => {
-    const res = await fetch(`/api/my-reservations?${params.toString()}`, {
-      credentials: "include",
-    });
-
-    if (res.status === 401 && !retried) {
-      const refreshRes = await fetch("/api/refresh", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (refreshRes.ok) {
-        return requestReservations(params, reset, true);
-      }
-
-      setItems([]);
-      setHasNext(false);
-      setInitialized(true);
-      return;
-    }
+    const res = await authFetch(`/api/my-reservations?${params.toString()}`);
 
     if (!res.ok) {
       setHasNext(false);
@@ -141,8 +123,8 @@ export default function PageClient() {
     <section className="flex flex-col gap-6">
       {/* 상단 텍스트 영역 (항상 유지) */}
       <div>
-        <h1 className="text-xl font-bold">예약 내역</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-h4 font-bold">예약 내역</h1>
+        <p className="text-body text-gray-500">
           예약 내역 변경 및 취소할 수 있습니다.
         </p>
       </div>
