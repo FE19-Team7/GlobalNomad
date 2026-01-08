@@ -1,6 +1,5 @@
 "use client";
 
-import { RefObject } from "react";
 import { useInfiniteScroll } from "@/lib/hooks/useInfiniteScroll";
 import ReservationCard from "@/src/components/Card/ReservationCard";
 import { ReservationStatus } from "@/src/components/Card/StatusBadge";
@@ -24,10 +23,6 @@ interface ReservationListProps {
   items: Reservation[];
   hasNext: boolean;
   onLoadMore: () => void;
-
-  /** 중앙 스크롤 영역 ref */
-  scrollContainerRef: RefObject<HTMLElement | null>;
-
   onCancel?: (id: number) => void;
   onReview?: (id: number) => void;
 }
@@ -36,15 +31,13 @@ export default function ReservationList({
   items,
   hasNext,
   onLoadMore,
-  scrollContainerRef,
   onCancel,
   onReview,
 }: ReservationListProps) {
-  /** scrollContainer 기준 */
+  /** window 스크롤 기준 무한 스크롤 */
   const bottomRef = useInfiniteScroll({
     onIntersect: onLoadMore,
     disabled: !hasNext,
-    rootRef: scrollContainerRef,
   });
 
   return (

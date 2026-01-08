@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import FilterButton from "@/src/components/Button/FilterButton";
 import ReservationList from "@/src/features/mypage/reservations/components/ReservationList";
 import ReservationEmpty from "@/src/features/mypage/reservations/components/ReservationEmpty";
@@ -26,8 +26,6 @@ const FILTER_OPTIONS: {
 ];
 
 export default function PageClient() {
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-
   const [items, setItems] = useState<Reservation[]>([]);
   const [filter, setFilter] = useState<FilterType>(null);
   const [cursorId, setCursorId] = useState<number | null>(null);
@@ -55,19 +53,16 @@ export default function PageClient() {
         credentials: "include",
       });
 
-      // refresh 성공 → 요청 1회 재시도
       if (refreshRes.ok) {
         return requestReservations(params, reset, true);
       }
 
-      // refresh 실패 → 로그인 필요 상태
       setItems([]);
       setHasNext(false);
       setInitialized(true);
       return;
     }
 
-    // 그 외 실패
     if (!res.ok) {
       setHasNext(false);
       setInitialized(true);
@@ -105,7 +100,6 @@ export default function PageClient() {
 
       try {
         await requestReservations(params, true);
-        scrollContainerRef.current?.scrollTo({ top: 0 });
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -144,7 +138,7 @@ export default function PageClient() {
   };
 
   return (
-    <section ref={scrollContainerRef} className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6">
       {/* 상단 텍스트 영역 (항상 유지) */}
       <div>
         <h1 className="text-xl font-bold">예약 내역</h1>
@@ -180,7 +174,6 @@ export default function PageClient() {
               items={items}
               hasNext={hasNext}
               onLoadMore={fetchMore}
-              scrollContainerRef={scrollContainerRef}
             />
           )}
         </>
