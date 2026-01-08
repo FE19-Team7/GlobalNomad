@@ -4,9 +4,9 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import Input from '@/src/components/Input/Input';
 import Button from '@/src/components/Button/Button';
 import { useMyPageForm } from '@/src/features/public/hooks/useMyPageForm';
-import { getGlobalCancelHandler } from '@/src/app/(auth)/mypage/MyPageLayout';
+import { getGlobalCancelHandler } from '@/src/app/(auth)/mypage/MypageLayout';
 import { updateMyProfile } from '@/src/apis/user';
-import { useUser } from '@/src/app/(auth)/mypage/MyPageLayout';
+import { useUser } from '@/src/app/(auth)/mypage/MypageLayout';
 
 export default function MyProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -115,7 +115,7 @@ const handleSaveClick = async () => {
 
   return (
     <div className="flex-1">
-      <div className="max-w-[640px] md:scale-[0.857] md:origin-top-left md:-ml-[15px] md:-mr-[90px] lg:scale-100 lg:mr-0">
+      <div className="max-w-[640px] md:scale-[0.857] md:origin-top-left md:-mr-[90px] lg:scale-100 lg:mr-0">
         {/* 페이지 제목 */}
         <div className="mb-8">
           <h1 className="text-lg font-bold text-gray-900 mb-2">
@@ -157,6 +157,20 @@ const handleSaveClick = async () => {
           {/* 새 비밀번호 영역 */}
           <div>
             <Input
+              label="비밀번호"
+              type="password"
+              value={newPassword}
+              onChange={handleNewPasswordChange}
+              onBlur={handleNewPasswordBlur}
+              error={newPasswordError}
+              placeholder="8자 이상 입력해주세요"
+              fullWidth
+            />
+          </div>
+          
+          {/* 새 비밀번호 확인 영역 */}
+          <div>
+            <Input
               label="비밀번호 확인"
               type="password"
               value={confirmPassword}
@@ -168,19 +182,6 @@ const handleSaveClick = async () => {
             />
           </div>
 
-          {/* 새 비밀번호 확인 영역 */}
-          <div>
-            <Input
-              label="비밀번호"
-              type="password"  // <- 삼항 연산자 쓰지 말고 "password"로 고정
-              value={newPassword}
-              onChange={handleNewPasswordChange}
-              onBlur={handleNewPasswordBlur}
-              error={newPasswordError}
-              placeholder="8자 이상 입력해주세요"
-              fullWidth
-            />
-          </div>
 
           {/* 버튼 영역 */}
           <div className="flex justify-center gap-3 pt-6">
