@@ -42,10 +42,8 @@ export default function SunghyeonPage() {
           endTime="06:30"
         />
       </div>
-      <div className="w-[964px]">
-        <div>
-          <PopularActivitiesList />
-        </div>
+      <div className="w-[1120px]">
+        <PopularActivitiesList />
       </div>
     </div>
   );

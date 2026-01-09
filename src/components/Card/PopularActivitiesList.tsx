@@ -10,6 +10,7 @@ export default function PopularActivitiesList() {
 
   // 초기 데이터 로드
   const initialData = getMockActivities(0, 4);
+
   const [items, setItems] = useState(initialData.data);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(initialData.hasMore);
@@ -20,6 +21,7 @@ export default function PopularActivitiesList() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
 
+  // 마지막 카드 그룹 빈 영역을 채우기 위한 카드 개수 계산
   const remainder = items.length % 4;
   const emptyCardsCount = remainder === 0 ? 0 : 4 - remainder;
 
@@ -68,7 +70,6 @@ export default function PopularActivitiesList() {
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-
       setShowLeftBtn(scrollLeft > 0);
       setShowRightBtn(scrollLeft < scrollWidth - clientWidth - 10);
     }
@@ -111,7 +112,7 @@ export default function PopularActivitiesList() {
   };
 
   return (
-    <div className="relative w-full group">
+    <div className="relative w-full">
 
       {/* 왼쪽 화살표 버튼 */}
       {showLeftBtn && (
@@ -129,7 +130,7 @@ export default function PopularActivitiesList() {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="pr-4 flex gap-4 overflow-x-hidden scroll-smooth"
+        className="flex gap-4 overflow-x-hidden scroll-smooth"
       >
         {items.map(item => (
           <div key={item.id} className="flex-shrink-0 w-[calc(25%-12px)]">
@@ -138,15 +139,17 @@ export default function PopularActivitiesList() {
         ))}
 
         {/* 비어 있는 카드 영역 생성 */}
-        {emptyCardsCount > 0 && (
-          <div
-            className="flex-shrink-0"
-            style={{
-              width: `calc(${emptyCardsCount * 25}% - ${emptyCardsCount * 12}px)`
-            }}
-          />
-        )}
+        {emptyCardsCount > 0 &&
+          Array.from({ length: emptyCardsCount }).map((_, i) => (
+            <div
+              key={`empty-${i}`}
+              className="flex-shrink-0 w-[calc(25%-12px)]"
+              aria-hidden="true"
+            />
+          ))
+        }
 
+        {/* 무한 스크롤 감지를 위한 타겟 요소 */}
         <div ref={loaderRef} className="flex-shrink-0" />
       </div>
 
