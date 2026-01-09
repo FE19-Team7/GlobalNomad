@@ -41,7 +41,6 @@ export default function SunghyeonPage() {
           startTime="05:30"
           endTime="06:30"
         />
-      </div>  
         <ReservationCard
           id={2}
           activity={{
@@ -59,7 +58,7 @@ export default function SunghyeonPage() {
       </div>
       <div className="w-[1120px]">
         <PopularActivitiesList />
-      <div>
-    </div>
+      </div>
+    </div >
   );
 }
