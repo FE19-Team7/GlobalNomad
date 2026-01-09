@@ -1,71 +1,39 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import SideMenu from "@/src/components/SideMenu/SideMenu";
+import { useState, useEffect, createContext, useContext } from 'react';
+import SideMenu from '@/src/components/SideMenu/SideMenu';
+import { getMyProfile, UserProfile } from '@/src/apis/user';
 
-let globalCancelHandler: (() => void) | null = null;
-
-export const setGlobalCancelHandler = (handler: () => void) => {
-  globalCancelHandler = handler;
-};
-
-export const getGlobalCancelHandler = (): (() => void) | null =>
-  globalCancelHandler;
-
-interface MyPageLayoutProps {
-  children: React.ReactNode;
+// 컨텍스트 정의
+interface UserContextType {
+  userData: UserProfile | null;
+  refreshUser: () => Promise<void>;
 }
 
-export default function MyPageLayout({ children }: MyPageLayoutProps) {
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-  const [showMobileContent, setShowMobileContent] = useState(false);
+const UserContext = createContext<UserContextType | null>(null);
 
-  const handleProfileEdit = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser는 반드시 MyPageLayout 안에서 사용해야 합니다.');
+  }
+  return context;
+};
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImageUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    };
-    input.click();
-  };
-
-  const handleMenuClick = () => {
-    setShowMobileContent(true);
-  };
-
-  const handleCancel = () => {
-    setShowMobileContent(false);
-  };
-
-  useEffect(() => {
-    setGlobalCancelHandler(handleCancel);
-  }, []);
+// 내부 콘텐츠 컴포넌트
+function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
+  const { userData } = useUser();
 
   return (
     <main className="flex-1">
       {/* 헤더/푸터 사이 영역 */}
-      <div className="h-[calc(100vh-160px)]">
+      <div className="h-[calc(100vh-160px)] py-6">
         <div className="w-full max-w-[980px] mx-auto px-6 h-full">
           <div className="flex gap-14 h-full">
             {/* 사이드 메뉴 */}
-            <aside
-              className={`w-[260px] flex-shrink-0 ${
-                showMobileContent ? "hidden md:block" : "block"
-              }`}
-            >
+            <aside className="w-[260px] flex-shrink-0">
               <SideMenu
-                profileImageUrl={profileImageUrl}
-                onProfileEdit={handleProfileEdit}
-                onMenuClick={handleMenuClick}
-                showMobileContent={showMobileContent}
+                profileImageUrl={userData?.profileImageUrl}
               />
             </aside>
 
@@ -77,6 +45,7 @@ export default function MyPageLayout({ children }: MyPageLayoutProps) {
                 [scrollbar-width:none]
                 [-ms-overflow-style:none]
                 [&::-webkit-scrollbar]:hidden
+                pb-6
               "
             >
               {children}
@@ -85,5 +54,44 @@ export default function MyPageLayout({ children }: MyPageLayoutProps) {
         </div>
       </div>
     </main>
+  );
+}
+
+// 메인 레이아웃
+interface MyPageLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function MyPageLayout({ children }: MyPageLayoutProps) {
+  const [userData, setUserData] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchUser = async () => {
+    try {
+      const data = await getMyProfile();
+      setUserData(data);
+    } catch (error) {
+      console.error('사용자 정보 로드 실패:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p className="text-gray-600">로딩 중...</p>
+      </div>
+    );
+  }
+
+  return (
+    <UserContext.Provider value={{ userData, refreshUser: fetchUser }}>
+      <MyPageLayoutContent>{children}</MyPageLayoutContent>
+    </UserContext.Provider>
   );
 }
