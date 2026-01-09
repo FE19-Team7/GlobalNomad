@@ -14,8 +14,9 @@ export async function POST() {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/tokens`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
+    headers: {
+      Authorization: `Bearer ${refreshToken}`,
+    },
   });
 
   if (!res.ok) {
