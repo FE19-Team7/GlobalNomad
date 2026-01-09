@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import FilterButton from "@/src/components/Button/FilterButton";
 import ReservationList from "@/src/features/mypage/reservations/components/ReservationList";
-import { ReservationStatus } from "@/src/components/Card/StatusBadge";
-import { generateMockReservations } from "@/src/features/mypage/reservations/mocks/MockReservation";
 import ReservationEmpty from "@/src/features/mypage/reservations/components/ReservationEmpty";
+import {
+  Reservation,
+  ReservationResponse,
+  ReservationStatus,
+} from "@/src/features/mypage/reservations/type";
+import { authFetch } from "@/src/lib/api/authFetch";
 
 const PAGE_SIZE = 10;
 
@@ -24,45 +27,110 @@ const FILTER_OPTIONS: {
 ];
 
 export default function PageClient() {
-  const searchParams = useSearchParams();
-  const isEmptyTest = searchParams.get("empty") === "true";
-
-  const ALL_ITEMS = useMemo(
-    () => (isEmptyTest ? [] : generateMockReservations(80)),
-    [isEmptyTest]
-  );
-
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-
+  const [items, setItems] = useState<Reservation[]>([]);
   const [filter, setFilter] = useState<FilterType>(null);
-  const [page, setPage] = useState(1);
+  const [cursorId, setCursorId] = useState<number | null>(null);
+  const [hasNext, setHasNext] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
-  const filteredItems = useMemo(() => {
-    if (filter === null) return ALL_ITEMS;
-    return ALL_ITEMS.filter((item) => item.status === filter);
-  }, [filter, ALL_ITEMS]);
+  /**
+   * 예약 목록 요청
+   * - reset: 필터 변경 / 최초 로딩 여부
+   * - retried: refresh 후 재시도 여부 (무한 루프 방지)
+   */
+  const requestReservations = async (
+    params: URLSearchParams,
+    reset: boolean
+  ) => {
+    const res = await authFetch(`/api/my-reservations?${params.toString()}`);
 
-  const items = filteredItems.slice(0, page * PAGE_SIZE);
-  const hasNext = items.length < filteredItems.length;
+    if (!res.ok) {
+      setHasNext(false);
+      setInitialized(true);
+      return;
+    }
+
+    const data: ReservationResponse = await res.json();
+
+    setItems((prev) =>
+      reset ? data.reservations : [...prev, ...data.reservations]
+    );
+    setCursorId(data.cursorId);
+    setHasNext(data.cursorId !== null);
+    setInitialized(true);
+  };
+
+  /**
+   * 최초 로딩 & 필터 변경
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchOnFilterChange = async () => {
+      if (cancelled) return;
+
+      setLoading(true);
+      setItems([]);
+      setCursorId(null);
+      setHasNext(true);
+
+      const params = new URLSearchParams({
+        size: String(PAGE_SIZE),
+        ...(filter && { status: filter }),
+      });
+
+      try {
+        await requestReservations(params, true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchOnFilterChange();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filter]);
+
+  /**
+   * 무한 스크롤 추가 로딩
+   */
+  const fetchMore = async () => {
+    if (loading || !hasNext) return;
+
+    setLoading(true);
+
+    const params = new URLSearchParams({
+      size: String(PAGE_SIZE),
+      ...(filter && { status: filter }),
+      ...(cursorId && { cursorId: String(cursorId) }),
+    });
+
+    try {
+      await requestReservations(params, false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleFilterClick = (value: ReservationStatus) => {
     setFilter((prev) => (prev === value ? null : value));
-    setPage(1);
-    scrollContainerRef.current?.scrollTo({ top: 0 });
   };
 
   return (
-    <section ref={scrollContainerRef} className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6">
       {/* 상단 텍스트 영역 (항상 유지) */}
       <div>
-        <h1 className="text-xl font-bold">예약 내역</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-h4 font-bold">예약 내역</h1>
+        <p className="text-body text-gray-500">
           예약 내역 변경 및 취소할 수 있습니다.
         </p>
       </div>
 
       {/* 전체 예약 Empty */}
-      {ALL_ITEMS.length === 0 ? (
+      {initialized && items.length === 0 && !filter ? (
         <ReservationEmpty />
       ) : (
         <>
@@ -87,8 +155,7 @@ export default function PageClient() {
             <ReservationList
               items={items}
               hasNext={hasNext}
-              onLoadMore={() => setPage((prev) => prev + 1)}
-              scrollContainerRef={scrollContainerRef}
+              onLoadMore={fetchMore}
             />
           )}
         </>

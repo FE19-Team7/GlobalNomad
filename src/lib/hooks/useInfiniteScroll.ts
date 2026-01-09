@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 interface UseInfiniteScrollProps {
   onIntersect: () => void;
   disabled?: boolean;
-  rootRef: React.RefObject<HTMLElement | null>;
+  rootRef?: React.RefObject<HTMLElement | null>;
 }
 
 export function useInfiniteScroll({
@@ -17,7 +17,7 @@ export function useInfiniteScroll({
 
   useEffect(() => {
     if (disabled) return;
-    if (!rootRef?.current || !targetRef.current) return;
+    if (!targetRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -26,8 +26,8 @@ export function useInfiniteScroll({
         }
       },
       {
-        root: rootRef.current,
-        threshold: 0.8,
+        root: rootRef?.current ?? null,
+        threshold: 0,
       }
     );
 
