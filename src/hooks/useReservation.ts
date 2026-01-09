@@ -14,7 +14,7 @@ import { useState } from 'react';
 
 const DAY_OF_WEEK = 7;
 
-export function useCalendar() {
+export function useReservation() {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 

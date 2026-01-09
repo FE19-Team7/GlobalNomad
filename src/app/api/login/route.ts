@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     // refreshToken → httpOnly 쿠키
     response.cookies.set("refreshToken", data.refreshToken, {
       httpOnly: true,
-      path: "/api",
+      path: "/",
     });
 
     return response;

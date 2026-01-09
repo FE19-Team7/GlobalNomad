@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import SideMenu from "@/src/components/SideMenu/SideMenu";
 import UserMenuDropDown from '@/src/components/Dropdown/UserMenuDropDown';
 import PriceSortDropdown, { PriceSortValue } from '@/src/components/Dropdown/PriceSortDropdown';
@@ -9,8 +9,12 @@ import ReservationsDropdown, { ReservationItem } from '@/src/components/Dropdown
 import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
 import { EventBadge } from '@/src/components/Calendar/EventBadge';
 import { Pagination } from '@/src/components/Pagination/Pagination';
-import Search from "@/src/components/Search/search";
+import Search from "@/src/components/Search/Search";
+import ReservationsTimeDropdown from '@/src/components/Dropdown/ReservationsTimeDropdown';
+import Popover from '@/src/components/Popover/Popover'
 import Button from '@/src/components/Button/Button';
+import Input from '@/src/components/Input/Input';
+
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
@@ -31,6 +35,12 @@ const MOCK_RESERVATIONS: ReservationItem[] = [
   },
 ];
 
+const MOCK_TIMES = [
+  { id: 1, startTime: '14:00', endTime: '15:00' },
+  { id: 2, startTime: '15:00', endTime: '16:00' },
+  { id: 3, startTime: '16:00', endTime: '17:00' },
+]
+
 // ReservationsDropdown 최근 예약 기준 정렬
 const sortedReservations = [...MOCK_RESERVATIONS].sort(
   (a, b) =>
@@ -44,6 +54,9 @@ export default function JunyeolPage() {
   const [reservation, setReservation] = useState<string | undefined>(
     sortedReservations[0]?.value
   );
+  const [selectedTimeId, setSelectedTimeId] = useState<number>(
+    MOCK_TIMES[0].id
+  )
   const [currentPage, setCurrentPage] = useState(1);
   const TOTAL_PAGES = 12;
   const [searchValue, setSearchValue] = useState('');
@@ -51,6 +64,9 @@ export default function JunyeolPage() {
   const handleSearch = (value: string) => {
     console.log('검색어:', value);
   }
+
+  const anchorRef = useRef<HTMLButtonElement>(null)
+  const [open, setOpen] = useState(false)
 
   return (
     <div className="flex flex-col gap-10 justify-center items-center">
@@ -85,6 +101,33 @@ export default function JunyeolPage() {
           onChange={setReservation}
           className="w-[640px]"
         />
+
+        {/* ReservationsTimeDropDown 컴포넌트 사용 예시 */}
+        <ReservationsTimeDropdown
+          times={MOCK_TIMES}
+          value={selectedTimeId}
+          onChange={setSelectedTimeId}
+          className="w-[200px]"
+        />
+      </div>
+
+      <div className="flex flex-col gap-10 justify-center items-center">
+        <h2 className="text-h2">ReservationsTimeDropDown 컴포넌트를 사용하는 Popover 컴포넌트 테스트</h2>
+        <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
+          <Button
+            ref={anchorRef}
+            onClick={() => setOpen(true)}
+          >
+            테스트
+          </Button>
+
+          <Popover
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            dateLabel="2024-01-09"
+            anchorRef={anchorRef}
+          />
+        </div>
       </div>
 
       <h2 className="text-h2">CallendarDayCell, EventBadge 컴포넌트</h2>
@@ -184,6 +227,14 @@ export default function JunyeolPage() {
           onSearch={handleSearch}
           className="w-[660px]"
         />
+      </div>
+
+      <h2 className="text-h2">Input 컴포넌트</h2>
+      <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center w-100">
+        {/* Input 컴포넌트 사용 예시 */}
+        <Input label="Email" placeholder="email@example.com" />
+        <Input label="Password" type="password" placeholder="••••••••" />
+        <Input label="Error" error="에러" />
       </div>
 
     </div>

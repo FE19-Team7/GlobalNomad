@@ -145,7 +145,7 @@ export default function Dropdown({
                                     <Link
                                         href={item.href}
                                         onClick={() => setOpen(false)}
-                                        className={`block w-full px-4 py-2 text-center text-body border-b border-gray-100 hover:bg-primary-100 
+                                        className={`block w-full px-4 py-2 text-center text-body hover:bg-primary-100 
                                             ${itemClassName}`}
                                     >
                                         {item.label}
@@ -158,7 +158,7 @@ export default function Dropdown({
                                 <button
                                     type="button"
                                     onClick={() => handleSelect(item)}
-                                    className={`block w-full px-4 py-2 text-center text-body  border-b border-gray-100 hover:bg-primary-100 cursor-pointer 
+                                    className={`block w-full px-4 py-2 text-center text-body hover:bg-primary-100 cursor-pointer 
                                         ${itemClassName}`}
                                 >
                                     {item.label}

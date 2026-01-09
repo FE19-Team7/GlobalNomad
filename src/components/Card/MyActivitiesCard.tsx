@@ -3,7 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import CardBase from '@/src/components/Card/CardBase';
+import Button from '@/src/components/Button/Button'
+import DeleteModal from '@/src/components/Modal/DeleteModal'
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 
@@ -31,25 +34,36 @@ export default function MyActivitiesCard({
   }
 }: MyActivitiesCardProps) {
   const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleEdit = () => {
     router.push(`/seller/activities/${id}/edit`);    // 체험 수정 페이지로 이동
   };
 
   const handleDelete = () => {
-    onDelete?.(id);    // 삭제 confirm 모달 호출
+    setIsDeleteModalOpen(true);    // 삭제 confirm 모달 열기
+  }
+
+  const handleConfirmDelete = () => {
+    // TODO: API 연동 시 삭제 로직 추가 예정
+    onDelete?.(id);
+    setIsDeleteModalOpen(false);    // 모달 닫기
+  }
+
+  const handleCloseDelete = () => {
+    setIsDeleteModalOpen(false);    // 모달 닫기 (삭제 안 함)
   }
 
   return (
-    <Link href={`/activities/${id}`} className="w-full block group">
+    <>
       <CardBase
         height={false}
-        className="max-w-[640px] min-h-[200px]"
+        className="max-w-[640px] min-h-[200px] flex p-[30px] justify-between gap-[30px] group"
       >
-        <div className="flex p-[30px] justify-between gap-[30px]">
-          <div className="max-w-[550px] flex flex-1 min-w-0 flex-col gap-5">
 
-            {/* 텍스트 영역 */}
+        {/* 텍스트 영역 */}
+        <div className="w-full max-w-[550px] flex flex-col gap-5">
+          <Link href={`/activities/${id}`} className="block">
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-2">
                 <div className="text-h4 font-bold leading-6">{title}</div>
@@ -64,32 +78,27 @@ export default function MyActivitiesCard({
                 <span className="text-gray-400 text-body-lg leading-6">/{' '}인</span>
               </div>
             </div>
+          </Link>
 
-            {/* 버튼 영역 */}
-            <div className="flex items-center gap-[8px]">
-              {/* TODO: 버튼 컴포넌트로 교체 예정 */}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleEdit();
-                }}
-                className="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 hover:text-gray-700 transition-colors duration-150"
-              >
-                수정하기
-              </button>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleDelete();
-                }}
-                className="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
-              >
-                삭제하기
-              </button>
-            </div>
+          {/* 버튼 영역 */}
+          <div className="flex items-center gap-[8px]">
+            <Button
+              onClick={handleEdit}
+              baseStyles="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 transition-colors duration-150"
+            >
+              수정하기
+            </Button>
+            <Button
+              onClick={handleDelete}
+              baseStyles="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
+            >
+              삭제하기
+            </Button>
           </div>
+        </div>
 
-          {/* 이미지 영역 */}
+        {/* 이미지 영역 */}
+        <Link href={`/activities/${id}`} className="block self-center">
           <div className="w-[142px] h-[142px] flex-shrink-0 relative rounded-[32px] overflow-hidden bg-gray-100">
             {bannerImageUrl ? (
               <Image
@@ -107,8 +116,16 @@ export default function MyActivitiesCard({
               />
             )}
           </div>
-        </div>
+        </Link>
       </CardBase>
-    </Link>
+
+      {/* 삭제 모달 */}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDelete}
+        onConfirm={handleConfirmDelete}
+        message="체험을 삭제하시겠습니까?"
+      />
+    </>
   )
 };
