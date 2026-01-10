@@ -35,7 +35,6 @@ export default function ReservationList({
   onCancel,
   onReview,
 }: ReservationListProps) {
-  /** window 스크롤 기준 무한 스크롤 */
   const bottomRef = useInfiniteScroll({
     onIntersect: onLoadMore,
     disabled: !hasNext,
@@ -46,13 +45,20 @@ export default function ReservationList({
       {items.map((item) => (
         <ReservationCard
           key={item.id}
-          {...item}
+          id={item.id}
+          activity={item.activity}
+          status={item.status}
+          reviewSubmitted={item.reviewSubmitted ?? false}
+          totalPrice={item.totalPrice}
+          headCount={item.headCount}
+          date={item.date}
+          startTime={item.startTime}
+          endTime={item.endTime}
           onCancel={onCancel}
           onReview={onReview}
         />
       ))}
 
-      {/* 무한 스크롤 트리거 */}
       {hasNext && <div ref={bottomRef} className="h-1" />}
     </div>
   );
