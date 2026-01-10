@@ -119,11 +119,13 @@ export default function ActivityCreatePage() {
         subImageUrls,
       });
 
-      // 라우터 추가
-    } catch (error: any) {
-      setErrorMessage(error.message || '체험 등록 중 오류 발생');
-    } finally {
-      setIsSubmitting(false);
+      router.push('/mypage/activities')
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('체험 등록 중 오류 발생');
+      }
     }
   };
 
@@ -208,7 +210,6 @@ export default function ActivityCreatePage() {
       <Button
         onClick={handleSubmit}
         disabled={isSubmitting}
-        className="mt-6 w-full bg-black text-white py-3"
       >
         {isSubmitting ? '등록 중...' : '체험 등록'}
       </Button>
