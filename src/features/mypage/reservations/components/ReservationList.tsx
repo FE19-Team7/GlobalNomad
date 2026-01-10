@@ -12,6 +12,7 @@ interface Reservation {
     bannerImageUrl?: string;
   };
   status: ReservationStatus;
+  reviewSubmitted?: boolean;
   totalPrice: number;
   headCount: number;
   date: string;

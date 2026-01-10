@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import CardBase from '@/src/components/Card/CardBase';
-import StatusBadge, { type ReservationStatus } from '@/src/components/Card/StatusBadge';
-import Button from '@/src/components/Button/Button';
-import CancelModal from '@/src/components/Modal/CancelModal';
-import ReviewModal from '@/src/components/Modal/ReviewModal';
-import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import CardBase from "@/src/components/Card/CardBase";
+import StatusBadge, {
+  type ReservationStatus,
+} from "@/src/components/Card/StatusBadge";
+import Button from "@/src/components/Button/Button";
+import CancelModal from "@/src/components/Modal/CancelModal";
+import DefaultThumbnail from "@/assets/activity-default-thumbnail.svg";
 
 interface ReservationCardProps {
   id: number;
@@ -19,6 +20,7 @@ interface ReservationCardProps {
     bannerImageUrl?: string;
   };
   status: ReservationStatus;
+  reviewSubmitted: boolean;
   totalPrice: number;
   headCount: number;
   date: string;
@@ -32,6 +34,7 @@ export default function ReservationCard({
   id,
   activity,
   status,
+  reviewSubmitted,
   totalPrice = 0,
   headCount = 0,
   date,
@@ -42,40 +45,23 @@ export default function ReservationCard({
 }: ReservationCardProps) {
   const router = useRouter();
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-
 
   const handleEdit = () => {
-    router.push(`/activities/${activity.id}`);    // 체험 상세 페이지에서 예약 변경
-  }
+    router.push(`/activities/${activity.id}`); // 체험 상세 페이지에서 예약 변경
+  };
 
   const handleCancel = () => {
-    setIsCancelModalOpen(true);    // 취소 confirm 모달 호출
-  }
+    setIsCancelModalOpen(true); // 취소 confirm 모달 호출
+  };
 
   const handleConfirmCancel = () => {
-    // TODO: API 연동 시 예약 취소 로직 추가 예정
     onCancel?.(id);
     setIsCancelModalOpen(false);
-  }
+  };
 
   const handleCloseCancel = () => {
     setIsCancelModalOpen(false);
-  }
-
-  const handleReview = () => {
-    setIsReviewModalOpen(true);    // 후기 작성 모달 호출
-  }
-
-  const handleCloseReview = () => {
-    setIsReviewModalOpen(false);
-  }
-
-  const handleSubmitReview = (rating: number, content: string) => {
-    // TODO: API 연동 시 리뷰 작성 로직 추가 예정
-    onReview?.(id);
-    setIsReviewModalOpen(false);
-  }
+  };
 
   return (
     <>
@@ -84,19 +70,27 @@ export default function ReservationCard({
           <CardBase
             width="flex-1"
             height={false}
-            boxShadow='sm'
-            className="flex flex-col justify-between -mr-[26px] px-[40px] py-[30px] z-10">
-
+            boxShadow="sm"
+            className="flex flex-col justify-between -mr-[26px] px-[40px] py-[30px] z-10"
+          >
             {/* 텍스트 영역 */}
             <div className="flex flex-col">
               <StatusBadge status={status} className="mb-[12px]" />
               <Link href={`/activities/${activity.id}`} className="block">
                 <div className="flex flex-col">
-                  <div className="text-h4 font-bold leading-6">{activity.title}</div>
+                  <div className="text-h4 font-bold leading-6">
+                    {activity.title}
+                  </div>
                   <div className="flex">
-                    <span className="text-gray-500 text-body leading-6">{date}</span>
-                    <span className="mx-[8px] text-gray-500 text-body leading-6">·</span>
-                    <span className="text-gray-500 text-body leading-6">{startTime} - {endTime}</span>
+                    <span className="text-gray-500 text-body leading-6">
+                      {date}
+                    </span>
+                    <span className="mx-[8px] text-gray-500 text-body leading-6">
+                      ·
+                    </span>
+                    <span className="text-gray-500 text-body leading-6">
+                      {startTime} - {endTime}
+                    </span>
                   </div>
                 </div>
               </Link>
@@ -105,13 +99,18 @@ export default function ReservationCard({
             {/* 가격·버튼 영역 */}
             <div className="h-[29px] flex items-center justify-between">
               <div>
-                <span className="mr-[4px] text-h4 font-bold leading-6">₩ {totalPrice.toLocaleString()}</span>
-                <span className="text-gray-400 text-body-lg leading-6">/{' '}{headCount}명</span>
+                <span className="mr-[4px] text-h4 font-bold leading-6">
+                  ₩ {totalPrice.toLocaleString()}
+                </span>
+                <span className="text-gray-400 text-body-lg leading-6">
+                  / {headCount}명
+                </span>
               </div>
 
-              {/* 예약 상태별 버튼 분기 */}
+              {/* 상태별 버튼 분기 */}
               <div className="flex justify-end items-center gap-2">
-                {status === 'pending' && (
+                {/* 예약 대기 */}
+                {status === "pending" && (
                   <>
                     <Button
                       onClick={handleEdit}
@@ -119,6 +118,7 @@ export default function ReservationCard({
                     >
                       예약 변경
                     </Button>
+
                     <Button
                       onClick={handleCancel}
                       baseStyles="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
@@ -127,13 +127,20 @@ export default function ReservationCard({
                     </Button>
                   </>
                 )}
-                {status === 'completed' && (
+
+                {/* 체험 완료 + 리뷰 미작성 */}
+                {status === "completed" && !reviewSubmitted && (
                   <Button
-                    onClick={handleReview}
+                    onClick={() => onReview?.(id)}
                     baseStyles="px-[10px] py-[6px] bg-primary-500 text-body text-white rounded-lg cursor-pointer hover:bg-blue-500 transition-colors duration-150"
                   >
                     후기 작성
                   </Button>
+                )}
+
+                {/* 체험 완료 + 리뷰 작성 완료 */}
+                {status === "completed" && reviewSubmitted && (
+                  <span className="text-sm text-gray-400">리뷰 작성 완료</span>
                 )}
               </div>
             </div>
@@ -169,15 +176,6 @@ export default function ReservationCard({
         onConfirm={handleConfirmCancel}
         message="예약을 취소하시겠습니까?"
       />
-
-      {/* 후기 모달 */}
-      <ReviewModal
-        isOpen={isReviewModalOpen}
-        onClose={handleCloseReview}
-        onSubmit={handleSubmitReview}
-        title={activity.title}    // 체험명
-        subtitle={`${date} · ${startTime} - ${endTime}`}    // 날짜·시간
-      />
     </>
-  )
-};
+  );
+}

@@ -4,27 +4,26 @@ import { useEffect, useState } from "react";
 import FilterButton from "@/src/components/Button/FilterButton";
 import ReservationList from "@/src/features/mypage/reservations/components/ReservationList";
 import ReservationEmpty from "@/src/features/mypage/reservations/components/ReservationEmpty";
+import ReviewModal from "@/src/components/Modal/ReviewModal";
 import {
   Reservation,
   ReservationResponse,
   ReservationStatus,
 } from "@/src/features/mypage/reservations/type";
 import { authFetch } from "@/src/lib/api/authFetch";
+import { useReservationActions } from "@/src/features/mypage/reservations/hooks/useReservationActions";
 
 const PAGE_SIZE = 10;
 
 type FilterType = ReservationStatus | null;
 
-const FILTER_OPTIONS: {
-  label: string;
-  value: ReservationStatus;
-}[] = [
+const FILTER_OPTIONS = [
   { label: "예약 신청", value: "pending" },
   { label: "예약 취소", value: "canceled" },
   { label: "예약 승인", value: "confirmed" },
   { label: "예약 거절", value: "declined" },
   { label: "체험 완료", value: "completed" },
-];
+] as const;
 
 export default function PageClient() {
   const [items, setItems] = useState<Reservation[]>([]);
@@ -33,6 +32,13 @@ export default function PageClient() {
   const [hasNext, setHasNext] = useState(true);
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
+
+  const [reviewTarget, setReviewTarget] = useState<Reservation | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+  const { cancelReservation, submitReview } = useReservationActions({
+    setItems,
+  });
 
   /**
    * 예약 목록 요청
@@ -119,6 +125,27 @@ export default function PageClient() {
     setFilter((prev) => (prev === value ? null : value));
   };
 
+  const handleReviewClick = (reservationId: number) => {
+    const target = items.find((item) => item.id === reservationId);
+    if (!target) return;
+    if (target.reviewSubmitted) return;
+
+    setReviewTarget(target);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleReviewSubmit = async (rating: number, content: string) => {
+    if (!reviewTarget) return;
+
+    try {
+      await submitReview(reviewTarget.id, rating, content);
+      setIsReviewModalOpen(false);
+      setReviewTarget(null);
+    } catch {
+      alert("리뷰 작성에 실패했습니다.");
+    }
+  };
+
   return (
     <section className="flex flex-col gap-6">
       {/* 상단 텍스트 영역 (항상 유지) */}
@@ -156,9 +183,23 @@ export default function PageClient() {
               items={items}
               hasNext={hasNext}
               onLoadMore={fetchMore}
+              onCancel={cancelReservation}
+              onReview={handleReviewClick}
             />
           )}
         </>
+      )}
+
+      {isReviewModalOpen && reviewTarget && (
+        <ReviewModal
+          isOpen={isReviewModalOpen}
+          reservation={reviewTarget}
+          onClose={() => {
+            setIsReviewModalOpen(false);
+            setReviewTarget(null);
+          }}
+          onSubmit={handleReviewSubmit}
+        />
       )}
     </section>
   );
