@@ -45,15 +45,8 @@ export default function ReservationList({
       {items.map((item) => (
         <ReservationCard
           key={item.id}
-          id={item.id}
-          activity={item.activity}
-          status={item.status}
+          {...item}
           reviewSubmitted={item.reviewSubmitted ?? false}
-          totalPrice={item.totalPrice}
-          headCount={item.headCount}
-          date={item.date}
-          startTime={item.startTime}
-          endTime={item.endTime}
           onCancel={onCancel}
           onReview={onReview}
         />

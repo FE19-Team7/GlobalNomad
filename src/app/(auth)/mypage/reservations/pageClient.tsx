@@ -36,8 +36,20 @@ export default function PageClient() {
   const [reviewTarget, setReviewTarget] = useState<Reservation | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
+  /**
+   * 예약 액션 훅 (콜백 기반)
+   */
   const { cancelReservation, submitReview } = useReservationActions({
-    setItems,
+    onSubmitReview: (reservationId) => {
+      setItems((prev) =>
+        prev.map((item) =>
+          item.id === reservationId ? { ...item, reviewSubmitted: true } : item
+        )
+      );
+    },
+    onCancelReservation: (reservationId) => {
+      setItems((prev) => prev.filter((item) => item.id !== reservationId));
+    },
   });
 
   /**

@@ -1,14 +1,15 @@
 "use client";
 
 import { authFetch } from "@/src/lib/api/authFetch";
-import { Reservation } from "../type";
 
 type UseReservationActionsParams = {
-  setItems: React.Dispatch<React.SetStateAction<Reservation[]>>;
+  onSubmitReview?: (reservationId: number) => void;
+  onCancelReservation?: (reservationId: number) => void;
 };
 
 export function useReservationActions({
-  setItems,
+  onSubmitReview,
+  onCancelReservation,
 }: UseReservationActionsParams) {
   /**
    * 리뷰 작성
@@ -30,12 +31,8 @@ export function useReservationActions({
       throw new Error("REVIEW_FAILED");
     }
 
-    // ✅ 리뷰 작성 완료 상태 반영
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === reservationId ? { ...item, reviewSubmitted: true } : item
-      )
-    );
+    // 리뷰 작성 성공 시 콜백 알림
+    onSubmitReview?.(reservationId);
   };
 
   /**
@@ -54,8 +51,8 @@ export function useReservationActions({
       throw new Error("CANCEL_FAILED");
     }
 
-    // ✅ 취소 → 리스트에서 제거
-    setItems((prev) => prev.filter((item) => item.id !== reservationId));
+    // 예약 취소 성공 시 콜백 알림
+    onCancelReservation?.(reservationId);
   };
 
   return {

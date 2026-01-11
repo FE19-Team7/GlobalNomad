@@ -23,6 +23,7 @@ export default function ReviewModal({
 }: ReviewModalProps) {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
+  const reservationTimeText = `${reservation.date} / ${reservation.startTime} - ${reservation.endTime} (${reservation.headCount}명)`;
 
   const resetState = () => {
     setRating(0);
@@ -63,8 +64,7 @@ export default function ReviewModal({
           </h2>
 
           <p className="mt-1 text-sm text-gray-500 text-center">
-            {reservation.date} / {reservation.startTime} - {reservation.endTime}
-            ({reservation.headCount}명)
+            {reservationTimeText}
           </p>
 
           <div className="mt-4 flex justify-center gap-2">
