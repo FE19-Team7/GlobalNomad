@@ -74,7 +74,7 @@ export default function Calendar({ summaryMap = {} }: CalendarProps) {
   ];
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm pt-6 pb-4">
+    <div className="rounded-2xl bg-white border border-gray-50 shadow-sm pt-5">
       {/* Header */}
       <div className="flex items-center justify-center gap-6 mb-4">
         <button onClick={() => setCurrentDate(subMonths(currentDate, 1))}>
