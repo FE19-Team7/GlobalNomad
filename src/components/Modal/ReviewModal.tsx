@@ -2,28 +2,28 @@
 
 import { useState } from "react";
 import Modal from "./Modal";
-import Button from '@/src/components/Button/Button';
+import Button from "@/src/components/Button/Button";
 import EmptyStar from "@/src/assets/icon_empty_star.svg";
 import FilledStar from "@/src/assets/icon_filled_star.svg";
 import DeleteIcon from "@/src/assets/icon_delete.svg";
+import { Reservation } from "@/src/features/mypage/reservations/type";
 
 interface ReviewModalProps {
   isOpen: boolean;
+  reservation: Reservation;
   onClose: () => void;
   onSubmit: (rating: number, content: string) => void;
-  title: string;
-  subtitle: string;
 }
 
 export default function ReviewModal({
   isOpen,
+  reservation,
   onClose,
   onSubmit,
-  title,
-  subtitle,
 }: ReviewModalProps) {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
+  const reservationTimeText = `${reservation.date} / ${reservation.startTime} - ${reservation.endTime} (${reservation.headCount}명)`;
 
   const resetState = () => {
     setRating(0);
@@ -59,9 +59,13 @@ export default function ReviewModal({
       }
       contents={
         <div>
-          <h2 className="text-base font-bold text-center">{title}</h2>
+          <h2 className="text-base font-bold text-center">
+            {reservation.activity.title}
+          </h2>
 
-          <p className="mt-1 text-sm text-gray-500 text-center">{subtitle}</p>
+          <p className="mt-1 text-sm text-gray-500 text-center">
+            {reservationTimeText}
+          </p>
 
           <div className="mt-4 flex justify-center gap-2">
             {Array.from({ length: 5 }).map((_, index) => {
