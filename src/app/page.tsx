@@ -10,7 +10,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col gap-15">
       <div className="bg-gradient-to-t from-white via-[#F7FBFF] to-[#BBDDFF]/50">
         <Header />
-        <div className="w-full max-w-[1200px] mx-auto px-10 py-5">
+        <div className="w-full max-w-[1200px] mx-auto mt-[53px] px-10 py-[50px]">
           <HeroSection />
         </div>
       </div>
