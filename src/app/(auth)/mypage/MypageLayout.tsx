@@ -25,7 +25,7 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
   const { userData } = useUser();
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       {/* 헤더/푸터 사이 영역 */}
       <div className="h-[calc(100vh-160px)] py-6">
         <div className="w-full max-w-[980px] mx-auto px-6 h-full">
@@ -53,7 +53,7 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 
