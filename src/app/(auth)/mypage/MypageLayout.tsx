@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import SideMenu from '@/src/components/SideMenu/SideMenu';
-import { getMyProfile, uploadProfileImage, updateMyProfile, UserProfile } from '@/src/apis/user';
+import { getMyProfile, uploadProfileImage, updateMyProfile, UserProfile } from '@/src/features/mypage/services/userService';
 
 // 컨텍스트 정의
 interface UserContextType {
@@ -46,7 +46,7 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       {/* 헤더/푸터 사이 영역 */}
       <div className="h-[calc(100vh-160px)] py-6">
         <div className="w-full max-w-[980px] mx-auto px-6 h-full">
@@ -75,7 +75,7 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

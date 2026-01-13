@@ -1,4 +1,9 @@
-export interface UserProfile { // 로그인, 내 정도 등에서 사용되는 공통 타입 사용시 정보 받아오기 필요시 import 
+import { authFetch } from '@/src/lib/api/authFetch';
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// 공통 타입으로 사용시 import 해서 뽑아 갈 것. 
+export interface UserProfile {
   id: number;
   email: string;
   nickname: string;
@@ -15,7 +20,7 @@ export interface UpdateUserData {
 
 // GET - 내 정보 조회
 export const getMyProfile = async (): Promise<UserProfile> => {
-  const response = await fetch('/api/users/me', {
+  const response = await authFetch('/api/users/me', {
     method: 'GET',
   });
 
@@ -28,7 +33,7 @@ export const getMyProfile = async (): Promise<UserProfile> => {
 
 // PATCH - 내 정보 수정
 export const updateMyProfile = async (data: UpdateUserData): Promise<UserProfile> => {
-  const response = await fetch('/api/users/me', {
+  const response = await authFetch('/api/users/me', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -48,7 +53,7 @@ export const uploadProfileImage = async (file: File): Promise<{ profileImageUrl:
   const formData = new FormData();
   formData.append('image', file);
 
-  const response = await fetch('/api/users/me/image', {
+  const response = await authFetch('/api/users/me/image', {
     method: 'POST',
     body: formData,
   });
