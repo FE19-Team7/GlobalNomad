@@ -1,41 +1,35 @@
 "use client";
 
-import { RefObject, useEffect, useRef, useState, useMemo } from "react";
+import { useMemo, useRef } from "react";
 import StatusBadge from "@/src/components/Card/StatusBadge";
 import DeleteIcon from "@/src/assets/icon_delete.svg";
 import ReservationsTimeDropdown from "@/src/components/Dropdown/ReservationsTimeDropdown";
+import { Reservation } from "@/src/features/mypage/reservation-status/type";
 
-type TabKey = "requested" | "approved" | "declined";
+export type TabKey = "requested" | "approved" | "declined";
 
-interface Reservation {
+export interface TimeOption {
   id: number;
-  name: string;
-  people: number;
-  time: string;
-  status?: "pending" | "declined";
+  startTime: string;
+  endTime: string;
+  fullTime: string;
 }
 
 interface ReservationPopoverProps {
   isOpen: boolean;
   onClose: () => void;
   dateLabel: string;
-  anchorRef: RefObject<HTMLElement | null>;
+  anchorEl: HTMLElement;
+  activeTab: TabKey;
+  onTabChange: (tab: TabKey) => void;
+  timeOptions: TimeOption[];
+  selectedTimeId: number;
+  onTimeChange: (scheduleId: number) => void;
+  reservations: Reservation[];
+  loading?: boolean;
+  onApprove: (id: number) => void;
+  onDecline: (id: number) => void;
 }
-
-const INITIAL_RESERVATIONS: Reservation[] = [
-  {
-    id: 1,
-    name: "정만철",
-    people: 10,
-    time: "14:00 - 15:00",
-  },
-  {
-    id: 2,
-    name: "정만철",
-    people: 12,
-    time: "14:00 - 15:00",
-  },
-];
 
 const TAB_LABEL: Record<TabKey, string> = {
   requested: "신청",
@@ -47,92 +41,48 @@ export default function ReservationPopover({
   isOpen,
   onClose,
   dateLabel,
-  anchorRef,
+  anchorEl,
+  activeTab,
+  onTabChange,
+  timeOptions,
+  selectedTimeId,
+  onTimeChange,
+  reservations,
+  loading = false,
+  onApprove,
+  onDecline,
 }: ReservationPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState<React.CSSProperties>({});
 
-  const [activeTab, setActiveTab] = useState<TabKey>("requested");
-  const [reservations, setReservations] =
-    useState<Reservation[]>(INITIAL_RESERVATIONS);
-
-  const timeOptions = useMemo(() => {
-  const timeStrings = Array.from(
-    new Set(reservations.map((r) => r.time))
-  )
-
-  return timeStrings.map((time, index) => {
-    const [startTime, endTime] = time.split('-').map(t => t.trim())
-
+  /* ======================
+   * 위치 계산
+   ====================== */
+  const style = useMemo<React.CSSProperties>(() => {
+    if (!isOpen || !anchorEl) return {};
+    const rect = anchorEl.getBoundingClientRect();
     return {
-      id: index,  // api 붙이면 수정
-      startTime,
-      endTime,
-      fullTime: time,
-    }
-  })
-}, [reservations])
-
-const [selectedTimeId, setSelectedTimeId] = useState<number>(() => {
-  return timeOptions[0]?.id ?? 0
-})
-
-const selectedTime = useMemo(() => {
-  return timeOptions.find(o => o.id === selectedTimeId)?.fullTime ?? ''
-}, [timeOptions, selectedTimeId])
-
-  useEffect(() => {
-    if (!isOpen || !anchorRef.current) return;
-
-    const rect = anchorRef.current.getBoundingClientRect();
-    setStyle({
       position: "fixed",
       top: rect.top,
       left: rect.right + 8,
       zIndex: 50,
-    });
-  }, [isOpen, anchorRef]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(e.target as Node) &&
-        !anchorRef.current?.contains(e.target as Node)
-      ) {
-        onClose();
-      }
     };
+  }, [isOpen, anchorEl]);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, onClose, anchorRef]);
+  /* ======================
+   * 예약 목록 필터링 
+   ====================== */
+  const filtered = useMemo(() => {
+    return reservations.filter((r) => {
+      if (selectedTimeId && r.scheduleId !== selectedTimeId) return false;
+
+      if (activeTab === "requested") return r.status === "pending";
+      if (activeTab === "approved") return r.status === "confirmed";
+      if (activeTab === "declined") return r.status === "declined";
+      return false;
+    });
+  }, [reservations, selectedTimeId, activeTab]);
 
   if (!isOpen) return null;
-
-  const approve = (id: number) => {
-    setReservations((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status: "pending" } : r))
-    );
-    setActiveTab("approved");
-  };
-
-  const decline = (id: number) => {
-    setReservations((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status: "declined" } : r))
-    );
-    setActiveTab("declined");
-  };
-
-  const filtered = reservations.filter((r) => {
-    if (r.time !== selectedTime) return false;
-
-    if (activeTab === "requested") return r.status === undefined;
-    if (activeTab === "approved") return r.status === "pending";
-    if (activeTab === "declined") return r.status === "declined";
-  });
 
   return (
     <aside
@@ -158,11 +108,12 @@ const selectedTime = useMemo(() => {
           {(Object.keys(TAB_LABEL) as TabKey[]).map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`pb-2 ${activeTab === tab
-                ? "border-b-2 border-primary-500 text-primary-500 font-semibold"
-                : "text-gray-400"
-                }`}
+              onClick={() => onTabChange(tab)}
+              className={`pb-2 ${
+                activeTab === tab
+                  ? "border-b-2 border-primary-500 text-primary-500 font-semibold"
+                  : "text-gray-400"
+              }`}
             >
               {TAB_LABEL[tab]}
             </button>
@@ -175,54 +126,58 @@ const selectedTime = useMemo(() => {
           <ReservationsTimeDropdown
             times={timeOptions}
             value={selectedTimeId}
-            onChange={setSelectedTimeId}
+            onChange={onTimeChange}
           />
         </section>
 
         {/* 예약 내역 */}
         <section className="flex flex-col gap-3">
           <h3 className="text-m font-bold mb-2">예약 내역</h3>
-          {filtered.length === 0 && (
+
+          {loading && <p className="text-sm text-gray-400">불러오는 중…</p>}
+
+          {!loading && filtered.length === 0 && (
             <p className="text-sm text-gray-400">예약 내역이 없습니다.</p>
           )}
 
-          {filtered.map((r) => (
-            <div
-              key={r.id}
-              className="flex justify-between items-center border border-gray-100 rounded-xl p-3"
-            >
-              <div>
-                <p className="text-sm">
-                  <span className="text-gray-500 font-bold">닉네임 </span>
-                  <span className="text-black">{r.name}</span>
-                </p>
-                <p className="text-sm">
-                  <span className="text-gray-500 font-bold">인원 </span>
-                  <span className="text-black">{r.people}명</span>
-                </p>
-              </div>
-
-              {activeTab === "requested" ? (
-                <div className="flex flex-col text-sm gap-1">
-                  <button
-                    onClick={() => approve(r.id)}
-                    className="px-3 py-1 rounded-full bg-white border border-gray-50 text-gray-600 text-xs font-semibold"
-                  >
-                    승인하기
-                  </button>
-
-                  <button
-                    onClick={() => decline(r.id)}
-                    className=" px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-xs font-semibold"
-                  >
-                    거절하기
-                  </button>
+          {!loading &&
+            filtered.map((r) => (
+              <div
+                key={r.id}
+                className="flex justify-between items-center border border-gray-100 rounded-xl p-3"
+              >
+                <div>
+                  <p className="text-sm">
+                    <span className="text-gray-500 font-bold">닉네임 </span>
+                    <span className="text-black">{r.nickname}</span>
+                  </p>
+                  <p className="text-sm">
+                    <span className="text-gray-500 font-bold">인원 </span>
+                    <span className="text-black">{r.headCount}명</span>
+                  </p>
                 </div>
-              ) : (
-                <StatusBadge status={r.status!} />
-              )}
-            </div>
-          ))}
+
+                {activeTab === "requested" ? (
+                  <div className="flex flex-col text-sm gap-1">
+                    <button
+                      onClick={() => onApprove(r.id)}
+                      className="px-3 py-1 rounded-full bg-white border border-gray-50 text-gray-600 text-xs font-semibold"
+                    >
+                      승인하기
+                    </button>
+
+                    <button
+                      onClick={() => onDecline(r.id)}
+                      className="px-3 py-1 rounded-full bg-gray-50 text-gray-600 text-xs font-semibold"
+                    >
+                      거절하기
+                    </button>
+                  </div>
+                ) : (
+                  <StatusBadge status={r.status} />
+                )}
+              </div>
+            ))}
         </section>
       </div>
     </aside>

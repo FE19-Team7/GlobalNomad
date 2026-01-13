@@ -10,6 +10,7 @@ import {
 } from "date-fns";
 import { useState } from "react";
 import { CalendarDayCell } from "./CalendarDayCell";
+import { EventStatus } from "./EventBadge";
 
 export interface DaySummary {
   reserved: number;
@@ -25,9 +26,17 @@ const EMPTY_SUMMARY: DaySummary = {
 
 interface CalendarProps {
   summaryMap?: Record<string, DaySummary>;
+  onBadgeClick?: (payload: {
+    dateKey: string;
+    status: EventStatus;
+    anchorEl: HTMLElement;
+  }) => void;
 }
 
-export default function Calendar({ summaryMap = {} }: CalendarProps) {
+export default function Calendar({
+  summaryMap = {},
+  onBadgeClick,
+}: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(() => new Date());
 
   const year = currentDate.getFullYear();
@@ -59,7 +68,7 @@ export default function Calendar({ summaryMap = {} }: CalendarProps) {
     ...prevDays.map((day) => ({
       day,
       isOutsideMonth: true,
-      dateKey: null,
+      dateKey: null as string | null,
     })),
     ...currentDays.map((day) => ({
       day,
@@ -69,7 +78,7 @@ export default function Calendar({ summaryMap = {} }: CalendarProps) {
     ...nextDays.map((day) => ({
       day,
       isOutsideMonth: true,
-      dateKey: null,
+      dateKey: null as string | null,
     })),
   ];
 
@@ -107,6 +116,15 @@ export default function Calendar({ summaryMap = {} }: CalendarProps) {
               summary={
                 dateKey ? (summaryMap[dateKey] ?? EMPTY_SUMMARY) : EMPTY_SUMMARY
               }
+              onBadgeClick={(payload) => {
+                if (!dateKey || !onBadgeClick) return;
+
+                onBadgeClick({
+                  dateKey,
+                  status: payload.status,
+                  anchorEl: payload.anchorEl,
+                });
+              }}
             />
           </div>
         ))}
