@@ -17,6 +17,7 @@ export default function PopularActivitiesList() {
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -87,16 +88,22 @@ export default function PopularActivitiesList() {
 
   // 왼쪽 화살표 버튼 - 이전으로 이동
   const handlePrevBtn = () => {
+    setIsScrolling(true);
+
     if (scrollRef.current) {
       scrollRef.current.scrollBy({
         left: -getMoveDistance(),
         behavior: 'smooth',
       });
     }
+
+    setTimeout(() => setIsScrolling(false), 600);
   };
 
   // 오른쪽 화살표 버튼 - 다음으로 이동
   const handleNextBtn = async () => {
+    setIsScrolling(true);
+
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
       const isNearEnd = scrollLeft + clientWidth >= scrollWidth - 50;
@@ -109,6 +116,8 @@ export default function PopularActivitiesList() {
         behavior: 'smooth',
       });
     }
+
+    setTimeout(() => setIsScrolling(false), 600);
   };
 
   return (
@@ -118,10 +127,11 @@ export default function PopularActivitiesList() {
       {showLeftBtn && (
         <button
           onClick={handlePrevBtn}
+          disabled={isScrolling}
           className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-20 
                      w-12 h-12 flex items-center justify-center 
                      bg-white border border-gray-200 rounded-full shadow-xl
-                     hover:bg-gray-50"
+                     hover:bg-gray-50 cursor-pointer"
         >
           <ArrowLeftIcon className="w-6 h-6 text-gray-700" />
         </button>
@@ -157,10 +167,11 @@ export default function PopularActivitiesList() {
       {(hasMore || showRightBtn) && (
         <button
           onClick={handleNextBtn}
+          disabled={isScrolling}
           className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-20 
                      w-12 h-12 flex items-center justify-center 
                      bg-white border border-gray-200 rounded-full shadow-xl
-                     hover:bg-gray-50"
+                     hover:bg-gray-50 cursor-pointer"
         >
           <ArrowRightIcon className="w-6 h-6 text-gray-700" />
         </button>
