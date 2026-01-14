@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import SideMenu from '@/src/components/SideMenu/SideMenu';
-import { getMyProfile, UserProfile } from '@/src/apis/user';
+import { getMyProfile, uploadProfileImage, updateMyProfile, UserProfile } from '@/src/apis/user';
 
 // 컨텍스트 정의
 interface UserContextType {
@@ -22,10 +22,31 @@ export const useUser = () => {
 
 // 내부 콘텐츠 컴포넌트
 function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
-  const { userData } = useUser();
+  const { userData, refreshUser } = useUser();
+
+  const handleProfileEdit = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      try {
+        const uploadRes = await uploadProfileImage(file);
+        await updateMyProfile({ profileImageUrl: uploadRes.profileImageUrl });
+        await refreshUser();
+        alert('프로필 이미지가 변경되었습니다.');
+      } catch (error) {
+        console.error(error);
+        alert('이미지 변경에 실패했습니다.');
+      }
+    };
+    input.click();
+  };
 
   return (
-    <main className="flex-1">
+    <div className="flex-1">
       {/* 헤더/푸터 사이 영역 */}
       <div className="h-[calc(100vh-160px)] py-6">
         <div className="w-full max-w-[980px] mx-auto px-6 h-full">
@@ -34,6 +55,7 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
             <aside className="w-[260px] flex-shrink-0">
               <SideMenu
                 profileImageUrl={userData?.profileImageUrl}
+                onProfileEdit={handleProfileEdit}
               />
             </aside>
 
@@ -53,7 +75,7 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -69,6 +91,10 @@ export default function MyPageLayout({ children }: MyPageLayoutProps) {
   const fetchUser = async () => {
     try {
       const data = await getMyProfile();
+      // 캐시 방지를 위한 타임스탬프 추가
+      if (data?.profileImageUrl) {
+        data.profileImageUrl = `${data.profileImageUrl}?v=${new Date().getTime()}`;
+      }
       setUserData(data);
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);

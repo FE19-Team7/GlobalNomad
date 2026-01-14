@@ -3,7 +3,7 @@ export type EventStatus = "RESERVED" | "APPROVED" | "COMPLETED";
 interface EventBadgeProps {
   status: EventStatus;
   count: number;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const BADGE_STYLE = {
