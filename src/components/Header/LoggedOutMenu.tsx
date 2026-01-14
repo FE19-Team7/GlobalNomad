@@ -1,8 +1,14 @@
+import Link from "next/link";
+
 export default function LoggedOutMenu() {
   return (
     <div className="flex items-center gap-4">
-      <button className="text-gray-950">로그인</button>
-      <button className="text-gray-950">회원가입</button>
+      <Link className="text-gray-950" href="/login">
+        로그인
+      </Link>
+      <Link className="text-gray-950" href="/signup">
+        회원가입
+      </Link>
     </div>
   );
 }

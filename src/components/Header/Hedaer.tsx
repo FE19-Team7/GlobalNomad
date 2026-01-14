@@ -1,19 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderLayout from "./HeaderLayout";
 import Logo from "@/assets/Logo.svg";
 import LoggedInMenu from "./LoggedInMenu";
 import LoggedOutMenu from "./LoggedOutMenu";
 import Link from "next/link";
+import { authFetch } from "@/src/lib/api/authFetch";
+
+type User = {
+  nickname: string;
+};
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const nickname = "조동현"; // 임시 데이터 -> 추후 로그인 회원가입 연동 시 수정
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
+  useEffect(() => {
+    authFetch("/api/users/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then(setUser)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/logout", { method: "POST" });
+    window.location.reload();
   };
+
+  if (loading) return null;
 
   return (
     <HeaderLayout>
@@ -27,9 +42,9 @@ export default function Header() {
         </Link>
 
         {/* 오른쪽 */}
-        <div className="flex justify-end items-center">
-          {isLoggedIn ? (
-            <LoggedInMenu nickname={nickname} onLogout={handleLogout} />
+        <div className="flex items-center">
+          {user ? (
+            <LoggedInMenu nickname={user.nickname} onLogout={handleLogout} />
           ) : (
             <LoggedOutMenu />
           )}
