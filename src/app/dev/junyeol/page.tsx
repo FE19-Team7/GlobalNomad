@@ -1,72 +1,75 @@
-'use client'
+"use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 import SideMenu from "@/src/components/SideMenu/SideMenu";
-import UserMenuDropDown from '@/src/components/Dropdown/UserMenuDropDown';
-import PriceSortDropdown, { PriceSortValue } from '@/src/components/Dropdown/PriceSortDropdown';
-import ActivitiesCategoryDropdown, { ActivityCategory } from '@/src/components/Dropdown/ActivitiesCategoryDropdown';
-import ReservationsDropdown, { ReservationItem } from '@/src/components/Dropdown/ReservationsDropdown';
-import { CalendarDayCell } from '@/src/components/Calendar/CalendarDayCell';
-import { EventBadge } from '@/src/components/Calendar/EventBadge';
-import { Pagination } from '@/src/components/Pagination/Pagination';
+import UserMenuDropDown from "@/src/components/Dropdown/UserMenuDropDown";
+import PriceSortDropdown, {
+  PriceSortValue,
+} from "@/src/components/Dropdown/PriceSortDropdown";
+import ActivitiesCategoryDropdown, {
+  ActivityCategory,
+} from "@/src/components/Dropdown/ActivitiesCategoryDropdown";
+import ReservationsDropdown, {
+  ReservationItem,
+} from "@/src/components/Dropdown/ReservationsDropdown";
+import { CalendarDayCell } from "@/src/components/Calendar/CalendarDayCell";
+import { EventBadge } from "@/src/components/Calendar/EventBadge";
+import { Pagination } from "@/src/components/Pagination/Pagination";
 import Search from "@/src/components/Search/Search";
-import ReservationsTimeDropdown from '@/src/components/Dropdown/ReservationsTimeDropdown';
-import Popover from '@/src/components/Popover/Popover'
-import Button from '@/src/components/Button/Button';
-import Input from '@/src/components/Input/Input';
-
+import ReservationsTimeDropdown from "@/src/components/Dropdown/ReservationsTimeDropdown";
+import Popover from "@/src/components/Popover/Popover";
+import Button from "@/src/components/Button/Button";
+import Input from "@/src/components/Input/Input";
 
 // api 연동 전 목업 데이터
 const MOCK_RESERVATIONS: ReservationItem[] = [
   {
-    label: '서핑 입문 체험',
-    value: '1',
-    reservedAt: '2024-12-01',
+    label: "서핑 입문 체험",
+    value: "1",
+    reservedAt: "2024-12-01",
   },
   {
-    label: '도자기 원데이 클래스',
-    value: '2',
-    reservedAt: '2025-01-03',
+    label: "도자기 원데이 클래스",
+    value: "2",
+    reservedAt: "2025-01-03",
   },
   {
-    label: '함께 배우는 즐거운 스트릿댄스',
-    value: '3',
-    reservedAt: '2025-02-10',
+    label: "함께 배우는 즐거운 스트릿댄스",
+    value: "3",
+    reservedAt: "2025-02-10",
   },
 ];
 
 const MOCK_TIMES = [
-  { id: 1, startTime: '14:00', endTime: '15:00' },
-  { id: 2, startTime: '15:00', endTime: '16:00' },
-  { id: 3, startTime: '16:00', endTime: '17:00' },
-]
+  { id: 1, startTime: "14:00", endTime: "15:00" },
+  { id: 2, startTime: "15:00", endTime: "16:00" },
+  { id: 3, startTime: "16:00", endTime: "17:00" },
+];
 
 // ReservationsDropdown 최근 예약 기준 정렬
 const sortedReservations = [...MOCK_RESERVATIONS].sort(
-  (a, b) =>
-    new Date(b.reservedAt).getTime() -
-    new Date(a.reservedAt).getTime()
+  (a, b) => new Date(b.reservedAt).getTime() - new Date(a.reservedAt).getTime()
 );
 
 export default function JunyeolPage() {
-  const [sort, setSort] = useState<PriceSortValue>('price_asc');
+  const [sort, setSort] = useState<PriceSortValue>("price_asc");
   const [category, setCategory] = useState<ActivityCategory | undefined>();
   const [reservation, setReservation] = useState<string | undefined>(
     sortedReservations[0]?.value
   );
   const [selectedTimeId, setSelectedTimeId] = useState<number>(
     MOCK_TIMES[0].id
-  )
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const TOTAL_PAGES = 12;
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
 
   const handleSearch = (value: string) => {
-    console.log('검색어:', value);
-  }
+    console.log("검색어:", value);
+  };
 
-  const anchorRef = useRef<HTMLButtonElement>(null)
-  const [open, setOpen] = useState(false)
+  const anchorRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-10 justify-center items-center">
@@ -76,7 +79,7 @@ export default function JunyeolPage() {
         {/* api 연동시 로그아웃 로직 구현 */}
         <UserMenuDropDown
           userName="김준열"
-          onLogout={() => alert('로그아웃')}
+          onLogout={() => alert("로그아웃")}
           className="w-25"
         />
 
@@ -112,21 +115,20 @@ export default function JunyeolPage() {
       </div>
 
       <div className="flex flex-col gap-10 justify-center items-center">
-        <h2 className="text-h2">ReservationsTimeDropDown 컴포넌트를 사용하는 Popover 컴포넌트 테스트</h2>
+        <h2 className="text-h2">
+          ReservationsTimeDropDown 컴포넌트를 사용하는 Popover 컴포넌트 테스트
+        </h2>
         <div className="flex flex-col border border-primary-100 rounded-xl p-10 gap-10 justify-center items-center">
-          <Button
-            ref={anchorRef}
-            onClick={() => setOpen(true)}
-          >
+          <Button ref={anchorRef} onClick={() => setOpen(true)}>
             테스트
           </Button>
 
-          <Popover
+          {/* <Popover
             isOpen={open}
             onClose={() => setOpen(false)}
             dateLabel="2024-01-09"
-            anchorRef={anchorRef}
-          />
+            // anchorRef={anchorRef}
+          /> */}
         </div>
       </div>
 
@@ -215,7 +217,8 @@ export default function JunyeolPage() {
           profileImageUrl={null}
           onProfileEdit={() => {
             console.log("프로필 편집");
-          }} />
+          }}
+        />
       </div>
 
       <h2 className="text-h2">Search 컴포넌트</h2>
@@ -236,7 +239,6 @@ export default function JunyeolPage() {
         <Input label="Password" type="password" placeholder="••••••••" />
         <Input label="Error" error="에러" />
       </div>
-
     </div>
   );
 }

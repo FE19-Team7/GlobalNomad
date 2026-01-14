@@ -37,8 +37,8 @@ export default function ActivitiesCategoryDropdown({
             value={value}
             onChange={(v) => onChange(v as ActivityCategory)}
             fullWidth
-            className={`border border-gray-100 rounded-[16px] ${className}`}
-            buttonClassName="p-[10px] rounded-[16px]"
+            className={`min-h-[54px] border border-gray-100 rounded-[16px] ${className}`}
+            buttonClassName="flex items-center px-5 w-full min-h-[54px] p-[10px] rounded-[16px]"
             menuClassName="w-full mt-3 rounded-[8px] p-2"
             itemClassName="text-left rounded-[12px]"
         />
