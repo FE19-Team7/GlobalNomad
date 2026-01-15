@@ -56,11 +56,6 @@ const ActivityDetailPage = () => {
     );
   }
 
-  // availableTimes 변환 (첫 번째 스케줄의 시간대만 사용)
-  const availableTimes = activityData.schedules?.[0]?.times?.map(
-    time => `${time.startTime}~${time.endTime}`
-  ) || [];
-
   // subImages URL 배열로 변환
   const subImageUrls = activityData.subImages?.map(img => img.imageUrl) || [];
 
@@ -69,7 +64,7 @@ const ActivityDetailPage = () => {
       <div className="max-w-[1200px] mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-8">
           
-          {/* 왼쪽: 이미지 및 상세 정보 */}
+          {/* 이미지 및 상세 정보 */}
           <div className="space-y-8">
             <ImageGallery 
               bannerImage={activityData.bannerImageUrl}
@@ -86,7 +81,7 @@ const ActivityDetailPage = () => {
             />
           </div>
           
-          {/* 오른쪽: 헤더 + 예약 카드 */}
+          {/* 제목 + 예약 달력 */}
           <div className="space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -114,8 +109,8 @@ const ActivityDetailPage = () => {
             </p>
             
             <ReservationCard 
+              activityId={activityData.id.toString()}
               pricePerPerson={activityData.price}
-              availableTimes={availableTimes}
             />
           </div>
         </div>
@@ -329,7 +324,7 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
       {reviewCount > 0 ? (
         <>
           <div className="flex flex-col items-center justify-center py-6">
-            <div className="text-[32px] font-bold text-gray-900 leading-none mb-2">
+            <div className="text-h1 font-bold text-gray-900 leading-none mb-2">
               {rating}
             </div>
             <div className="text-body-lg font-bold text-gray-900 mb-2">
@@ -375,7 +370,7 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
             )}
           </div>
           
-          {/* Pagination */}
+          {/* 페이지 네이션 */}
           {reviews.length > 0 && totalPages > 1 && (
             <div className="flex justify-center">
               <Pagination 
@@ -411,16 +406,16 @@ const Star = ({ filled, size = "normal" }: { filled: boolean; size?: string }) =
 };
 
 // 예약 카드
-const ReservationCard = ({ pricePerPerson, availableTimes }: { pricePerPerson: number; availableTimes: string[] }) => {
+const ReservationCard = ({ activityId, pricePerPerson }: { activityId: string; pricePerPerson: number }) => {
   return (
     <div 
       className="bg-white rounded-lg p-4" 
       style={{ boxShadow: '0px 4px 24px 0px rgba(156, 180, 202, 0.2)' }}
     >
-      <div className="[&>*]:!text-body [&_h3]:!text-body-lg [&_button]:!text-body [&_span]:!text-body [&>*]:!border-0">
+      <div className="[&>*]:!text-body [&_h3]:!text-body-lg [&_span]:!text-body">
         <Reservation 
+          activityId={activityId}
           pricePerPerson={pricePerPerson}
-          availableTimes={availableTimes}
         />
       </div>
     </div>
