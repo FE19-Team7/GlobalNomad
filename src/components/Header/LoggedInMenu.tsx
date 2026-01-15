@@ -41,16 +41,13 @@ export default function LoggedInMenu({
       <Divider className="mx-5" />
 
       <Link
-        href="/mypage"
+        href="/mypage/myprofile"
         aria-label="마이페이지"
         className="flex items-centerhover:opacity-70 transition"
       >
         <DefaultProfile />
       </Link>
-      <UserMenuDropDown
-        userName={nickname}
-        onLogout={onLogout}
-      />
+      <UserMenuDropDown userName={nickname} onLogout={onLogout} />
     </div>
   );
 }
