@@ -56,8 +56,8 @@ export default function ActivityCard({
             className="-mt-[60px] relative"
           >
             <div className="flex flex-col px-[30px] py-[20px] gap-[18px]">
-              <div className="flex flex-col">
-                <div className="text-h4 font-bold leading-6">{title}</div>
+              <div className="flex flex-col min-w-0">
+                <div className="text-h4 font-bold leading-6 truncate">{title}</div>
                 <div className="flex gap-[2px]">
                   <StarIcon aria-label="별점" className="w-[20px] h-[20px]" />
                   <span className="ml-[3px] text-body leading-6">{rating}</span>
