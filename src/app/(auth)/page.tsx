@@ -2,7 +2,6 @@ import HeroSection from "@/src/features/mainpage/components/HeroSection";
 import SearchSection from "@/src/features/mainpage/components/SearchSection";
 import PopularActivitiesSection from "@/src/features/mainpage/components/PopularActivitiesSection";
 import AllActivitiesSection from "@/src/features/mainpage/components/AllActivitiesSection";
-import { Footer } from "@/src/components/Footer/Footer";
 
 export default function Home() {
   return (
@@ -17,7 +16,6 @@ export default function Home() {
         <PopularActivitiesSection />
         <AllActivitiesSection />
       </main>
-      <Footer />
     </div>
   );
 }
