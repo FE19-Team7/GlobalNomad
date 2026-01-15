@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import SideMenu from '@/src/components/SideMenu/SideMenu';
-import { getMyProfile, uploadProfileImage, updateMyProfile, UserProfile } from '@/src/apis/user';
+import { getMyProfile, uploadProfileImage, updateMyProfile, UserProfile } from '@/src/features/mypage/services/userService';
 
 // 컨텍스트 정의
 interface UserContextType {
