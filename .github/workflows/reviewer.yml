@@ -1,0 +1,48 @@
+name: Auto assign random reviewers
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Assign random reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const reviewers = [
+              "Chodongdong",
+              "glowhyeon",
+              "hyuns8328",
+              "kimjunyeol3"
+            ];
+
+            const author = context.payload.pull_request.user.login;
+
+            // PR 작성자 제외
+            const candidates = reviewers.filter(r => r !== author);
+
+            // 랜덤 섞기
+            const shuffled = candidates.sort(() => 0.5 - Math.random());
+
+            // 2명 선택
+            const selected = shuffled.slice(0, 2);
+
+            if (selected.length < 2) {
+              core.warning("리뷰어가 충분하지 않습니다.");
+              return;
+            }
+
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: selected,
+            });
+
+            core.info(`Assigned reviewers: ${selected.join(", ")}`);
