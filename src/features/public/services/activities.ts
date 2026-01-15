@@ -109,3 +109,20 @@ export const createReservation = async (
   const result = await response.json();
   return result;
 };
+
+/**
+ * 내 체험 삭제
+ */
+export const deleteMyActivity = async (activityId: string): Promise<void> => {
+  const response = await fetch(`/api/my-activities/${activityId}/delete-activities`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || '체험 삭제에 실패했습니다.');
+  }
+};
