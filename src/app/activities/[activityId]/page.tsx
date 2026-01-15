@@ -1,27 +1,45 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Reservation from '@/src/components/Reservation/Reservation';
 import { Pagination } from '@/src/components/Pagination/Pagination';
+import DeleteModal from '@/src/components/Modal/DeleteModal';
 import { ActivityData } from '@/src/types/activityType';
 import { Review } from '@/src/types/reviewType';
-import { getActivityDetail } from '@/src/features/public/services/activities';
+import { getActivityDetail, deleteMyActivity } from '@/src/features/public/services/activities';
 import LocationIcon from '@/src/assets/icon_location.svg';
 import KebabMenuIcon from '@/src/assets/icon_kebab_menu.svg';
 import StarIcon from '@/src/assets/icon_star.svg';
 
 const ActivityDetailPage = () => {
   const params = useParams();
+  const router = useRouter();
   const activityId = params.activityId as string;
   
   const [activityData, setActivityData] = useState<ActivityData | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 임시 데이터 (API에 없는 필드)
   const defaultReviews: Review[] = [];
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch('/api/users/me');
+        if (response.ok) {
+          const userData = await response.json();
+          setCurrentUserId(userData.id);
+        }
+      } catch (error) {
+        console.error('사용자 정보 가져오기 실패:', error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     const fetchActivityData = async () => {
@@ -51,12 +69,11 @@ const ActivityDetailPage = () => {
   if (error || !activityData) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-body text-red-600">{error || '데이터를 불러올 수 없습니다.'}</p>
+        <p className="text-body text-red-500">{error || '데이터를 불러올 수 없습니다.'}</p>
       </div>
     );
   }
 
-  // subImages URL 배열로 변환
   const subImageUrls = activityData.subImages?.map(img => img.imageUrl) || [];
 
   return (
@@ -64,16 +81,13 @@ const ActivityDetailPage = () => {
       <div className="max-w-[1200px] mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-8">
           
-          {/* 이미지 및 상세 정보 */}
           <div className="space-y-8">
             <ImageGallery 
               bannerImage={activityData.bannerImageUrl}
               images={subImageUrls}
             />
             <DescriptionSection description={activityData.description} />
-            <LocationSection 
-              address={activityData.address}
-            />
+            <LocationSection address={activityData.address} />
             <ReviewSection 
               rating={activityData.rating}
               reviewCount={activityData.reviewCount}
@@ -81,7 +95,6 @@ const ActivityDetailPage = () => {
             />
           </div>
           
-          {/* 제목 + 예약 달력 */}
           <div className="space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -101,12 +114,12 @@ const ActivityDetailPage = () => {
                   <span>{activityData.address}</span>
                 </div>
               </div>
-              <KebabMenu />
+              <KebabMenu 
+                activityId={activityId}
+                userId={activityData.userId}
+                currentUserId={currentUserId}
+              />
             </div>
-            
-            <p className="text-body text-gray-700">
-              초보자부터 전문가까지 즐거운 체험을 함께 느껴보세요.
-            </p>
             
             <ReservationCard 
               activityId={activityData.id.toString()}
@@ -119,56 +132,98 @@ const ActivityDetailPage = () => {
   );
 };
 
-// 케밥 메뉴
-const KebabMenu = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+const KebabMenu = ({ 
+  activityId, 
+  userId,
+  currentUserId 
+}: { 
+  activityId: string; 
+  userId: number;
+  currentUserId: number | null;
+}) => {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const isMyActivity = currentUserId !== null && userId === currentUserId;
+
+  if (!isMyActivity) {
+    return null;
+  }
 
   const handleEdit = () => {
-    window.location.href = '/my-reservations/1';
+    setIsOpen(false);
+    // 실제 경로 예상: /my-activities/${activityId}/edit
+    router.push('/');
   };
 
-  const handleDelete = () => {
-    if (confirm('정말 삭제하시겠습니까?')) {
-      alert('삭제되었습니다.');
-    }
+  const handleDeleteClick = () => {
+    setIsOpen(false);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    deleteMyActivity(activityId)
+      .then(() => {
+        alert('체험이 삭제되었습니다.');
+        router.push('/');
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          alert(error.message);
+        } else {
+          alert('체험 삭제에 실패했습니다.');
+        }
+      })
+      .finally(() => {
+        setIsDeleteModalOpen(false);
+      });
   };
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-full"
-      >
-        <KebabMenuIcon className="w-5 h-5" />
-      </button>
+    <>
+      <div className="relative">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-full"
+        >
+          <KebabMenuIcon className="w-5 h-5" />
+        </button>
 
-      {isOpen && (
-        <>
-          <div 
-            className="fixed inset-0 z-10" 
-            onClick={() => setIsOpen(false)}
-          />
-          <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
-            <button
-              onClick={handleEdit}
-              className="w-full px-4 py-3 text-left text-body text-gray-900 hover:bg-gray-50 rounded-t-lg"
-            >
-              수정하기
-            </button>
-            <button
-              onClick={handleDelete}
-              className="w-full px-4 py-3 text-left text-body text-gray-900 hover:bg-gray-50 rounded-b-lg"
-            >
-              삭제하기
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+        {isOpen && (
+          <>
+            <div 
+              className="fixed inset-0 z-10" 
+              onClick={() => setIsOpen(false)}
+            />
+            <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+              <button
+                onClick={handleEdit}
+                className="w-full px-4 py-3 text-left text-body text-gray-900 hover:bg-gray-50 rounded-t-lg"
+              >
+                수정하기
+              </button>
+              <button
+                onClick={handleDeleteClick}
+                className="w-full px-4 py-3 text-left text-body text-gray-900 hover:bg-gray-50 rounded-b-lg"
+              >
+                삭제하기
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        message="체험을 삭제하시겠어요?"
+      />
+    </>
   );
 };
 
-// 이미지 갤러리
 const ImageGallery = ({ bannerImage, images }: { bannerImage: string | null; images: string[] }) => {
   return (
     <div className="space-y-4">
@@ -188,7 +243,6 @@ const ImageGallery = ({ bannerImage, images }: { bannerImage: string | null; ima
         )}
       </div>
       
-      {/* 서브 이미지 */}
       {images.length > 0 && (
         <div className="grid grid-cols-4 gap-2">
           {images.map((image, index) => (
@@ -207,7 +261,6 @@ const ImageGallery = ({ bannerImage, images }: { bannerImage: string | null; ima
   );
 };
 
-// 체험 설명
 const DescriptionSection = ({ description }: { description: string }) => {
   return (
     <div className="space-y-4">
@@ -223,7 +276,6 @@ const DescriptionSection = ({ description }: { description: string }) => {
   );
 };
 
-// 오시는 길
 const LocationSection = ({ address }: { address: string }) => {
   const mapRef = React.useRef<HTMLDivElement>(null);
 
@@ -238,10 +290,8 @@ const LocationSection = ({ address }: { address: string }) => {
         const container = mapRef.current;
         if (!container) return;
 
-        // Geocoder 생성
         const geocoder = new window.kakao.maps.services.Geocoder();
 
-        // 주소로 좌표 검색
         geocoder.addressSearch(address, (result: Array<{ x: string; y: string }>, status: string) => {
           if (status === window.kakao.maps.services.Status.OK) {
             const coords = new window.kakao.maps.LatLng(
@@ -261,7 +311,6 @@ const LocationSection = ({ address }: { address: string }) => {
             });
             marker.setMap(map);
           } else {
-            // 주소 검색 실패 시 기본 위치 (서울시청)
             const defaultCoords = new window.kakao.maps.LatLng(37.5665, 126.9780);
             const options = {
               center: defaultCoords,
@@ -300,7 +349,6 @@ const LocationSection = ({ address }: { address: string }) => {
   );
 };
 
-// 후기 섹션
 const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; reviewCount: number; reviews: Review[] }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const reviewsPerPage = 3;
@@ -312,7 +360,6 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
 
   return (
     <div className="space-y-6">
-      {/* 후기 헤더 */}
       <div className="flex items-center gap-2">
         <h2 className="text-h3 font-bold text-gray-900 tracking-h3">
           체험 후기
@@ -320,7 +367,6 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
         <span className="text-body font-medium text-gray-600">{reviewCount}개</span>
       </div>
 
-      {/* 평점 정보 */}
       {reviewCount > 0 ? (
         <>
           <div className="flex flex-col items-center justify-center py-6">
@@ -340,7 +386,6 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
             </div>
           </div>
 
-          {/* 리뷰 목록 */}
           <div className="space-y-3">
             {currentReviews.length > 0 ? (
               currentReviews.map((review) => (
@@ -370,7 +415,6 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
             )}
           </div>
           
-          {/* 페이지 네이션 */}
           {reviews.length > 0 && totalPages > 1 && (
             <div className="flex justify-center">
               <Pagination 
@@ -392,7 +436,6 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
   );
 };
 
-// 별 아이콘 컴포넌트
 const Star = ({ filled, size = "normal" }: { filled: boolean; size?: string }) => {
   const sizeClass = size === "small" ? "w-4 h-4" : "w-6 h-6";
   const color = filled ? "#FFC107" : "#E0E0E5";
@@ -405,7 +448,6 @@ const Star = ({ filled, size = "normal" }: { filled: boolean; size?: string }) =
   );
 };
 
-// 예약 카드
 const ReservationCard = ({ activityId, pricePerPerson }: { activityId: string; pricePerPerson: number }) => {
   return (
     <div 
