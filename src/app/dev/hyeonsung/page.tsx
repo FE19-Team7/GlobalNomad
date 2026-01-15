@@ -198,7 +198,7 @@ export default function Home() {
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-4">캘린더 컴포넌트 테스트</h2>
           <div className="flex justify-center">
-            <Calendar />
+            <Calendar activityId="1" />
           </div>
         </section>
       </main>
