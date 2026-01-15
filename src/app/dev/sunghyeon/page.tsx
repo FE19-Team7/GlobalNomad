@@ -1,4 +1,5 @@
 import ActivityCard from "@/src/components/Card/ActivityCard";
+import AllActivitiesList from "@/src/components/Card/AllActivitiesList";
 import MyActivitiesCard from "@/src/components/Card/MyActivitiesCard";
 import ReservationCard from "@/src/components/Card/ReservationCard";
 
@@ -56,6 +57,9 @@ export default function SunghyeonPage() {
           startTime="07:00"
           endTime="17:00"
         />
+      </div>
+      <div className="h-[832px]">
+        <AllActivitiesList />
       </div>
     </div>
   );
