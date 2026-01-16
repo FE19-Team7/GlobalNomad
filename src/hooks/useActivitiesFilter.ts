@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { ActivityCardProps } from '@/src/components/Card/ActivityCard';
 
 export type PriceSortValue = 'price_asc' | 'price_desc';
@@ -6,16 +6,19 @@ export type PriceSortValue = 'price_asc' | 'price_desc';
 interface UseActivitiesFilterProps {
   activities: ActivityCardProps[];
   itemsPerPage: number;
+  searchTerm?: string;
 }
 
 interface useActivitiesFilterReturn {
   priceSort: PriceSortValue | null;
   selectedCategory: string | null;
   currentPage: number;
+  searchTerm: string;
 
   setPriceSort: (value: PriceSortValue | null) => void;
   setSelectedCategory: (category: string | null) => void;
   setCurrentPage: (page: number) => void;
+  setSearchTerm: (term: string) => void;
   resetFilters: () => void;
 
   processedItems: ActivityCardProps[];    // 필터링 및 정렬된 전체 데이터
@@ -27,6 +30,7 @@ interface useActivitiesFilterReturn {
 export function useActivitiesFilter({
   activities,
   itemsPerPage = 8,
+  searchTerm: externalSearchTerm = '',
 }: UseActivitiesFilterProps): useActivitiesFilterReturn {
 
   // 필터 상태 관리
@@ -37,6 +41,13 @@ export function useActivitiesFilter({
   // 필터링 및 정렬된 전체 데이터
   const processedItems = useMemo(() => {
     let items = [...activities];
+
+    // 검색 필터링
+    if (externalSearchTerm.trim()) {
+      items = items.filter(item =>
+        item.title.toLowerCase().includes(externalSearchTerm.toLowerCase())
+      );
+    }
 
     // 카테고리 필터링
     if (selectedCategory) {
@@ -57,7 +68,7 @@ export function useActivitiesFilter({
     });
 
     return items;
-  }, [activities, selectedCategory, priceSort]);
+  }, [activities, externalSearchTerm, selectedCategory, priceSort]);
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(processedItems.length / itemsPerPage);
@@ -70,16 +81,21 @@ export function useActivitiesFilter({
     return processedItems.slice(startIndex, endIndex);
   }, [processedItems, currentPage, itemsPerPage]);
 
+  // 검색어 변경 시 1페이지로 초기화
+  const handleSetSearchTerm = useCallback((term: string) => {
+    setCurrentPage(1);
+  }, []);
+
   // 필터 변경 시 1페이지로 초기화
-  const handleSetPriceSort = (sort: PriceSortValue | null) => {
+  const handleSetPriceSort = useCallback((sort: PriceSortValue | null) => {
     setPriceSort(sort);
     setCurrentPage(1);
-  };
+  }, []);
 
-  const handleSetSelectedCategory = (category: string | null) => {
+  const handleSetSelectedCategory = useCallback((category: string | null) => {
     setSelectedCategory(category);
     setCurrentPage(1);
-  };
+  }, []);
 
   // 모든 필터 초기화
   const resetFilters = () => {
@@ -89,10 +105,12 @@ export function useActivitiesFilter({
   };
 
   return {
+    searchTerm: externalSearchTerm,
     priceSort,
     selectedCategory,
     currentPage,
 
+    setSearchTerm: handleSetSearchTerm,
     setPriceSort: handleSetPriceSort,
     setSelectedCategory: handleSetSelectedCategory,
     setCurrentPage,
