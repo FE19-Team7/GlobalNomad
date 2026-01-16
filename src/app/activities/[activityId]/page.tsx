@@ -7,8 +7,8 @@ import Reservation from '@/src/components/Reservation/Reservation';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 import DeleteModal from '@/src/components/Modal/DeleteModal';
 import { ActivityData } from '@/src/types/activityType';
-import { Review } from '@/src/types/reviewType';
-import { getActivityDetail, deleteMyActivity } from '@/src/features/public/services/activities';
+import { ReviewsResponse } from '@/src/types/reviewType';
+import { getActivityDetail, deleteMyActivity, getActivityReviews } from '@/src/features/public/services/activities';
 import LocationIcon from '@/src/assets/icon_location.svg';
 import KebabMenuIcon from '@/src/assets/icon_kebab_menu.svg';
 import StarIcon from '@/src/assets/icon_star.svg';
@@ -22,8 +22,10 @@ const ActivityDetailPage = () => {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const defaultReviews: Review[] = [];
+  
+  const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [currentReviewPage, setCurrentReviewPage] = useState(1);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -58,6 +60,22 @@ const ActivityDetailPage = () => {
     fetchActivityData();
   }, [activityId]);
 
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setReviewsLoading(true);
+        const data = await getActivityReviews(activityId, currentReviewPage, 3);
+        setReviewsData(data);
+      } catch (err) {
+        console.error('리뷰 API 에러:', err);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [activityId, currentReviewPage]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -89,9 +107,10 @@ const ActivityDetailPage = () => {
             <DescriptionSection description={activityData.description} />
             <LocationSection address={activityData.address} />
             <ReviewSection 
-              rating={activityData.rating}
-              reviewCount={activityData.reviewCount}
-              reviews={defaultReviews}
+              reviewsData={reviewsData}
+              reviewsLoading={reviewsLoading}
+              currentPage={currentReviewPage}
+              onPageChange={setCurrentReviewPage}
             />
           </div>
           
@@ -105,12 +124,16 @@ const ActivityDetailPage = () => {
                   {activityData.title}
                 </h1>
                 <div className="flex items-center gap-2 text-body text-gray-600 mb-2">
-                  <Star filled={true} size="small" />
+                  <div className="flex-shrink-0">
+                    <Star filled={true} size="small" />
+                  </div>
                   <span className="font-medium">{activityData.rating}</span>
                   <span>({activityData.reviewCount})</span>
                 </div>
                 <div className="flex items-center gap-1 text-body text-gray-600">
-                  <LocationIcon className="w-4 h-4" />
+                  <div className="flex-shrink-0">
+                    <LocationIcon className="w-6 h-6" />
+                  </div>
                   <span>{activityData.address}</span>
                 </div>
               </div>
@@ -153,7 +176,6 @@ const KebabMenu = ({
 
   const handleEdit = () => {
     setIsOpen(false);
-    // 실제 경로 예상: /my-activities/${activityId}/edit
     router.push('/');
   };
 
@@ -267,11 +289,9 @@ const DescriptionSection = ({ description }: { description: string }) => {
       <h2 className="text-h3 font-bold text-gray-900 tracking-h3">
         체험 설명
       </h2>
-      <div className="p-6 bg-gray-25 rounded-lg">
         <p className="text-body text-gray-700 whitespace-pre-wrap">
           {description}
         </p>
-      </div>
     </div>
   );
 };
@@ -349,14 +369,49 @@ const LocationSection = ({ address }: { address: string }) => {
   );
 };
 
-const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; reviewCount: number; reviews: Review[] }) => {
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const reviewsPerPage = 3;
-  
-  const indexOfLastReview = currentPage * reviewsPerPage;
-  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+const ReviewSection = ({ 
+  reviewsData,
+  reviewsLoading,
+  currentPage,
+  onPageChange
+}: { 
+  reviewsData: ReviewsResponse | null;
+  reviewsLoading: boolean;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    });
+  };
+
+  if (reviewsLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+          <h2 className="text-h3 font-bold text-gray-900 tracking-h3">
+            체험 후기
+          </h2>
+        </div>
+        <div className="p-8 bg-gray-25 rounded-lg">
+          <p className="text-body text-gray-600 text-center">
+            리뷰를 불러오는 중...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!reviewsData) {
+    return null;
+  }
+
+  const { averageRating, totalCount, reviews } = reviewsData;
+  const totalPages = Math.ceil(totalCount / 3);
 
   return (
     <div className="space-y-6">
@@ -364,43 +419,47 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
         <h2 className="text-h3 font-bold text-gray-900 tracking-h3">
           체험 후기
         </h2>
-        <span className="text-body font-medium text-gray-600">{reviewCount}개</span>
+        <span className="text-body font-medium text-gray-600">{totalCount}개</span>
       </div>
 
-      {reviewCount > 0 ? (
+      {totalCount > 0 ? (
         <>
           <div className="flex flex-col items-center justify-center py-6">
             <div className="text-h1 font-bold text-gray-900 leading-none mb-2">
-              {rating}
+              {averageRating.toFixed(1)}
             </div>
             <div className="text-body-lg font-bold text-gray-900 mb-2">
               매우 만족
             </div>
             <div className="flex items-center gap-1">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} filled={star <= Math.round(rating)} size="small" />
-                ))}
+              <div className="flex-shrink-0">
+                <PartialStar rating={averageRating} />
               </div>
-              <span className="text-body font-medium text-gray-600 ml-1">{reviewCount}개 후기</span>
+              <span className="text-body font-medium text-gray-600 ml-1">{totalCount}개 후기</span>
             </div>
           </div>
 
           <div className="space-y-3">
-            {currentReviews.length > 0 ? (
-              currentReviews.map((review) => (
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
                 <div 
                   key={review.id} 
                   className="bg-white rounded-lg p-6"
                   style={{ boxShadow: '0px 4px 24px 0px rgba(156, 180, 202, 0.2)' }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-body-lg font-bold text-gray-900">{review.author}</span>
-                    <span className="text-body text-gray-500">{review.date}</span>
+                    <span className="text-body-lg font-bold text-gray-900">
+                      {review.user.nickname}
+                    </span>
+                    <span className="text-body text-gray-500">
+                      {formatDate(review.createdAt)}
+                    </span>
                   </div>
-                  <div className="flex mb-2">
+                  <div className="flex gap-0.5 mb-2">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} filled={star <= review.rating} size="small" />
+                      <div key={star} className="flex-shrink-0">
+                        <Star filled={star <= review.rating} size="small" />
+                      </div>
                     ))}
                   </div>
                   <p className="text-body text-gray-700">{review.content}</p>
@@ -415,12 +474,12 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
             )}
           </div>
           
-          {reviews.length > 0 && totalPages > 1 && (
+          {totalPages > 1 && (
             <div className="flex justify-center">
               <Pagination 
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                onPageChange={onPageChange}
               />
             </div>
           )}
@@ -437,7 +496,7 @@ const ReviewSection = ({ rating, reviewCount, reviews }: { rating: number; revie
 };
 
 const Star = ({ filled, size = "normal" }: { filled: boolean; size?: string }) => {
-  const sizeClass = size === "small" ? "w-4 h-4" : "w-6 h-6";
+  const sizeClass = size === "small" ? "w-5 h-5" : "w-6 h-6";
   const color = filled ? "#FFC107" : "#E0E0E5";
   
   return (
@@ -445,6 +504,28 @@ const Star = ({ filled, size = "normal" }: { filled: boolean; size?: string }) =
       className={sizeClass}
       style={{ color }}
     />
+  );
+};
+
+const PartialStar = ({ rating }: { rating: number }) => {
+  const percentage = (rating / 5) * 100;
+  
+  return (
+    <div className="relative w-5 h-5 flex-shrink-0">
+      <StarIcon 
+        className="w-5 h-5 absolute top-0 left-0"
+        style={{ color: '#E0E0E5' }}
+      />
+      <div 
+        className="absolute top-0 left-0 overflow-hidden"
+        style={{ width: `${percentage}%` }}
+      >
+        <StarIcon 
+          className="w-5 h-5"
+          style={{ color: '#FFC107' }}
+        />
+      </div>
+    </div>
   );
 };
 
