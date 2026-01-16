@@ -176,7 +176,7 @@ const KebabMenu = ({
 
   const handleEdit = () => {
     setIsOpen(false);
-    router.push('/');
+    router.push(`/seller/activities/${activityId}/edit`);
   };
 
   const handleDeleteClick = () => {
@@ -289,9 +289,11 @@ const DescriptionSection = ({ description }: { description: string }) => {
       <h2 className="text-h3 font-bold text-gray-900 tracking-h3">
         체험 설명
       </h2>
+      <div className="p-6 bg-gray-25 rounded-lg">
         <p className="text-body text-gray-700 whitespace-pre-wrap">
           {description}
         </p>
+      </div>
     </div>
   );
 };
