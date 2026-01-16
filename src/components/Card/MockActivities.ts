@@ -1,10 +1,13 @@
-export const mockActivities = [
+import { ActivityCardProps } from '@/src/components/Card/ActivityCard';
+
+export const baseActivities = [
   {
     id: 1,
     title: "함께 배우면 즐거운 스트릿 댄스",
     rating: 4.9,
     reviewCount: 703,
     price: 38000,
+    category: "스포츠",
   },
   {
     id: 2,
@@ -12,6 +15,7 @@ export const mockActivities = [
     rating: 4.9,
     reviewCount: 293,
     price: 38000,
+    category: "문화 · 예술",
   },
   {
     id: 3,
@@ -19,6 +23,7 @@ export const mockActivities = [
     rating: 4.7,
     reviewCount: 236,
     price: 40000,
+    category: "웰빙",
   },
   {
     id: 4,
@@ -26,6 +31,7 @@ export const mockActivities = [
     rating: 3.9,
     reviewCount: 108,
     price: 35000,
+    category: "투어",
   },
   {
     id: 5,
@@ -33,6 +39,7 @@ export const mockActivities = [
     rating: 4.9,
     reviewCount: 10,
     price: 25000,
+    category: "식음료",
   },
   {
     id: 6,
@@ -40,6 +47,7 @@ export const mockActivities = [
     rating: 3.9,
     reviewCount: 109,
     price: 42800,
+    category: "관광",
   },
   {
     id: 7,
@@ -47,6 +55,7 @@ export const mockActivities = [
     rating: 4.9,
     reviewCount: 10,
     price: 225000,
+    category: "웰빙",
   },
   {
     id: 8,
@@ -54,6 +63,7 @@ export const mockActivities = [
     rating: 4.9,
     reviewCount: 10,
     price: 25000,
+    category: "투어",
   },
   {
     id: 9,
@@ -61,6 +71,7 @@ export const mockActivities = [
     rating: 4.1,
     reviewCount: 85,
     price: 35000,
+    category: "관광",
   },
   {
     id: 10,
@@ -68,6 +79,7 @@ export const mockActivities = [
     rating: 3.9,
     reviewCount: 108,
     price: 63000,
+    category: "스포츠",
   },
   {
     id: 11,
@@ -75,6 +87,7 @@ export const mockActivities = [
     rating: 4.3,
     reviewCount: 18,
     price: 50000,
+    category: "투어",
   },
   {
     id: 12,
@@ -82,6 +95,7 @@ export const mockActivities = [
     rating: 4.8,
     reviewCount: 52,
     price: 25000,
+    category: "식음료",
   },
   {
     id: 13,
@@ -89,6 +103,7 @@ export const mockActivities = [
     rating: 4.1,
     reviewCount: 111,
     price: 18000,
+    category: "웰빙",
   },
   {
     id: 14,
@@ -96,6 +111,7 @@ export const mockActivities = [
     rating: 4.8,
     reviewCount: 10,
     price: 35000,
+    category: "문화 · 예술",
   },
   {
     id: 15,
@@ -103,6 +119,7 @@ export const mockActivities = [
     rating: 4.1,
     reviewCount: 10,
     price: 35000,
+    category: "관광",
   },
   {
     id: 16,
@@ -110,6 +127,7 @@ export const mockActivities = [
     rating: 4.7,
     reviewCount: 42,
     price: 60000,
+    category: "문화 · 예술",
   },
   {
     id: 17,
@@ -117,6 +135,7 @@ export const mockActivities = [
     rating: 4.7,
     reviewCount: 11,
     price: 25000,
+    category: "스포츠",
   },
   {
     id: 18,
@@ -124,6 +143,7 @@ export const mockActivities = [
     rating: 4.9,
     reviewCount: 65,
     price: 8000,
+    category: "문화 · 예술",
   },
   {
     id: 19,
@@ -131,8 +151,27 @@ export const mockActivities = [
     rating: 4.5,
     reviewCount: 110,
     price: 80000,
+    category: "스포츠",
   },
 ];
+
+const categories = ["문화 · 예술", "식음료", "스포츠", "투어", "관광", "웰빙"];
+
+// 100개 목업 데이터 생성
+export const mockActivities: ActivityCardProps[] = Array.from({ length: 100 }, (_, index) => {
+  const baseIndex = index % baseActivities.length;
+  const base = baseActivities[baseIndex];
+
+  return {
+    id: index + 1,
+    title: `${base.title} #${Math.floor(index / baseActivities.length) + 1}`,
+    category: categories[index % categories.length],
+    rating: +((index % 20) / 10 + 3).toFixed(1),
+    reviewCount: (index % 500) + 10,
+    price: ((index % 20) + 1) * 5000,
+  };
+});
+
 
 export const getMockActivities = (page: number, size: number = 4) => {
   const start = page * size;
