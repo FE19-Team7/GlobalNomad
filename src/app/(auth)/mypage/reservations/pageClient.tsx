@@ -71,8 +71,16 @@ export default function PageClient() {
 
     const data: ReservationResponse = await res.json();
 
+    const normalizedReservations = data.reservations.map((reservation) => ({
+      ...reservation,
+      activity: {
+        ...reservation.activity,
+        bannerImageUrl: reservation.activity?.bannerImageUrl?.trim(),
+      },
+    }));
+
     setItems((prev) =>
-      reset ? data.reservations : [...prev, ...data.reservations]
+      reset ? normalizedReservations : [...prev, ...normalizedReservations]
     );
     setCursorId(data.cursorId);
     setHasNext(data.cursorId !== null);
