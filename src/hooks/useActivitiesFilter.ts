@@ -6,6 +6,7 @@ export type PriceSortValue = 'price_asc' | 'price_desc';
 interface UseActivitiesFilterProps {
   activities: ActivityCardProps[];
   itemsPerPage: number;
+  searchTerm?: string;
 }
 
 interface useActivitiesFilterReturn {
@@ -29,22 +30,22 @@ interface useActivitiesFilterReturn {
 export function useActivitiesFilter({
   activities,
   itemsPerPage = 8,
+  searchTerm: externalSearchTerm = '',
 }: UseActivitiesFilterProps): useActivitiesFilterReturn {
 
   // 필터 상태 관리
   const [priceSort, setPriceSort] = useState<PriceSortValue | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
 
   // 필터링 및 정렬된 전체 데이터
   const processedItems = useMemo(() => {
     let items = [...activities];
 
     // 검색 필터링
-    if (searchTerm.trim()) {
+    if (externalSearchTerm.trim()) {
       items = items.filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+        item.title.toLowerCase().includes(externalSearchTerm.toLowerCase())
       );
     }
 
@@ -67,7 +68,7 @@ export function useActivitiesFilter({
     });
 
     return items;
-  }, [activities, searchTerm, selectedCategory, priceSort]);
+  }, [activities, externalSearchTerm, selectedCategory, priceSort]);
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(processedItems.length / itemsPerPage);
@@ -82,7 +83,6 @@ export function useActivitiesFilter({
 
   // 검색어 변경 시 1페이지로 초기화
   const handleSetSearchTerm = useCallback((term: string) => {
-    setSearchTerm(term);
     setCurrentPage(1);
   }, []);
 
@@ -105,7 +105,7 @@ export function useActivitiesFilter({
   };
 
   return {
-    searchTerm,
+    searchTerm: externalSearchTerm,
     priceSort,
     selectedCategory,
     currentPage,
