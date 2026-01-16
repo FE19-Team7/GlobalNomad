@@ -18,32 +18,20 @@ async function getAccessToken() {
   return cookieStore.get('accessToken')?.value ?? null;
 }
 
-// POST /api/activities/image
-export async function POST(req: NextRequest) {
+// GET /api/activities/:activityId
+export async function GET(
+  _req: NextRequest,
+  ctx: { params: { activityId: string } }
+) {
   const apiErr = requireApiUrl();
   if (apiErr) return apiErr;
 
   const accessToken = await getAccessToken();
-  if (!accessToken) {
-    return NextResponse.json({ message: '로그인이 필요합니다.' }, { status: 401 });
-  }
 
-  const form = await req.formData();
-  const image = form.get('image');
-
-  if (!image || !(image instanceof File)) {
-    return NextResponse.json({ message: 'image 파일이 필요합니다.' }, { status: 400 });
-  }
-
-  const fd = new FormData();
-  fd.append('image', image);
-
-  const res = await fetch(`${API_URL}/activities/image`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: fd,
+  const res = await fetch(`${API_URL}/activities/${ctx.params.activityId}`, {
+    method: 'GET',
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+    cache: 'no-store',
   });
 
   const text = await res.text();

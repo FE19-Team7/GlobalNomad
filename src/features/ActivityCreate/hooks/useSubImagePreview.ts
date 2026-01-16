@@ -1,40 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
-import { fileKey } from '../utils/image';
+import { useEffect, useMemo } from 'react';
 
 type PreviewItem = { key: string; url: string };
 
-/**
- * 소개 이미지 미리보기 (0/4)
- * - files -> objectURL 배열 생성/해제
- * - key/url를 묶어서 반환(삭제/재정렬 시 렌더 안정)
- */
 export function useSubImagePreview(files: File[]) {
-  const [items, setItems] = useState<PreviewItem[]>([]);
-
-  useEffect(() => {
-    if (!files.length) {
-      setItems([]);
-      return;
-    }
-
-    const next: PreviewItem[] = files.map((f) => ({
-      key: fileKey(f),
+  const items = useMemo<PreviewItem[]>(() => {
+    if (!files.length) return [];
+    return files.map((f) => ({
+      key: `${f.name}-${f.size}-${f.lastModified}`,
       url: URL.createObjectURL(f),
     }));
-
-    setItems(next);
-
-    return () => {
-      next.forEach((it) => URL.revokeObjectURL(it.url));
-    };
   }, [files]);
 
-  const info = useMemo(() => {
-    return {
-      count: files.length,
-      items,
+  useEffect(() => {
+    return () => {
+      items.forEach((it) => URL.revokeObjectURL(it.url));
     };
-  }, [files.length, items]);
+  }, [items]);
 
-  return info;
+  return { items, count: files.length };
 }

@@ -1,11 +1,11 @@
-import { Schedule, ActivityDetail } from '../type';
+import type { ActivityDetailForEdit, Schedule } from '../type';
 
 const same = (a: Schedule, b: Schedule) =>
   a.date === b.date && a.startTime === b.startTime && a.endTime === b.endTime;
 
 export function buildUpdatePayload(params: {
   currentSchedules: Schedule[];
-  original: ActivityDetail;
+  original: ActivityDetailForEdit;
   subImageIdsToRemove: number[];
   subImageUrlsToAdd: string[];
   bannerImageUrl: string;
@@ -35,14 +35,9 @@ export function buildUpdatePayload(params: {
     }
   }
 
-  // 2) 신규(id 없음) 추가 감지
+  // 2) 신규(id 없음) + 방어(id 있는데 원본에 없으면 신규)
   for (const cur of currentSchedules) {
-    if (!cur.id) {
-      schedulesToAdd.push({ date: cur.date, startTime: cur.startTime, endTime: cur.endTime });
-      continue;
-    }
-    // 방어: id 있는데 원본에 없으면 신규 취급
-    if (!originalById.has(cur.id)) {
+    if (!cur.id || !originalById.has(cur.id)) {
       schedulesToAdd.push({ date: cur.date, startTime: cur.startTime, endTime: cur.endTime });
     }
   }
@@ -56,7 +51,7 @@ export function buildUpdatePayload(params: {
     bannerImageUrl: params.bannerImageUrl,
     subImageIdsToRemove: params.subImageIdsToRemove,
     subImageUrlsToAdd: params.subImageUrlsToAdd,
-    scheduleIdsToRemove,
+    scheduleIdsToRemove: Array.from(new Set(scheduleIdsToRemove)),
     schedulesToAdd,
   };
 }

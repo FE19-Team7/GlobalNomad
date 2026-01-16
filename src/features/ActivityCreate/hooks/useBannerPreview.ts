@@ -1,35 +1,22 @@
-import { useEffect, useMemo, useState } from 'react';
-import { fileKey } from '../utils/image';
+import { useEffect, useMemo } from 'react';
 
-/**
- * 배너 이미지 미리보기 (0/1)
- * - File -> objectURL 생성/해제
- * - key를 함께 내려서 렌더 안정성 확보
- */
 export function useBannerPreview(file: File | null) {
-  const [url, setUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!file) {
-      setUrl(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    setUrl(objectUrl);
-
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
+  const key = useMemo(() => {
+    if (!file) return null;
+    return `${file.name}-${file.size}-${file.lastModified}`;
   }, [file]);
 
-  const info = useMemo(() => {
-    return {
-      hasFile: Boolean(file),
-      key: file ? fileKey(file) : null,
-      url,
-    };
-  }, [file, url]);
+  const url = useMemo(() => {
+    if (!file) return null;
+    return URL.createObjectURL(file);
+  }, [file]);
 
-  return info;
+  useEffect(() => {
+    if (!url) return;
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [url]);
+
+  return { url, hasFile: Boolean(file), key };
 }

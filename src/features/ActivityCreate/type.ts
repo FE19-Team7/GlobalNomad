@@ -1,3 +1,5 @@
+export type Mode = 'create' | 'edit';
+
 export type Schedule = {
   id?: number;
   date: string;
@@ -5,12 +7,12 @@ export type Schedule = {
   endTime: string;
 };
 
-export type SubImage = {
+export type ExistingSubImage = {
   id: number;
   imageUrl: string;
 };
 
-export type ActivityDetail = {
+export type ActivityDetailForEdit = {
   id: number;
   title: string;
   description: string;
@@ -18,6 +20,6 @@ export type ActivityDetail = {
   price: number;
   address: string;
   bannerImageUrl: string;
-  subImages: SubImage[];
-  schedules: Required<Schedule>[];
+  subImages: ExistingSubImage[];
+  schedules: Array<Required<Schedule>>;
 };

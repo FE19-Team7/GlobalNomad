@@ -18,30 +18,11 @@ async function getAccessToken() {
   return cookieStore.get('accessToken')?.value ?? null;
 }
 
-// GET /api/activities?...
-export async function GET(req: NextRequest) {
-  const apiErr = requireApiUrl();
-  if (apiErr) return apiErr;
-
-  const url = new URL(req.url);
-  const backendUrl = new URL(`${API_URL}/activities`);
-  // 쿼리 파라미터는 그대로 백엔드에 패스스루
-  url.searchParams.forEach((v, k) => backendUrl.searchParams.set(k, v));
-
-  const accessToken = await getAccessToken();
-
-  const res = await fetch(backendUrl.toString(), {
-    method: 'GET',
-    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
-    cache: 'no-store',
-  });
-
-  const text = await res.text();
-  return new NextResponse(text, { status: res.status });
-}
-
-// POST /api/activities
-export async function POST(req: NextRequest) {
+// PATCH /api/my-activities/:activityId
+export async function PATCH(
+  req: NextRequest,
+  ctx: { params: { activityId: string } }
+) {
   const apiErr = requireApiUrl();
   if (apiErr) return apiErr;
 
@@ -52,13 +33,37 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  const res = await fetch(`${API_URL}/activities`, {
-    method: 'POST',
+  const res = await fetch(`${API_URL}/my-activities/${ctx.params.activityId}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify(body),
+  });
+
+  const text = await res.text();
+  return new NextResponse(text, { status: res.status });
+}
+
+// DELETE /api/my-activities/:activityId
+export async function DELETE(
+  _req: NextRequest,
+  ctx: { params: { activityId: string } }
+) {
+  const apiErr = requireApiUrl();
+  if (apiErr) return apiErr;
+
+  const accessToken = await getAccessToken();
+  if (!accessToken) {
+    return NextResponse.json({ message: '로그인이 필요합니다.' }, { status: 401 });
+  }
+
+  const res = await fetch(`${API_URL}/my-activities/${ctx.params.activityId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 
   const text = await res.text();
