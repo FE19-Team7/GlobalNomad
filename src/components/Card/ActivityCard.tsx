@@ -4,12 +4,13 @@ import CardBase from '@/src/components/Card/CardBase';
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 
-interface ActivityCardProps {
+export interface ActivityCardProps {
   id: number;
   title: string;
   rating: number;
   reviewCount: number;
   price: number;
+  category?: string;
   bannerImageUrl?: string;
 }
 
