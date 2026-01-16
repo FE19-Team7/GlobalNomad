@@ -41,7 +41,30 @@ export default function MyActivitiesMockPage() {
 
       setItems((prev) => {
         const merged = [...prev, ...data.activities];
-        return Array.from(new Map(merged.map((x) => [x.id, x])).values());
+
+        // 1) id 중복 제거
+        const unique = Array.from(new Map(merged.map((x) => [x.id, x])).values());
+
+        // 2) 최신순 정렬: createdAt 내림차순 → createdAt 없으면 id 내림차순
+        unique.sort((a, b) => {
+          const at = a.createdAt ? Date.parse(a.createdAt) : NaN;
+          const bt = b.createdAt ? Date.parse(b.createdAt) : NaN;
+
+          const aValid = Number.isFinite(at);
+          const bValid = Number.isFinite(bt);
+
+          // 둘 다 createdAt 유효: createdAt 최신순
+          if (aValid && bValid) return bt - at;
+
+          // 한쪽만 유효: createdAt 있는 쪽을 앞으로(=더 최신으로 간주)
+          if (aValid && !bValid) return -1;
+          if (!aValid && bValid) return 1;
+
+          // 둘 다 없거나 파싱 불가: id 큰 순
+          return b.id - a.id;
+        });
+
+        return unique;
       });
 
       if (data.cursorId === null || data.activities.length < PAGE_SIZE) {
