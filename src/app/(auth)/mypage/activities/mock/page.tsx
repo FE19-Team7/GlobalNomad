@@ -8,12 +8,15 @@ import MyActivitiesCard from '@/src/components/Card/MyActivitiesCard';
 import Button from '@/src/components/Button/Button';
 import Earth from '@/src/assets/earth.svg';
 
-import { deleteMyActivity, getMyActivities } from '@/src/features/myActivities/api/myActivities';
 import type { MyActivity } from '@/src/features/myActivities/type';
+import {
+  deleteMyActivityMock,
+  getMyActivitiesMock,
+} from '@/src/features/myActivities/mock/myActivities.mock';
 
 const PAGE_SIZE = 20;
 
-export default function MyActivitiesPage() {
+export default function MyActivitiesMockPage() {
   const router = useRouter();
 
   const [items, setItems] = useState<MyActivity[]>([]);
@@ -34,36 +37,24 @@ export default function MyActivitiesPage() {
     setIsLoading(true);
 
     try {
-      const data = await getMyActivities({ cursorId, size: PAGE_SIZE });
+      const data = getMyActivitiesMock({ cursorId, size: PAGE_SIZE });
 
-      // 안전망: id 중복 제거 (StrictMode/인터섹션 중복 호출 대비)
       setItems((prev) => {
         const merged = [...prev, ...data.activities];
         return Array.from(new Map(merged.map((x) => [x.id, x])).values());
       });
 
-      // 다음 커서 판단 (스웨거: cursorId가 null이면 종료)
-      if (data.cursorId === null) {
+      if (data.cursorId === null || data.activities.length < PAGE_SIZE) {
         setHasNext(false);
         return;
       }
 
-      // 추가 안전망: 빈 배열이면 종료
-      if (data.activities.length === 0) {
-        setHasNext(false);
-        return;
-      }
-
-      // 커서가 그대로면 무한루프 방지
       if (data.cursorId === cursorId) {
         setHasNext(false);
         return;
       }
 
       setCursorId(data.cursorId);
-    } catch (e) {
-      alert(e instanceof Error ? e.message : '목록 조회 실패');
-      setHasNext(false);
     } finally {
       setIsLoading(false);
       inFlightRef.current = false;
@@ -85,16 +76,9 @@ export default function MyActivitiesPage() {
     router.push('/activities/create');
   };
 
-  // 실패하면 throw 해야 카드에서 모달이 닫히지 않음
   const handleDelete = async (id: number) => {
-    try {
-      await deleteMyActivity(id);
-      setItems((prev) => prev.filter((x) => x.id !== id));
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : '삭제 실패';
-      alert(msg);
-      throw e;
-    }
+    deleteMyActivityMock(id);
+    setItems((prev) => prev.filter((x) => x.id !== id));
   };
 
   const isEmpty = useMemo(
