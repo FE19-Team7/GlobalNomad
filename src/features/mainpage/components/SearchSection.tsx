@@ -3,11 +3,15 @@
 import { useState } from 'react';
 import SearchBar from '@/src/components/Search/Search';
 
-export default function SearchSection() {
+interface SearchSectionProps {
+  onSearch: (term: string) => void;
+}
+
+export default function SearchSection({ onSearch }: SearchSectionProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (term: string) => {
-    console.log('검색:', term);
+    onSearch(term);
   };
 
   return (

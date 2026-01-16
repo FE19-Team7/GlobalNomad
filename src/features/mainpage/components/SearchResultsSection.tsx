@@ -8,12 +8,10 @@ import EmptyImage from '@/src/assets/earth.svg';
 
 interface SearchResultsSectionProps {
   searchTerm: string;
-  onSearchTermChange: (term: string) => void;
 }
 
 export default function SearchResultsSection({
   searchTerm,
-  onSearchTermChange
 }: SearchResultsSectionProps) {
   const {
     currentItems,
@@ -21,16 +19,11 @@ export default function SearchResultsSection({
     totalItems,
     currentPage,
     setCurrentPage,
-    setSearchTerm,
   } = useActivitiesFilter({
     activities: mockActivities,
     itemsPerPage: 8,
+    searchTerm: searchTerm,
   });
-
-  const handleSearchChange = (term: string) => {
-    setSearchTerm(term);
-    onSearchTermChange(term);
-  };
 
   return (
     <div className="flex flex-col">
@@ -50,7 +43,7 @@ export default function SearchResultsSection({
         <div className="text-center py-20">
           <EmptyImage
             aria-label="검색 결과 없음 이미지"
-            className="w-[150px] h-[150px] mx-auto mb-6 object-contain"
+            className="w-[150px] h-[150px] block mx-auto mb-6 object-contain"
           />
           <p className="text-lg text-gray-500">
             {searchTerm}에 대한 검색 결과가 없습니다.
