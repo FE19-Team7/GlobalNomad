@@ -65,7 +65,7 @@ export default function LoggedInMenu({
       <Divider className="mx-5" />
 
       <Link
-        href="/mypage/myprofile"
+        href="/mypage/my-profile"
         aria-label="마이페이지"
         className="flex items-center hover:opacity-70 transition"
       >
