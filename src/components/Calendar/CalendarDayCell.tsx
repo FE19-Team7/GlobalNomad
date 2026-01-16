@@ -11,7 +11,10 @@ interface CalendarDayCellProps {
   summary: DaySummary;
   className?: string;
   isOutsideMonth?: boolean;
-  onBadgeClick?: (status: EventStatus) => void;
+  onBadgeClick?: (payload: {
+    status: EventStatus;
+    anchorEl: HTMLElement;
+  }) => void;
 }
 
 const TRACKING_FIELDS: (keyof DaySummary)[] = [
@@ -33,9 +36,9 @@ export const CalendarDayCell = ({
   return (
     <div
       className={`flex flex-col gap-[5px] 
-                        px-3 pt-[18px] pb-[10px] 
-                        bg-white  
-                        ${className}`}
+        px-3 pt-[18px] pb-[10px] 
+        bg-white  
+        ${className}`}
     >
       {/* 날짜 + 뱃지가 있을 시 알림 빨간 점 */}
       <div className="relative flex items-center justify-center">
@@ -58,7 +61,12 @@ export const CalendarDayCell = ({
         <EventBadge
           status="RESERVED"
           count={summary.reserved}
-          onClick={() => onBadgeClick?.("RESERVED")}
+          onClick={(e) =>
+            onBadgeClick?.({
+              status: "RESERVED",
+              anchorEl: e.currentTarget,
+            })
+          }
         />
       )}
 
@@ -66,7 +74,12 @@ export const CalendarDayCell = ({
         <EventBadge
           status="APPROVED"
           count={summary.approved}
-          onClick={() => onBadgeClick?.("APPROVED")}
+          onClick={(e) =>
+            onBadgeClick?.({
+              status: "APPROVED",
+              anchorEl: e.currentTarget,
+            })
+          }
         />
       )}
 
@@ -74,7 +87,12 @@ export const CalendarDayCell = ({
         <EventBadge
           status="COMPLETED"
           count={summary.completed}
-          onClick={() => onBadgeClick?.("COMPLETED")}
+          onClick={(e) =>
+            onBadgeClick?.({
+              status: "COMPLETED",
+              anchorEl: e.currentTarget,
+            })
+          }
         />
       )}
     </div>

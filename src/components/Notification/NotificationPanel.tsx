@@ -8,12 +8,14 @@ interface Props {
   notifications: NotificationUIItem[];
   totalCount: number;
   onClose: () => void;
+  onDelete: (id: number) => void;
 }
 
 export default function NotificationPanel({
   notifications,
   totalCount,
   onClose,
+  onDelete,
 }: Props) {
   return (
     <div
@@ -38,7 +40,7 @@ export default function NotificationPanel({
           </p>
         ) : (
           notifications.map((item) => (
-            <NotificationItem key={item.id} item={item} />
+            <NotificationItem key={item.id} item={item} onDelete={onDelete} />
           ))
         )}
       </div>

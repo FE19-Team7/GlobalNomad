@@ -1,6 +1,3 @@
-import { ca } from "date-fns/locale";
-import CategoryFilter from "./CategoryFilter";
-
 export const mockActivities = [
   {
     id: 1,

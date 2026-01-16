@@ -1,7 +1,7 @@
 import ActivityCard from "@/src/components/Card/ActivityCard";
-import AllActivitiesList from "@/src/components/Card/AllActivitiesList";
 import MyActivitiesCard from "@/src/components/Card/MyActivitiesCard";
 import ReservationCard from "@/src/components/Card/ReservationCard";
+import PopularActivitiesList from "@/src/components/Card/PopularActivitiesList";
 
 export default function SunghyeonPage() {
   return (
@@ -40,9 +40,8 @@ export default function SunghyeonPage() {
           date="2026. 01. 01"
           startTime="05:30"
           endTime="06:30"
+          reviewSubmitted={false}
         />
-      </div>
-      <div>
         <ReservationCard
           id={2}
           activity={{
@@ -56,11 +55,12 @@ export default function SunghyeonPage() {
           date="2025. 11. 07"
           startTime="07:00"
           endTime="17:00"
+          reviewSubmitted={true}
         />
       </div>
-      <div className="h-[832px]">
-        <AllActivitiesList />
+      <div className="w-[1120px]">
+        <PopularActivitiesList />
       </div>
-    </div>
+    </div >
   );
 }
