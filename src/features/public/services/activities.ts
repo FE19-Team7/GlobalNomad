@@ -1,4 +1,5 @@
 import { ActivityData } from '@/src/types/activityType';
+import { ReviewsResponse } from '@/src/types/reviewType';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -108,4 +109,47 @@ export const createReservation = async (
 
   const result = await response.json();
   return result;
+};
+
+/**
+ * 내 체험 삭제
+ */
+export const deleteMyActivity = async (activityId: string): Promise<void> => {
+  const response = await fetch(`/api/my-activities/${activityId}/delete-activities`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || '체험 삭제에 실패했습니다.');
+  }
+};
+
+/**
+ * 체험 리뷰 목록 조회
+ */
+export const getActivityReviews = async (
+  activityId: string,
+  page: number = 1,
+  size: number = 3
+): Promise<ReviewsResponse> => {
+  const response = await fetch(
+    `${API_BASE_URL}/activities/${activityId}/reviews?page=${page}&size=${size}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('리뷰 목록을 가져오는데 실패했습니다.');
+  }
+
+  const data = await response.json();
+  return data;
 };
