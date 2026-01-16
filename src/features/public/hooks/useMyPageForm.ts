@@ -34,11 +34,11 @@ export function useMyPageForm({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
-  // 초기값 저장
-  const [initialValues] = useState({
+  // 초기값 저장 - 함수형으로 개선
+  const [initialValues] = useState(() => ({
     nickname: initialNickname,
     email: initialEmail,
-  });
+  }));
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
