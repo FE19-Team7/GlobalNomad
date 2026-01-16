@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import SideMenu from '@/src/components/SideMenu/SideMenu';
-import { getMyProfile, uploadProfileImage, updateMyProfile, UserProfile } from '@/src/apis/user';
+import { getMyProfile, uploadProfileImage, updateMyProfile, UserProfile } from '@/src/features/mypage/services/userService';
 
 // 컨텍스트 정의
 interface UserContextType {
@@ -20,9 +20,28 @@ export const useUser = () => {
   return context;
 };
 
+// 전역 핸들러
+let globalCancelHandler: (() => void) | null = null;
+
+export const setGlobalCancelHandler = (handler: () => void) => {
+  globalCancelHandler = handler;
+};
+
+export const getGlobalCancelHandler = (): (() => void) | null =>
+  globalCancelHandler;
+
 // 내부 콘텐츠 컴포넌트
 function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
   const { userData, refreshUser } = useUser();
+  const [showMobileContent, setShowMobileContent] = useState(false);
+
+  const handleCancel = () => {
+    setShowMobileContent(false);
+  };
+
+  useEffect(() => {
+    setGlobalCancelHandler(handleCancel);
+  }, []);
 
   const handleProfileEdit = () => {
     const input = document.createElement('input');
@@ -45,6 +64,10 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
     input.click();
   };
 
+  const handleMenuClick = () => {
+    setShowMobileContent(true);
+  };
+
   return (
     <div className="flex-1">
       {/* 헤더/푸터 사이 영역 */}
@@ -52,10 +75,16 @@ function MyPageLayoutContent({ children }: { children: React.ReactNode }) {
         <div className="w-full max-w-[980px] mx-auto px-6 h-full">
           <div className="flex gap-14 h-full">
             {/* 사이드 메뉴 */}
-            <aside className="w-[260px] flex-shrink-0">
+            <aside
+              className={`w-[260px] flex-shrink-0 ${
+                showMobileContent ? "hidden md:block" : "block"
+              }`}
+            >
               <SideMenu
                 profileImageUrl={userData?.profileImageUrl}
                 onProfileEdit={handleProfileEdit}
+                onMenuClick={handleMenuClick}
+                showMobileContent={showMobileContent}
               />
             </aside>
 

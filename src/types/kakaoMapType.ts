@@ -20,11 +20,28 @@ export interface KakaoMap {
   setLevel(level: number): void;
 }
 
+export interface KakaoGeocoder {
+  addressSearch(
+    address: string,
+    callback: (result: Array<{ x: string; y: string }>, status: string) => void
+  ): void;
+}
+
+export interface KakaoServices {
+  Status: {
+    OK: string;
+    ZERO_RESULT: string;
+    ERROR: string;
+  };
+  Geocoder: new () => KakaoGeocoder;
+}
+
 export interface KakaoMaps {
   LatLng: new (lat: number, lng: number) => KakaoLatLng;
   Map: new (container: HTMLElement, options: { center: KakaoLatLng; level: number }) => KakaoMap;
   Marker: new (options: { position: KakaoLatLng }) => KakaoMarker;
   load(callback: () => void): void;
+  services: KakaoServices;
 }
 
 export interface Kakao {

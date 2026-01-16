@@ -4,12 +4,13 @@ import CardBase from '@/src/components/Card/CardBase';
 import DefaultThumbnail from '@/assets/activity-default-thumbnail.svg';
 import StarIcon from '@/assets/icon_star.svg';
 
-interface ActivityCardProps {
+export interface ActivityCardProps {
   id: number;
   title: string;
   rating: number;
   reviewCount: number;
   price: number;
+  category?: string;
   bannerImageUrl?: string;
 }
 
@@ -56,8 +57,8 @@ export default function ActivityCard({
             className="-mt-[60px] relative"
           >
             <div className="flex flex-col px-[30px] py-[20px] gap-[18px]">
-              <div className="flex flex-col">
-                <div className="text-h4 font-bold leading-6">{title}</div>
+              <div className="flex flex-col min-w-0">
+                <div className="text-h4 font-bold leading-6 truncate">{title}</div>
                 <div className="flex gap-[2px]">
                   <StarIcon aria-label="별점" className="w-[20px] h-[20px]" />
                   <span className="ml-[3px] text-body leading-6">{rating}</span>

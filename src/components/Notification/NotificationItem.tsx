@@ -4,9 +4,10 @@ import { NotificationUIItem } from "./types";
 
 interface Props {
   item: NotificationUIItem;
+  onDelete: (id: number) => void;
 }
 
-export default function NotificationItem({ item }: Props) {
+export default function NotificationItem({ item, onDelete }: Props) {
   const isApprove = item.content.includes("승인");
   const isReject = item.content.includes("거절");
 
@@ -25,9 +26,12 @@ export default function NotificationItem({ item }: Props) {
         <p className="text-sm font-bold">
           {isApprove ? "예약 승인" : "예약 거절"}
         </p>
-        <span className="text-xs text-gray-400">
-          {formatRelativeTime(item.createdAt)}
-        </span>
+        <button
+          className="text-xs text-gray-400"
+          onClick={() => onDelete(item.id)}
+        >
+          삭제
+        </button>
       </div>
 
       <p className="mt-1 text-sm text-gray-900">{item.activityTitle}</p>
