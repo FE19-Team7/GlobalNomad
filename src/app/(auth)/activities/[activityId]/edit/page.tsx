@@ -79,7 +79,7 @@ export default function ActivityEditPage() {
         mode="edit"
         initialData={data}
         submitText="수정하기"
-        successMessage="체험이 수정되었습니다."
+        successMessage="수정이 완료되었습니다."
         uploadImage={uploadActivityImage}
         onSubmitCreate={async () => {
           // edit에서는 호출되지 않음
