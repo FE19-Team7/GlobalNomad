@@ -18,17 +18,20 @@ async function getAccessToken() {
   return cookieStore.get('accessToken')?.value ?? null;
 }
 
+type Params = { activityId: string };
+
 // GET /api/activities/:activityId
 export async function GET(
   _req: NextRequest,
-  ctx: { params: { activityId: string } }
+  context: { params: Promise<Params> }
 ) {
   const apiErr = requireApiUrl();
   if (apiErr) return apiErr;
 
+  const { activityId } = await context.params;
   const accessToken = await getAccessToken();
 
-  const res = await fetch(`${API_URL}/activities/${ctx.params.activityId}`, {
+  const res = await fetch(`${API_URL}/activities/${activityId}`, {
     method: 'GET',
     headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
     cache: 'no-store',
