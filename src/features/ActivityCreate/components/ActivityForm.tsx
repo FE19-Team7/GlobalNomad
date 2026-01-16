@@ -219,7 +219,7 @@ export default function ActivityForm({
     ]);
 
     // leave guard: confirm() 제거하고 CancelModal 띄우기
-    useLeaveGuard({
+    const allowLeave = useLeaveGuard({
         enabled: isDirty && !isSubmitting,
         onAttemptLeave: () => {
             setIsCancelModalOpen(true);
@@ -227,8 +227,10 @@ export default function ActivityForm({
     });
 
     const confirmLeave = () => {
+        allowLeave();
         setIsCancelModalOpen(false);
-        history.back();
+
+        history.go(-2);
     };
 
     const cancelLeave = () => {
