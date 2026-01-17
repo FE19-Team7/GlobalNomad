@@ -24,7 +24,7 @@ export default function Header({ initialUser }: HeaderProps) {
     <HeaderLayout>
       <div className="flex w-full items-center justify-between">
         {/* 왼쪽 */}
-        <Link href="/" className="flex items-center cursor-pointer">
+        <Link href="/" onClick={() => window.location.reload()}>
           <Logo />
         </Link>
 
