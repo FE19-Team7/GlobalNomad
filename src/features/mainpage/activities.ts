@@ -55,8 +55,8 @@ export const getActivities = async ({
   sort = 'latest',
 }: GetActivitiesParams): Promise<ActivityResponse> => {
 
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const url = `${BASE_URL}/activities`;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+  const url = `${API_URL}/activities`;
 
   const params = new URLSearchParams({
     method,
