@@ -4,6 +4,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export type User = {
   nickname: string;
+  profileImageUrl?: string | null;
 };
 
 export async function getUser(): Promise<User | null> {

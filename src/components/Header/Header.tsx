@@ -33,6 +33,7 @@ export default function Header({ initialUser }: HeaderProps) {
           {initialUser ? (
             <LoggedInMenu
               nickname={initialUser.nickname}
+              profileImageUrl={initialUser.profileImageUrl}
               onLogout={handleLogout}
             />
           ) : (
