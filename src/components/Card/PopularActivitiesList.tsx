@@ -32,7 +32,11 @@ export default function PopularActivitiesList() {
       const result = await getPopularActivities(cursorId, 4);
 
       if (result?.activities && result.activities.length > 0) {
-        setItems((prevItems) => [...prevItems, ...result.activities]);
+        setItems((prevItems) => {
+          const merged = [...prevItems, ...result.activities];
+          const map = new Map(merged.map(item => [item.id, item]));
+          return Array.from(map.values());
+        });
         setCursorId(result.cursorId);
         setHasMore(result.cursorId !== null);
       } else {
