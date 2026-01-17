@@ -7,10 +7,9 @@ import StarIcon from '@/assets/icon_star.svg';
 export interface ActivityCardProps {
   id: number;
   title: string;
-  rating: number;
-  reviewCount: number;
+  rating?: number;
+  reviewCount?: number;
   price: number;
-  category?: string;
   bannerImageUrl?: string;
 }
 

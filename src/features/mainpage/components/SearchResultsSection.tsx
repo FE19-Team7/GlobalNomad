@@ -3,7 +3,6 @@
 import ActivityCard from '@/src/components/Card/ActivityCard';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 import { useActivitiesFilter } from '@/src/hooks/useActivitiesFilter';
-import { mockActivities } from '@/src/components/Card/MockActivities';
 import EmptyImage from '@/src/assets/earth.svg';
 
 interface SearchResultsSectionProps {
@@ -20,7 +19,6 @@ export default function SearchResultsSection({
     currentPage,
     setCurrentPage,
   } = useActivitiesFilter({
-    activities: mockActivities,
     itemsPerPage: 8,
     searchTerm: searchTerm,
   });

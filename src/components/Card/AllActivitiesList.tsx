@@ -2,14 +2,12 @@
 
 import ActivityCard from '@/src/components/Card/ActivityCard';
 import { Pagination } from '@/src/components/Pagination/Pagination';
-import { mockActivities } from '@/src/components/Card/MockActivities';
 import PriceSortDropdown from '@/src/components/Dropdown/PriceSortDropdown';
 import CategoryFilter from '@/src/components/Card/CategoryFilter';
 import { useActivitiesFilter } from '@/src/hooks/useActivitiesFilter';
 
 export default function AllActivitiesList() {
   const {
-    priceSort,
     selectedCategory,
     currentPage,
     setPriceSort,
@@ -18,7 +16,6 @@ export default function AllActivitiesList() {
     currentItems,
     totalPages,
   } = useActivitiesFilter({
-    activities: mockActivities,
     itemsPerPage: 8,
   });
 
@@ -37,7 +34,7 @@ export default function AllActivitiesList() {
 
         <div className="flex items-center flex-end">
           <PriceSortDropdown
-            value={priceSort || 'price_asc'}
+            value={'price_asc'}
             onChange={setPriceSort}
           />
         </div>

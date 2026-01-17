@@ -2,18 +2,14 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import ActivityCard from '@/src/components/Card/ActivityCard';
-import { getMockActivities } from '@/src/components/Card/MockActivities';
 import ArrowRightIcon from '@/src/assets/icon_arrow_right.svg';
 import ArrowLeftIcon from '@/src/assets/icon_arrow_left.svg';
+import { Activity, getPopularActivities } from '@/src/features/mainpage/activities';
 
 export default function PopularActivitiesList() {
-
-  // 초기 데이터 로드
-  const initialData = getMockActivities(0, 4);
-
-  const [items, setItems] = useState(initialData.data);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(initialData.hasMore);
+  const [items, setItems] = useState<Activity[]>([]);
+  const [cursorId, setCursorId] = useState<number | null>(null);
+  const [hasMore, setHasMore] = useState(true);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,21 +29,27 @@ export default function PopularActivitiesList() {
     setIsLoading(true);
 
     try {
-      // TODO: API 연동 시 수정 예정
-      const result = getMockActivities(page, 4);
-      if (result.data.length > 0) {
-        setItems((prevItems) => [...prevItems, ...result.data]);
-        setHasMore(result.hasMore);
-        setPage((prevPage) => prevPage + 1);
+      const result = await getPopularActivities(cursorId, 4);
+
+      if (result?.activities && result.activities.length > 0) {
+        setItems((prevItems) => [...prevItems, ...result.activities]);
+        setCursorId(result.cursorId);
+        setHasMore(result.cursorId !== null);
+      } else {
+        setHasMore(false);
       }
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [page, hasMore, isLoading]);
+  }, [cursorId, hasMore, isLoading]);
 
   // 마지막 요소가 보이면 로드 - 모바일
+  useEffect(() => {
+    loadMore();
+  }, []);
+
   useEffect(() => {
     if (!hasMore || isLoading) return;
 
