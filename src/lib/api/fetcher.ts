@@ -1,31 +1,26 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-function requireApiUrl() {
-  if (!API_URL) throw new Error('NEXT_PUBLIC_API_URL이 설정되지 않았습니다.');
-  return API_URL;
-}
-
-async function parseErrorMessage(res: Response) {
-  try {
-    const data = await res.json();
-    if (data?.message) return String(data.message);
-  } catch {
-    // empty body or non-json
-  }
-  return `요청 실패: ${res.status}`;
-}
-
 type Primitive = string | number | boolean;
 
-type ApiFetchOptions = Omit<RequestInit, 'body'> & {
+type ApiFetchOptions = Omit<RequestInit, "body"> & {
   params?: Record<string, Primitive | undefined | null>;
   body?: unknown;
 };
 
-export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}) {
-  const base = requireApiUrl();
+async function parseErrorMessage(res: Response) {
+  try {
+    const ct = res.headers.get("content-type") ?? "";
+    if (ct.includes("application/json")) {
+      const data = await res.json();
+      if (data?.message) return String(data.message);
+      return JSON.stringify(data);
+    }
+    const text = await res.text();
+    if (text) return text;
+  } catch {}
+  return `요청 실패: ${res.status}`;
+}
 
-  const url = new URL(`${base}${path.startsWith('/') ? path : `/${path}`}`);
+export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}) {
+  const url = new URL(path, typeof window !== "undefined" ? window.location.origin : "http://localhost:3000");
 
   if (options.params) {
     Object.entries(options.params).forEach(([k, v]) => {
@@ -36,20 +31,17 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}) {
 
   const res = await fetch(url.toString(), {
     ...options,
-    credentials: 'include',
+    credentials: "include", // 같은 오리진(/api)이므로 OK (쿠키 포함)
     headers: {
-      ...(options.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      ...(options.body !== undefined ? { "Content-Type": "application/json" } : {}),
+      accept: "application/json",
       ...(options.headers ?? {}),
     },
     body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
-    cache: options.cache ?? 'no-store',
+    cache: options.cache ?? "no-store",
   });
 
   if (res.status === 204) return undefined as T;
-
-  if (!res.ok) {
-    throw new Error(await parseErrorMessage(res));
-  }
-
+  if (!res.ok) throw new Error(await parseErrorMessage(res));
   return (await res.json()) as T;
 }
