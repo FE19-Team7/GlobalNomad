@@ -18,7 +18,7 @@ interface MyActivitiesCardProps {
     reviewCount: number;
     price: number;
     bannerImageUrl?: string;
-    onDelete?: (id: number) => void;
+    onDelete?: (id: number) => void | Promise<void>;
   }
 }
 
@@ -35,22 +35,31 @@ export default function MyActivitiesCard({
 }: MyActivitiesCardProps) {
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEdit = () => {
-    router.push(`/seller/activities/${id}/edit`);    // 체험 수정 페이지로 이동
+    router.push(`/activities/${id}/edit`);    // 체험 수정 페이지로 이동
   };
 
   const handleDelete = () => {
+    if (isDeleting) return;
     setIsDeleteModalOpen(true);    // 삭제 confirm 모달 열기
   }
 
-  const handleConfirmDelete = () => {
-    // TODO: API 연동 시 삭제 로직 추가 예정
-    onDelete?.(id);
-    setIsDeleteModalOpen(false);    // 모달 닫기
-  }
+  const handleConfirmDelete = async () => {
+    if (isDeleting) return;
+    setIsDeleting(true);
+
+    try {
+      await onDelete?.(id); // 페이지에서 실제 삭제 + state 갱신
+      setIsDeleteModalOpen(false); // 성공 후 닫기
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleCloseDelete = () => {
+    if (isDeleting) return;
     setIsDeleteModalOpen(false);    // 모달 닫기 (삭제 안 함)
   }
 
@@ -84,13 +93,17 @@ export default function MyActivitiesCard({
           <div className="flex items-center gap-[8px]">
             <Button
               onClick={handleEdit}
-              baseStyles="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 transition-colors duration-150"
+              disabled={isDeleting}
+              baseStyles="px-[10px] py-[6px] outline outline-1 outline-offset-[-1px] outline-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-25 transition-colors duration-150
+                          disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
             >
               수정하기
             </Button>
             <Button
               onClick={handleDelete}
-              baseStyles="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150"
+              disabled={isDeleting}
+              baseStyles="px-[10px] py-[6px] bg-gray-100 text-body text-gray-600 rounded-lg cursor-pointer hover:bg-gray-200 hover:text-gray-700 transition-colors duration-150
+                          disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-gray-100 disabled:hover:text-gray-600"
             >
               삭제하기
             </Button>

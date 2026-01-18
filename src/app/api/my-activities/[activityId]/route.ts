@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
+type Params = { activityId: string };
+type Context = { params: Promise<Params> };
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 function requireApiUrl() {
@@ -18,47 +21,64 @@ async function getAccessToken() {
   return cookieStore.get('accessToken')?.value ?? null;
 }
 
-type Params = { activityId: string };
+async function forwardResponse(res: Response) {
+  if (res.status === 204) return new NextResponse(null, { status: 204 });
+
+  const contentType = res.headers.get('content-type') ?? '';
+
+  if (contentType.includes('application/json')) {
+    const data = await res.json().catch(() => null);
+    return NextResponse.json(data ?? { message: res.statusText }, { status: res.status });
+  }
+
+  const text = await res.text().catch(() => '');
+  if (text) {
+    return new NextResponse(text, {
+      status: res.status,
+      headers: { 'Content-Type': contentType || 'text/plain; charset=utf-8' },
+    });
+  }
+
+  return NextResponse.json({ message: res.statusText }, { status: res.status });
+}
 
 // PATCH /api/my-activities/:activityId
-export async function PATCH(
-  req: NextRequest,
-  context: { params: Promise<Params> }
-) {
+export async function PATCH(req: NextRequest, { params }: Context) {
   const apiErr = requireApiUrl();
   if (apiErr) return apiErr;
 
-  const { activityId } = await context.params;
+  const { activityId } = await params;
 
   const accessToken = await getAccessToken();
   if (!accessToken) {
     return NextResponse.json({ message: '로그인이 필요합니다.' }, { status: 401 });
   }
 
-  const body = await req.json();
+  const body = await req.json().catch(() => null);
+  if (body == null) {
+    return NextResponse.json({ message: '요청 본문(JSON)이 필요합니다.' }, { status: 400 });
+  }
 
   const res = await fetch(`${API_URL}/my-activities/${activityId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify(body),
+    cache: 'no-store',
   });
 
-  const text = await res.text();
-  return new NextResponse(text, { status: res.status });
+  return forwardResponse(res);
 }
 
 // DELETE /api/my-activities/:activityId
-export async function DELETE(
-  _req: NextRequest,
-  context: { params: Promise<Params> }
-) {
+export async function DELETE(_req: NextRequest, { params }: Context) {
   const apiErr = requireApiUrl();
   if (apiErr) return apiErr;
 
-  const { activityId } = await context.params;
+  const { activityId } = await params;
 
   const accessToken = await getAccessToken();
   if (!accessToken) {
@@ -68,10 +88,11 @@ export async function DELETE(
   const res = await fetch(`${API_URL}/my-activities/${activityId}`, {
     method: 'DELETE',
     headers: {
+      Accept: 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
+    cache: 'no-store',
   });
 
-  const text = await res.text();
-  return new NextResponse(text, { status: res.status });
+  return forwardResponse(res);
 }
