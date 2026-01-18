@@ -2,7 +2,7 @@ import HeroImage from '@/src/assets/main-hero.svg';
 
 export default function HeroSection() {
   return (
-    <section className="relative mx-auto">
+    <section className="relative mx-auto mb-[50px]">
       <div className="w-full h-[500px] rounded-3xl shadow-[0px_4px_24px_0px_rgba(156,180,202,0.20)] overflow-hidden">
         <HeroImage
           aria-label="메인 히어로 이미지"

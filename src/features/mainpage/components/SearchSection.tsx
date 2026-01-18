@@ -15,7 +15,7 @@ export default function SearchSection({ onSearch }: SearchSectionProps) {
   };
 
   return (
-    <section className="w-full h-[208px]">
+    <section className="w-full h-[208px] mb-[60px]">
       <SearchBar
         value={searchTerm}
         onChange={setSearchTerm}
