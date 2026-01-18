@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col gap-16">
+    <div className="min-h-screen flex flex-col mb-50">
       <div className="bg-gradient-to-t from-white via-[#F7FBFF] to-[#BBDDFF]/50">
         <div className="w-full max-w-[1200px] mx-auto mt-[53px] px-10 py-[50px]">
           <HeroSection />
@@ -60,7 +60,7 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="w-full max-w-[1200px] mx-auto px-10 py-5 flex flex-col gap-16">
+      <main className="w-full max-w-[1200px] mx-auto px-10 py-5 flex flex-col">
         {searchTerm ? (
           <SearchResultsSection
             searchTerm={searchTerm}
@@ -68,7 +68,7 @@ export default function Home() {
             onPageChange={handlePageChange}
           />
         ) : (
-          <div className="flex flex-col gap-16">
+          <div className="flex flex-col">
             <PopularActivitiesSection />
             <AllActivitiesSection
               page={currentPage}
