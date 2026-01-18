@@ -12,13 +12,43 @@ export default function Home() {
   const router = useRouter();
 
   const searchTerm = searchParams.get('keyword') || '';
+  const pageParam = searchParams.get('page');
+  const currentPage = (pageParam && Number(pageParam) > 0) ? Number(pageParam) : 1;
+
+  // 공통 쿼리 업데이트 함수
+  const updateQueryParams = (params: { keyword?: string; page?: number }) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    // keyword 업데이트
+    if (params.keyword !== undefined) {
+      if (params.keyword.trim()) {
+        newParams.set('keyword', params.keyword);
+        newParams.delete('page');    // 검색어가 바뀌면 페이지 1로 리셋 (page 쿼리 삭제)
+      } else {
+        newParams.delete('keyword');
+        newParams.delete('page');
+      }
+    }
+
+    // page 업데이트
+    if (params.page !== undefined) {
+      if (params.page > 1) {
+        newParams.set('page', params.page.toString());
+      } else {
+        newParams.delete('page');    // 1페이지는 주소에 미표시
+      }
+    }
+
+    const queryString = newParams.toString();
+    router.push(queryString ? `/?${queryString}` : '/');
+  };
 
   const handleSearch = (term: string) => {
-    if (term.trim()) {
-      router.push(`/?keyword=${encodeURIComponent(term)}`);
-    } else {
-      router.push('/');
-    }
+    updateQueryParams({ keyword: term });
+  };
+
+  const handlePageChange = (page: number) => {
+    updateQueryParams({ page });
   };
 
   return (
@@ -32,7 +62,11 @@ export default function Home() {
 
       <main className="w-full max-w-[1200px] mx-auto px-10 py-5 flex flex-col gap-16">
         {searchTerm ? (
-          <SearchResultsSection searchTerm={searchTerm} />
+          <SearchResultsSection
+            searchTerm={searchTerm}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         ) : (
           <div className="flex flex-col gap-16">
             <PopularActivitiesSection />

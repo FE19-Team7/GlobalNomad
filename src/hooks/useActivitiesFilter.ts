@@ -6,11 +6,13 @@ export type PriceSortValue = 'price_asc' | 'price_desc' | 'latest' | 'most_revie
 interface UseActivitiesFilterProps {
   itemsPerPage: number;
   searchTerm?: string;
+  page?: number;
 }
 
 export function useActivitiesFilter({
   itemsPerPage = 8,
   searchTerm: externalSearchTerm = '',
+  page = 1,
 }: UseActivitiesFilterProps) {
 
   // API 데이터 및 필터링 상태 관리
@@ -27,7 +29,7 @@ export function useActivitiesFilter({
     try {
       const data = await getActivities({
         method: 'offset',
-        page: currentPage,
+        page: page,
         size: itemsPerPage,
         keyword: externalSearchTerm,
         category: selectedCategory === '전체' ? null : selectedCategory,
@@ -40,7 +42,7 @@ export function useActivitiesFilter({
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, itemsPerPage, externalSearchTerm, selectedCategory, priceSort]);
+  }, [page, itemsPerPage, externalSearchTerm, selectedCategory, priceSort]);
 
   // 필터 · 페이지 · 검색어 변경 시 데이터 호출
   useEffect(() => {
