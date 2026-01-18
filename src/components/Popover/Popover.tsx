@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import StatusBadge from "@/src/components/Card/StatusBadge";
 import DeleteIcon from "@/src/assets/icon_delete.svg";
 import ReservationsTimeDropdown from "@/src/components/Dropdown/ReservationsTimeDropdown";
@@ -55,21 +55,7 @@ export default function ReservationPopover({
   const popoverRef = useRef<HTMLDivElement>(null);
 
   /* ======================
-   * 위치 계산
-   ====================== */
-  const style = useMemo<React.CSSProperties>(() => {
-    if (!isOpen || !anchorEl) return {};
-    const rect = anchorEl.getBoundingClientRect();
-    return {
-      position: "fixed",
-      top: rect.top,
-      left: rect.right + 8,
-      zIndex: 50,
-    };
-  }, [isOpen, anchorEl]);
-
-  /* ======================
-   * 예약 목록 필터링 
+   * 예약 목록 필터링
    ====================== */
   const filtered = useMemo(() => {
     return reservations.filter((r) => {
@@ -82,13 +68,45 @@ export default function ReservationPopover({
     });
   }, [reservations, selectedTimeId, activeTab]);
 
+  /* ======================
+   * 팝오버 위치 계산 (DOM 직접 제어)
+   ====================== */
+  useLayoutEffect(() => {
+    if (!isOpen || !anchorEl || !popoverRef.current) return;
+
+    const margin = 12;
+    const gap = 8;
+    const rect = anchorEl.getBoundingClientRect();
+    const el = popoverRef.current;
+    const popoverHeight = el.offsetHeight;
+    const popoverWidth = el.offsetWidth;
+
+    let top = rect.bottom + margin;
+    let left = rect.right + gap;
+
+    if (top + popoverHeight > window.innerHeight - margin) {
+      top = rect.top - popoverHeight - margin;
+    }
+
+    if (top < margin) top = margin;
+
+    if (left + popoverWidth > window.innerWidth - margin) {
+      left = window.innerWidth - popoverWidth - margin;
+    }
+
+    if (left < margin) left = margin;
+
+    el.style.top = `${top}px`;
+    el.style.left = `${left}px`;
+  }, [isOpen, anchorEl, activeTab, selectedTimeId, filtered.length]);
+
   if (!isOpen) return null;
 
   return (
     <aside
       ref={popoverRef}
-      style={style}
-      className="w-85 rounded-xl bg-white shadow-lg"
+      style={{ position: "fixed", zIndex: 9999 }}
+      className="w-85 rounded-xl bg-white shadow-lg max-h-[70vh] overflow-y-auto"
     >
       <div className="flex flex-col p-6 gap-6">
         {/* Header */}
