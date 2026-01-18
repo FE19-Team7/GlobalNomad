@@ -24,7 +24,13 @@ export default function Header({ initialUser }: HeaderProps) {
     <HeaderLayout>
       <div className="flex w-full items-center justify-between">
         {/* 왼쪽 */}
-        <Link href="/" onClick={() => window.location.reload()}>
+        <Link
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href = "/";
+          }}
+        >
           <Logo />
         </Link>
 
