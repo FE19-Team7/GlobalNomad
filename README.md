@@ -52,7 +52,7 @@
 ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
 
 - **Vercel** - 자동 배포 환경
-- **배포 URL**: [https://wikid-19-8.vercel.app](https://wikid-19-8.vercel.app)
+- **배포 URL**: https://global-nomad-alpha.vercel.app/
 - **프리뷰 배포** - PR 생성 시 미리보기 환경 자동 생성
 
 ## 👥 Team
