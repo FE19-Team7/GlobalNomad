@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 type Params = { activityId: string };
-
-type Ctx = RouteContext<'/api/my-activities/[activityId]'>;
+type Context = { params: Promise<Params> };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,21 +22,15 @@ async function getAccessToken() {
 }
 
 async function forwardResponse(res: Response) {
-  // 백엔드가 204를 주면 그대로 종료
   if (res.status === 204) return new NextResponse(null, { status: 204 });
 
   const contentType = res.headers.get('content-type') ?? '';
 
-  // JSON이면 JSON으로 안전 파싱
   if (contentType.includes('application/json')) {
     const data = await res.json().catch(() => null);
-    return NextResponse.json(
-      data ?? { message: res.statusText },
-      { status: res.status }
-    );
+    return NextResponse.json(data ?? { message: res.statusText }, { status: res.status });
   }
 
-  // 그 외엔 텍스트로 안전 처리
   const text = await res.text().catch(() => '');
   if (text) {
     return new NextResponse(text, {
@@ -46,16 +39,15 @@ async function forwardResponse(res: Response) {
     });
   }
 
-  // 바디가 비어있다면 statusText로
   return NextResponse.json({ message: res.statusText }, { status: res.status });
 }
 
 // PATCH /api/my-activities/:activityId
-export async function PATCH(req: NextRequest, ctx: Ctx) {
+export async function PATCH(req: NextRequest, { params }: Context) {
   const apiErr = requireApiUrl();
   if (apiErr) return apiErr;
 
-  const { activityId } = (await ctx.params) as Params;
+  const { activityId } = await params;
 
   const accessToken = await getAccessToken();
   if (!accessToken) {
@@ -82,11 +74,11 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
 }
 
 // DELETE /api/my-activities/:activityId
-export async function DELETE(_req: NextRequest, ctx: Ctx) {
+export async function DELETE(_req: NextRequest, { params }: Context) {
   const apiErr = requireApiUrl();
   if (apiErr) return apiErr;
 
-  const { activityId } = (await ctx.params) as Params;
+  const { activityId } = await params;
 
   const accessToken = await getAccessToken();
   if (!accessToken) {
