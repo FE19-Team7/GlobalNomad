@@ -1,23 +1,23 @@
 'use client';
 
 import ActivityCard from '@/src/components/Card/ActivityCard';
-import { Pagination } from '@/src/components/Pagination/Pagination';
 import PriceSortDropdown from '@/src/components/Dropdown/PriceSortDropdown';
 import CategoryFilter from '@/src/components/Card/CategoryFilter';
-import { useActivitiesFilter } from '@/src/hooks/useActivitiesFilter';
+import { Activity, SortOption } from '@/src/features/mainpage/activities';
 
-export default function AllActivitiesList() {
-  const {
-    selectedCategory,
-    currentPage,
-    setPriceSort,
-    setSelectedCategory,
-    setCurrentPage,
-    currentItems,
-    totalPages,
-  } = useActivitiesFilter({
-    itemsPerPage: 8,
-  });
+interface AllActivitiesListProps {
+  currentItems: Activity[];
+  selectedCategory: string | null;
+  setPriceSort: (sort: SortOption) => void;
+  onCategoryChange: (category: string | null) => void;
+}
+
+export default function AllActivitiesList({
+  currentItems,
+  selectedCategory,
+  setPriceSort,
+  onCategoryChange,
+}: AllActivitiesListProps) {
 
   const categories = ['문화 · 예술', '식음료', '스포츠', '투어', '관광', '웰빙'];
 
@@ -28,7 +28,7 @@ export default function AllActivitiesList() {
           <CategoryFilter
             categories={categories}
             selected={selectedCategory}
-            onSelect={setSelectedCategory}
+            onSelect={onCategoryChange}
           />
         </div>
 
@@ -44,15 +44,6 @@ export default function AllActivitiesList() {
         {currentItems.map((item) => (
           <ActivityCard key={item.id} {...item} />
         ))}
-      </div>
-
-      <div className="mt-[30px] flex justify-center">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          maxPageButtons={7}
-        />
       </div>
     </div>
   );

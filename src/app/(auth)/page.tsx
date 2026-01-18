@@ -40,7 +40,7 @@ export default function Home() {
     }
 
     const queryString = newParams.toString();
-    router.push(queryString ? `/?${queryString}` : '/');
+    router.push(queryString ? `/?${queryString}` : '/', { scroll: false });
   };
 
   const handleSearch = (term: string) => {
@@ -70,7 +70,10 @@ export default function Home() {
         ) : (
           <div className="flex flex-col gap-16">
             <PopularActivitiesSection />
-            <AllActivitiesSection />
+            <AllActivitiesSection
+              page={currentPage}
+              onPageChange={handlePageChange}
+            />
           </div>
         )}
       </main>

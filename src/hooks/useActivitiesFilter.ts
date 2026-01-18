@@ -1,18 +1,18 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getActivities, Activity } from '@/src/features/mainpage/activities';
-
-export type PriceSortValue = 'price_asc' | 'price_desc' | 'latest' | 'most_reviewed';
+import { getActivities, Activity, SortOption } from '@/src/features/mainpage/activities';
 
 interface UseActivitiesFilterProps {
   itemsPerPage: number;
   searchTerm?: string;
   page?: number;
+  selectedCategory?: string | null;
 }
 
 export function useActivitiesFilter({
   itemsPerPage = 8,
   searchTerm: externalSearchTerm = '',
   page = 1,
+  selectedCategory: externalCategory = null,
 }: UseActivitiesFilterProps) {
 
   // API 데이터 및 필터링 상태 관리
@@ -20,8 +20,10 @@ export function useActivitiesFilter({
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [priceSort, setPriceSort] = useState<PriceSortValue>('latest');
+  const [priceSort, setPriceSort] = useState<SortOption>('latest');
   const [isLoading, setIsLoading] = useState(false);
+
+  const currentCategory = externalCategory !== null ? externalCategory : selectedCategory;
 
   // 서버에서 데이터 불러오기
   const fetchActivities = useCallback(async () => {
@@ -32,7 +34,7 @@ export function useActivitiesFilter({
         page: page,
         size: itemsPerPage,
         keyword: externalSearchTerm,
-        category: selectedCategory === '전체' ? null : selectedCategory,
+        category: currentCategory === '전체' ? null : currentCategory,
         sort: priceSort,
       });
       setActivities(data.activities);
@@ -42,7 +44,7 @@ export function useActivitiesFilter({
     } finally {
       setIsLoading(false);
     }
-  }, [page, itemsPerPage, externalSearchTerm, selectedCategory, priceSort]);
+  }, [page, itemsPerPage, externalSearchTerm, currentCategory, priceSort]);
 
   // 필터 · 페이지 · 검색어 변경 시 데이터 호출
   useEffect(() => {
@@ -50,7 +52,7 @@ export function useActivitiesFilter({
   }, [fetchActivities]);
 
   // 정렬 방식 변경 시 첫 페이지로 초기화
-  const handleSetPriceSort = useCallback((sort: PriceSortValue | null) => {
+  const handleSetPriceSort = useCallback((sort: SortOption | null) => {
     setPriceSort(sort || 'latest');
     setCurrentPage(1);
   }, []);
@@ -74,7 +76,7 @@ export function useActivitiesFilter({
   return {
     // 필터링 상태
     priceSort,
-    selectedCategory,
+    selectedCategory: currentCategory,
     currentPage,
     searchTerm: externalSearchTerm,
     isLoading,
