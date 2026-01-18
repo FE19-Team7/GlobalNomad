@@ -3,26 +3,27 @@
 import ActivityCard from '@/src/components/Card/ActivityCard';
 import { Pagination } from '@/src/components/Pagination/Pagination';
 import { useActivitiesFilter } from '@/src/hooks/useActivitiesFilter';
-import { mockActivities } from '@/src/components/Card/MockActivities';
 import EmptyImage from '@/src/assets/earth.svg';
 
 interface SearchResultsSectionProps {
   searchTerm: string;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
 export default function SearchResultsSection({
   searchTerm,
+  currentPage,
+  onPageChange,
 }: SearchResultsSectionProps) {
   const {
     currentItems,
     totalPages,
     totalItems,
-    currentPage,
-    setCurrentPage,
   } = useActivitiesFilter({
-    activities: mockActivities,
     itemsPerPage: 8,
     searchTerm: searchTerm,
+    page: currentPage,
   });
 
   return (
@@ -66,7 +67,7 @@ export default function SearchResultsSection({
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={setCurrentPage}
+            onPageChange={onPageChange}
             maxPageButtons={7}
           />
         </div>
