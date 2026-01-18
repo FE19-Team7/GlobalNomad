@@ -176,7 +176,7 @@ const KebabMenu = ({
 
   const handleEdit = () => {
     setIsOpen(false);
-    router.push(`/seller/activities/${activityId}/edit`);
+    router.push(`/activities/${activityId}/edit`);
   };
 
   const handleDeleteClick = () => {

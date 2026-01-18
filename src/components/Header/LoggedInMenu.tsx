@@ -5,6 +5,7 @@ import BellIcon from "@/assets/icon_bell.svg";
 import DefaultProfile from "@/assets/default profile.svg";
 import Divider from "@/src/assets/divider.svg";
 import Link from "next/link";
+import Image from "next/image";
 import NotificationPanel from "@/src/components/Notification/NotificationPanel";
 import UserMenuDropDown from "../Dropdown/UserMenuDropDown";
 import { useNotifications } from "@/src/features/notification/hooks/useNotifications";
@@ -12,11 +13,13 @@ import { authFetch } from "@/src/lib/api/authFetch";
 
 type LoggedInMenuProps = {
   nickname: string;
+  profileImageUrl?: string | null;
   onLogout: () => void;
 };
 
 export default function LoggedInMenu({
   nickname,
+  profileImageUrl,
   onLogout,
 }: LoggedInMenuProps) {
   const [open, setOpen] = useState(false);
@@ -69,7 +72,20 @@ export default function LoggedInMenu({
         aria-label="마이페이지"
         className="flex items-center hover:opacity-70 transition"
       >
-        <DefaultProfile />
+        {profileImageUrl ? (
+          <div className="relative w-10 h-10 overflow-hidden rounded-full">
+            <Image
+              src={profileImageUrl}
+              alt="프로필 이미지"
+              fill
+              className="object-cover"
+              sizes="40px"
+              priority
+            />
+          </div>
+        ) : (
+          <DefaultProfile />
+        )}
       </Link>
 
       <UserMenuDropDown userName={nickname} onLogout={onLogout} />
